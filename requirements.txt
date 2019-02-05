@@ -1,0 +1,8 @@
+django
+django-extensions
+django-crispy-forms
+django-bootstrap4
+djangorestframework
+django-autocomplete-light>=2.0.0pre
+Pillow
+argon2-cffi

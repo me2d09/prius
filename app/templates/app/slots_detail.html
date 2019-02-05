@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<p><a class="btn btn-default" href="{% url 'app_slots_list' %}">Slots Listing</a></p>
+<table class="table">
+<tr><td>created</td><td>{{ object.created }}</td></tr>
+<tr><td>last_updated</td><td>{{ object.last_updated }}</td></tr>
+<tr><td>start</td><td>{{ object.start }}</td></tr>
+<tr><td>end</td><td>{{ object.end }}</td></tr>
+<tr><td>type</td><td>{{ object.type }}</td></tr>
+</table>
+<a class="btn btn-primary" href="{{object.get_update_url}}">Edit Slots</a>
+
+{% endblock %}

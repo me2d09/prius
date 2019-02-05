@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="breadcrumb-holder">
+        <div class="container-fluid">
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+            <li class="breadcrumb-item active">Contacts</li>
+          </ul>
+        </div>
+      </div>
+<section>
+        <div class="container-fluid">
+          <!-- Page Header-->
+          <header> 
+            <h1 class="h3 display">List of all contacts</h1>
+          </header>
+<div class="table-responsive">
+<table class="table table-striped table-sm table-hover">
+<tr>
+<td>Username</td>
+    <td>name</td>
+    <td>created</td>
+    <td>last_updated</td>
+    <td>email</td>
+    <td>orcid</td>
+</tr>
+{% for object in object_list %}
+<tr>
+    <td><a href="{{object.get_absolute_url}}">{{object.uid}}</a></td>
+    <td>{{ object.name }}</td>
+    <td>{{ object.created }}</td>
+    <td>{{ object.last_updated }}</td>
+    <td>{{ object.uid.email }}</td>
+    <td>{{ object.orcid }}</td>
+</tr>
+{% endfor %}
+</table>
+    
+     </div>
+            
+            <a class="btn btn-primary" href="{% url 'app_contacts_create' %}">Create new Contact</a>
+
+                    </div>
+      </section>
+
+
+{% endblock %}

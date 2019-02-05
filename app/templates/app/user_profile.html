@@ -1,0 +1,24 @@
+{% extends "form.html" %}
+{% load static %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item">Profiles</li>
+    <li class="breadcrumb-item active">{{ userprofile.username }}</li>
+{% endblock %}
+{% block formcontent %}
+          <!-- Page Header-->
+          <header> 
+            <h1 class="h3 display">Profile of {{ userprofile.username }}</h1>
+          </header>
+{% if not perms.app.add_proposals %}
+            <p>It seems, that you have newly created a registration in MGML Dashboard and someone else already created a profile for you. In order to complete the registration, you need to check your profile information. Please select <a href="/edit-profile/">edit your profile</a> and then save it.</p>{% endif %}
+<table class="table">
+<tr><td>username</td><td>{{ userprofile.username }} </td></tr>
+<tr><td>name</td><td>{{ contact.name }}</td></tr>
+<tr><td>email</td><td>{{ userprofile.email }}</td></tr>
+<tr><td>created</td><td>{{ contact.created }}</td></tr>
+<tr><td>last_updated</td><td>{{ contact.last_updated }}</td></tr>
+<tr><td>orcid</td><td>{{ contact.orcid }}</td></tr>
+</table>
+            <a class="btn btn-primary" href="/edit-profile/">Edit profile</a> <a class="btn btn-primary" href="/edit-user/">Change email/username</a> <a class="btn btn-primary" href="/password/">Change password</a>
+{% endblock %}

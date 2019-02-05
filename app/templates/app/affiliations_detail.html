@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<p><a class="btn btn-default" href="{% url 'app_affiliations_list' %}">Affiliations Listing</a></p>
+<table class="table">
+<tr><td>created</td><td>{{ object.created }}</td></tr>
+<tr><td>last_updated</td><td>{{ object.last_updated }}</td></tr>
+<tr><td>department</td><td>{{ object.department }}</td></tr>
+<tr><td>institution</td><td>{{ object.institution }}</td></tr>
+<tr><td>address1</td><td>{{ object.address1 }}</td></tr>
+<tr><td>address2</td><td>{{ object.address2 }}</td></tr>
+<tr><td>city</td><td>{{ object.city }}</td></tr>
+</table>
+<a class="btn btn-primary" href="{{object.get_update_url}}">Edit Affiliations</a>
+
+{% endblock %}

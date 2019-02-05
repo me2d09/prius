@@ -1,0 +1,18 @@
+{% extends "form.html" %}
+{% load static %}
+{% block breadcrumbs %}
+    <li class="breadcrumb-item">Contacts</li>
+    <li class="breadcrumb-item active">{{ object.name }}</li>
+{% endblock %}
+{% block formcontent %}
+          <header> 
+            <h1 class="h3 display">User contact details: {{ object.name }}</h1>
+          </header>
+<table class="table table-hover">
+<tr><td>name</td><td>{{ object.name }}</td></tr>
+<tr><td>created</td><td>{{ object.created }}</td></tr>
+<tr><td>last_updated</td><td>{{ object.last_updated }}</td></tr>
+<tr><td>email</td><td>{{ object.email }}</td></tr>
+<tr><td>orcid</td><td>{{ object.orcid }}</td></tr>
+</table>
+{% endblock %}

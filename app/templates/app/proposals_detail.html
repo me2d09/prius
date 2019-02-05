@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="breadcrumb-holder">
+        <div class="container-fluid">
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'app_proposals_list' %}">Proposals</a></li>
+            <li class="breadcrumb-item active">p{{ object.id }}</li>
+          </ul>
+        </div>
+      </div>
+<section>
+        <div class="container-fluid">
+          <!-- Page Header-->
+          <header> 
+            <h1 class="h3 display">Details of proposal p{{ object.id }}</h1>
+          </header>
+<table class="table table-hover">
+<tr><td>Created</td><td>{{ object.created }}</td></tr>
+<tr><td>Last updated</td><td>{{ object.last_updated }}</td></tr>
+<tr><td>Proposal name</td><td>{{ object.name }}</td></tr>
+<tr><td>Abstract</td><td>{{ object.abstract }}</td></tr>
+<tr><td>Scientific background</td><td>{{ object.scientific_bg }}</td></tr>
+<tr><td>Remarks</td><td>{{ object.remarks }}</td></tr>
+</table>
+<a class="btn btn-primary" href="{{object.get_update_url}}">Edit Proposals</a>
+            </div>
+    </section>
+{% endblock %}

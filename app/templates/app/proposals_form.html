@@ -1,0 +1,17 @@
+{% extends "form.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{% url 'app_proposals_list' %}">Proposals</a></li>
+    <li class="breadcrumb-item active">New</li>
+{% endblock %}
+{% block formcontent %}
+<header> 
+<h1 class="h3 display">Create a new proposal:</h1>
+</header>
+<div class="card">
+    <div class="card-body">  
+        {% crispy form %}
+    </div>
+</div>
+{% endblock %}

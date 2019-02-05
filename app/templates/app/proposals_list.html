@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="breadcrumb-holder">
+        <div class="container-fluid">
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+            <li class="breadcrumb-item active">Proposals</li>
+          </ul>
+        </div>
+      </div>
+<section>
+        <div class="container-fluid">
+          <!-- Page Header-->
+          <header> 
+            <h1 class="h3 display">List of all proposals</h1>
+          </header>
+
+<div class="table-responsive">
+<table class="table table-striped table-sm table-hover">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>created</th>
+            <th>last_updated</th>
+            <th>name</th>
+        </tr>
+    </thead>
+{% for object in object_list %}
+    <tr>
+        <th scope="row">{{object.pk}}</th>
+        <td><a href="{{object.get_absolute_url}}">{{object}}</a></td>
+        <td>{{ object.created }}</td>
+        <td>{{ object.last_updated }}</td>
+        <td>{{ object.name }}</td>
+    </tr>
+{% endfor %}
+</table>
+    </div>
+            
+            <a class="btn btn-primary" href="{% url 'app_proposals_create' %}">Create new Proposal</a>
+
+                    </div>
+      </section>
+{% endblock %}

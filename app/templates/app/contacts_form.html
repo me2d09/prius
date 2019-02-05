@@ -1,0 +1,19 @@
+{% extends "form.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block breadcrumbs %}
+    <li class="breadcrumb-item">Contacts</li>
+    <li class="breadcrumb-item active">Invite user</li>
+{% endblock %}
+{% block formcontent %}
+<header> 
+<h1 class="h3 display">Invite new user</h1>
+</header>
+<p>You can invite new users by entering their name, email and affiliation. Users will get an email, that you have created a profile for them and they can finish registration. 
+    After inviting a user to the MGML dashboard, you can immediatelly assign him to your experimental team in proposal application (you don't need to wait for his/her registration).</p>
+<div class="card">
+    <div class="card-body">  
+        {% crispy form %}
+    </div>
+</div>
+{% endblock %}

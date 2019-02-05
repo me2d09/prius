@@ -1,0 +1,287 @@
+﻿{% extends "base.html" %}
+
+{% block content %}
+      <!-- Counts Section -->
+      <section class="dashboard-counts section-padding">
+        <div class="container-fluid">
+          <div class="row">
+
+            <!-- Count item widget-->
+            <div class="col-xl-2 col-md-4 col-6">
+              <div class="wrapper count-title d-flex">
+                <div class="icon"><i class="icon-padnote"></i></div>
+                <div class="name"><strong class="text-uppercase">Pending proposals</strong><span>to be reviewed</span>
+                  <div class="count-number">36</div>
+                </div>
+              </div>
+            </div>
+            <!-- Count item widget-->
+            <div class="col-xl-2 col-md-4 col-6">
+              <div class="wrapper count-title d-flex">
+                <div class="icon"><i class="icon-check"></i></div>
+                <div class="name"><strong class="text-uppercase">Running measurements</strong><span>Now</span>
+                  <div class="count-number">23</div>
+                </div>
+              </div>
+            </div>
+            <!-- Count item widget-->
+            <div class="col-xl-2 col-md-4 col-6">
+              <div class="wrapper count-title d-flex">
+                <div class="icon"><i class="icon-bill"></i></div>
+                <div class="name"><strong class="text-uppercase">New exp. reports</strong><span>Last 2 weeks</span>
+                  <div class="count-number">12</div>
+                </div>
+              </div>
+            </div>
+            <!-- Count item widget-->
+            <div class="col-xl-2 col-md-4 col-6">
+              <div class="wrapper count-title d-flex">
+                <div class="icon"><i class="icon-list"></i></div>
+                <div class="name"><strong class="text-uppercase">Samples</strong><span>in database</span>
+                  <div class="count-number">9#2</div>
+                </div>
+              </div>
+            </div>
+            <!-- Count item widget-->
+            <div class="col-xl-2 col-md-4 col-6">
+              <div class="wrapper count-title d-flex">
+                <div class="icon"><i class="icon-list-1"></i></div>
+                <div class="name"><strong class="text-uppercase">Instrument failures</strong><span>Last 7 days</span>
+                  <div class="count-number">2</div>
+                </div>
+              </div>
+            </div>
+            <!-- Count item widget-->
+            <div class="col-xl-2 col-md-4 col-6">
+              <div class="wrapper count-title d-flex">
+                <div class="icon"><i class="icon-user"></i></div>
+                <div class="name"><strong class="text-uppercase">Active Users</strong><span>Last 7 days</span>
+                  <div class="count-number">25</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Statistics Section-->
+      <section class="statistics">
+        <div class="container-fluid">
+          <div class="row d-flex">
+            <div class="col-lg-4">
+              <!-- Income-->
+              <div class="card income text-center">
+                <div class="icon"><i class="icon-line-chart"></i></div>
+                <div class="number">94</div><strong class="text-primary">Publications</strong>
+                <p>Total amount of publications produced at MGML since 2019.</p>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <!-- Monthly Usage-->
+              <div class="card data-usage">
+                <h2 class="display h4">Peer reviewed usage</h2>
+                <div class="row d-flex align-items-center">
+                    <div id="progress-circle" class="d-flex align-items-center justify-content-center"></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <!-- User Actibity-->
+              <div class="card user-activity">
+                <h2 class="display h4">Student usage</h2>
+                <div class="number">19</div>
+                <h3 class="h4 display">Active student proposals</h3>
+                <div class="progress">
+                  <div role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" class="progress-bar progress-bar bg-primary"></div>
+                </div>
+                <div class="page-statistics d-flex justify-content-between">
+                  <div class="page-statistics-left"><span>Finished thesis</span><strong>3</strong></div>
+                  <div class="page-statistics-right"><span>Student instrument usage</span><strong>73.4%</strong></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Updates Section -->
+      <section class="mt-30px mb-30px">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-lg-4 col-md-12">
+              <!-- Recent Updates Widget          -->
+              <div id="new-updates" class="card updates recent-updated">
+                <div id="updates-header" class="card-header d-flex justify-content-between align-items-center">
+                  <h2 class="h5 display"><a data-toggle="collapse" data-parent="#new-updates" href="#updates-box" aria-expanded="true" aria-controls="updates-box">MGML News</a></h2><a data-toggle="collapse" data-parent="#new-updates" href="#updates-box" aria-expanded="true" aria-controls="updates-box"><i class="fa fa-angle-down"></i></a>
+                </div>
+                <div id="updates-box" role="tabpanel" class="collapse show">
+                  <ul class="news list-unstyled">
+                    <!-- Item-->
+                    <li class="d-flex justify-content-between"> 
+                      <div class="left-col d-flex">
+                        <div class="icon"><i class="icon-rss-feed"></i></div>
+                        <div class="title"><strong>Dilution is working</strong>
+                          <p>Our dilution stick was finally repaired and qe are starting to empty our backlog.</p>
+                        </div>
+                      </div>
+                      <div class="right-col text-right">
+                        <div class="update-date">24<span class="month">Jan</span></div>
+                      </div>
+                    </li>
+                    <!-- Item-->
+                    <li class="d-flex justify-content-between"> 
+                      <div class="left-col d-flex">
+                        <div class="icon"><i class="icon-rss-feed"></i></div>
+                        <div class="title"><strong>Alloy analogy model identifies new spintronic devices</strong>
+                          <p>David Wagenknecht used an advanced model for searching for new materials with direct application.</p>
+                        </div>
+                      </div>
+                      <div class="right-col text-right">
+                        <div class="update-date">24<span class="month">Jan</span></div>
+                      </div>
+                    </li>
+                    <!-- Item-->
+                    <li class="d-flex justify-content-between"> 
+                      <div class="left-col d-flex">
+                        <div class="icon"><i class="icon-rss-feed"></i></div>
+                        <div class="title"><strong>New GAČR grants announced.</strong>
+                          <p>We are happy that two new GAČR projects related to MGML will be funded. First is Junior GAČR by Ross Collman and second international Czech-Korean project lead by Marie Hrůzová-Kratochvílová.
+                            Congratz Marie and Ross!</p>
+                        </div>
+                      </div>
+                      <div class="right-col text-right">
+                        <div class="update-date">24<span class="month">Jan</span></div>
+                      </div>
+                    </li>
+                    <!-- Item-->
+                    <li class="d-flex justify-content-between"> 
+                      <div class="left-col d-flex">
+                        <div class="icon"><i class="icon-rss-feed"></i></div>
+                        <div class="title"><strong>Pressure conference is approachig</strong>
+                          <p>International conference EHPRG 2019 will be held in Prague.</p>
+                        </div>
+                      </div>
+                      <div class="right-col text-right">
+                        <div class="update-date">24<span class="month">Jan</span></div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <!-- Recent Updates Widget End-->
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <!-- Daily Feed Widget-->
+              <div id="daily-feeds" class="card updates daily-feeds">
+                <div id="feeds-header" class="card-header d-flex justify-content-between align-items-center">
+                  <h2 class="h5 display"><a data-toggle="collapse" data-parent="#daily-feeds" href="#feeds-box" aria-expanded="true" aria-controls="feeds-box">Your daily Feeds </a></h2>
+                  <div class="right-column">
+                    <div class="badge badge-primary">10 events</div><a data-toggle="collapse" data-parent="#daily-feeds" href="#feeds-box" aria-expanded="true" aria-controls="feeds-box"><i class="fa fa-angle-down"></i></a>
+                  </div>
+                </div>
+                <div id="feeds-box" role="tabpanel" class="collapse show">
+                  <div class="feed-box">
+                    <ul class="feed-elements list-unstyled">
+                      <!-- List-->
+                      <li class="clearfix">
+                        <div class="feed d-flex justify-content-between">
+                          <div class="feed-body d-flex justify-content-between"><a href="#" class="feed-profile"><img src="static/img/avatar.png" alt="person" class="img-fluid rounded-circle"></a>
+                            <div class="content"><strong>Petr Proschek</strong><small>Started measurement at 20T </small>
+                              <div class="full-date"><small>Today 8:12 am - 10.12.2018</small></div>
+                            </div>
+                          </div>
+                          <div class="date"><small>5min ago</small></div>
+                        </div>
+                      </li>
+                      <!-- List-->
+                      <li class="clearfix">
+                        <div class="feed d-flex justify-content-between">
+                          <div class="feed-body d-flex justify-content-between"><a href="#" class="feed-profile"><img src="static/img/avatar.png" alt="person" class="img-fluid rounded-circle"></a>
+                            <div class="content"><strong>Milan Klicpera</strong><small>Growing sample at Optical furnace </small>
+                              <div class="full-date"><small>Today 5:60 pm - 12.06.2014</small></div>
+                              <div class="CTAs"><a href="#" class="btn btn-xs btn-dark"><i class="fa fa-thumbs-up"> </i>Like</a><a href="#" class="btn btn-xs btn-dark"><i class="fa fa-heart"> </i>Love</a></div>
+                            </div>
+                          </div>
+                          <div class="date"><small>5min ago</small></div>
+                        </div>
+                      </li>
+                      <!-- List-->
+                      <li class="clearfix">
+                        <div class="feed d-flex justify-content-between">
+                          <div class="feed-body d-flex justify-content-between"><a href="#" class="feed-profile"><img src="static/img/avatar.png" alt="person" class="img-fluid rounded-circle"></a>
+                            <div class="content"><strong>Michael Paukov</strong><small>Started measurement at PPMS9</small>
+                              <div class="full-date"><small>Today 5:60 pm - 12.06.2014</small></div>
+                            </div>
+                          </div>
+                          <div class="date"><small>5min ago</small></div>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <!-- Daily Feed Widget End-->
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <!-- Recent Activities Widget      -->
+              <div id="recent-activities-wrapper" class="card updates activities">
+                <div id="activites-header" class="card-header d-flex justify-content-between align-items-center">
+                  <h2 class="h5 display"><a data-toggle="collapse" data-parent="#recent-activities-wrapper" href="#activities-box" aria-expanded="true" aria-controls="activities-box">Upcoming events</a></h2><a data-toggle="collapse" data-parent="#recent-activities-wrapper" href="#activities-box" aria-expanded="true" aria-controls="activities-box"><i class="fa fa-angle-down"></i></a>
+                </div>
+                <div id="activities-box" role="tabpanel" class="collapse show">
+                  <ul class="activities list-unstyled">
+                    <!-- Item-->
+                    <li>
+                      <div class="row">
+                        <div class="col-4 date-holder text-right">
+                          <div class="icon"><i class="icon-clock"></i></div>
+                          <div class="date"> <span>6:00 am</span><span class="text-info">6 hours ago</span></div>
+                        </div>
+                        <div class="col-8 content"><strong>Seminar</strong>
+                          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.                </p>
+                        </div>
+                      </div>
+                    </li>
+                    <!-- Item-->
+                    <li>
+                      <div class="row">
+                        <div class="col-4 date-holder text-right">
+                          <div class="icon"><i class="icon-clock"></i></div>
+                          <div class="date"> <span>6:00 am</span><span class="text-info">6 hours ago</span></div>
+                        </div>
+                        <div class="col-8 content"><strong>Meeting</strong>
+                          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.                </p>
+                        </div>
+                      </div>
+                    </li>
+                    <!-- Item-->
+                    <li>
+                      <div class="row">
+                        <div class="col-4 date-holder text-right">
+                          <div class="icon"><i class="icon-clock"></i></div>
+                          <div class="date"> <span>6:00 am</span><span class="text-info">6 hours ago</span></div>
+                        </div>
+                        <div class="col-8 content"><strong>Meeting</strong>
+                          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.                </p>
+                        </div>
+                      </div>
+                    </li>
+                    <!-- Item-->
+                    <li>
+                      <div class="row">
+                        <div class="col-4 date-holder text-right">
+                          <div class="icon"><i class="icon-clock"></i></div>
+                          <div class="date"> <span>6:00 am</span><span class="text-info">6 hours ago</span></div>
+                        </div>
+                        <div class="col-8 content"><strong>Meeting</strong>
+                          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.                </p>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+{% endblock %}

@@ -1,0 +1,14 @@
+﻿{% url 'activate' uidb64=uid token=token as myurl %}
+
+{% autoescape off %}
+Dear {{ user.username }},
+
+In order to use MGML dashboard, you need to confirm your email address.
+
+Please click on the link to confirm your registration,
+
+https://{{ domain }}{{ myurl }}
+
+Best regards,
+MGML
+{% endautoescape %}

@@ -1,0 +1,21 @@
+{% extends "window.html" %}
+
+{% block message %}
+            <p>In order to submit a proposal, manage your samples or book a time on the instrument, you need to login.</p>
+            <form id="text-left form-validate" method="post" >
+               {% csrf_token %}
+                <div class="form-group-material">
+                    <input id="id_username" type="text" name="username" required data-msg="Please enter your username" class="input-material">
+                    <label for="id_username" class="label-material">Username</label>
+                </div>
+                <div class="form-group-material">
+                    <input id="id_password" type="password" name="password" required data-msg="Please enter your password" class="input-material">
+                    <label for="id_password" class="label-material">Password</label>
+                </div><input type="submit" value="Log in" class="btn btn-primary" />
+                <input type="hidden" name="next" value="{{ next }}" />
+              <!-- This should be submit button but I replaced it with <a> for demo purposes-->
+              {% if form.errors %}
+                <p class="validation-summary-errors">Please enter a correct user name and password.</p>
+              {% endif %}
+            </form><a href="#" class="forgot-pass">Forgot Password?</a><small>Do not have an account? </small><a href="/signup/" class="signup">Signup</a>
+{% endblock %}

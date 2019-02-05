@@ -1,0 +1,231 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <Name>prius</Name>
+    <RootNamespace>prius</RootNamespace>
+    <InterpreterId>MSBuild|env|$(MSBuildProjectFullPath)</InterpreterId>
+    <WebBrowserPort>7000</WebBrowserPort>
+    <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
+    <CommandLineArguments>
+    </CommandLineArguments>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>63c9424e-cb83-476a-8211-36ac4477cdf4</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <ProjectTypeGuids>{5F0BE9CA-D677-4A4D-8806-6076C0FAAD37};{349c5851-65df-11da-9384-00065b846f21};{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <StartupFile>manage.py</StartupFile>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <WebBrowserUrl>
+    </WebBrowserUrl>
+    <LaunchProvider>Web launcher</LaunchProvider>
+    <OutputPath>.</OutputPath>
+    <SuppressCollectPythonCloudServiceFiles>true</SuppressCollectPythonCloudServiceFiles>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="app\admin.py" />
+    <Compile Include="app\signals.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="app\static\api.py" />
+    <Compile Include="app\forms.py" />
+    <Compile Include="app\models.py" />
+    <Compile Include="app\serializers.py" />
+    <Compile Include="app\tests.py" />
+    <Compile Include="app\token.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="app\urls.py" />
+    <Compile Include="app\views.py" />
+    <Compile Include="app\__init__.py" />
+    <Compile Include="app\migrations\__init__.py" />
+    <Compile Include="manage.py" />
+    <Compile Include="prius\settings_core.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="prius\__init__.py" />
+    <Compile Include="prius\settings.py" />
+    <Compile Include="prius\urls.py" />
+    <Compile Include="prius\wsgi.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="app\" />
+    <Folder Include="app\migrations\" />
+    <Folder Include="app\static\" />
+    <Folder Include="app\static\app\" />
+    <Folder Include="app\static\app\content\" />
+    <Folder Include="app\static\app\fonts\" />
+    <Folder Include="app\static\app\scripts\" />
+    <Folder Include="app\templates\" />
+    <Folder Include="app\templates\app\" />
+    <Folder Include="app\templates\accounts\" />
+    <Folder Include="app\templates\registration\" />
+    <Folder Include="prius\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="app\static\app\content\admin.css" />
+    <Content Include="app\static\app\content\custom.css" />
+    <Content Include="app\static\app\content\fontastic.css" />
+    <Content Include="app\static\app\content\select2-bootstrap4.css" />
+    <Content Include="app\static\app\scripts\admin.js" />
+    <Content Include="app\templates\accounts\change_password.html" />
+    <Content Include="app\templates\acc_active_email.html" />
+    <Content Include="app\templates\app\affiliations_detail.html" />
+    <Content Include="app\templates\app\affiliations_form.html" />
+    <Content Include="app\templates\app\affiliations_list.html" />
+    <Content Include="app\templates\app\base.html" />
+    <Content Include="app\templates\app\user_profile.html" />
+    <Content Include="app\templates\app\user_profile_update.html" />
+    <Content Include="app\templates\form.html" />
+    <Content Include="app\templates\app\user_update.html" />
+    <Content Include="app\templates\app\contacts_form.html" />
+    <Content Include="app\templates\app\contacts_list.html" />
+    <Content Include="app\templates\app\countries_detail.html" />
+    <Content Include="app\templates\app\countries_form.html" />
+    <Content Include="app\templates\app\countries_list.html" />
+    <Content Include="app\templates\app\experiments_detail.html" />
+    <Content Include="app\templates\app\experiments_form.html" />
+    <Content Include="app\templates\app\experiments_list.html" />
+    <Content Include="app\templates\app\useroffice.html" />
+    <Content Include="app\templates\app\instrumentparametersets_detail.html" />
+    <Content Include="app\templates\app\instrumentparametersets_form.html" />
+    <Content Include="app\templates\app\instrumentparametersets_list.html" />
+    <Content Include="app\templates\app\instrumentparameters_detail.html" />
+    <Content Include="app\templates\app\instrumentparameters_form.html" />
+    <Content Include="app\templates\app\instrumentparameters_list.html" />
+    <Content Include="app\templates\app\instrumentrequest_detail.html" />
+    <Content Include="app\templates\app\instrumentrequest_form.html" />
+    <Content Include="app\templates\app\instrumentrequest_list.html" />
+    <Content Include="app\templates\app\instruments_detail.html" />
+    <Content Include="app\templates\app\instruments_form.html" />
+    <Content Include="app\templates\app\instruments_list.html" />
+    <Content Include="app\templates\app\layout.html" />
+    <Content Include="app\templates\app\options_detail.html" />
+    <Content Include="app\templates\app\options_form.html" />
+    <Content Include="app\templates\app\options_list.html" />
+    <Content Include="app\templates\app\parametervalues_detail.html" />
+    <Content Include="app\templates\app\parametervalues_form.html" />
+    <Content Include="app\templates\app\parametervalues_list.html" />
+    <Content Include="app\templates\app\proposals_detail.html" />
+    <Content Include="app\templates\app\proposals_form.html" />
+    <Content Include="app\templates\app\proposals_list.html" />
+    <Content Include="app\templates\app\publications_detail.html" />
+    <Content Include="app\templates\app\publications_form.html" />
+    <Content Include="app\templates\app\publications_list.html" />
+    <Content Include="app\templates\app\samplephotos_detail.html" />
+    <Content Include="app\templates\app\samplephotos_form.html" />
+    <Content Include="app\templates\app\samplephotos_list.html" />
+    <Content Include="app\templates\app\sampleremarks_detail.html" />
+    <Content Include="app\templates\app\sampleremarks_form.html" />
+    <Content Include="app\templates\app\sampleremarks_list.html" />
+    <Content Include="app\templates\app\samples_detail.html" />
+    <Content Include="app\templates\app\samples_form.html" />
+    <Content Include="app\templates\app\samples_list.html" />
+    <Content Include="app\templates\app\sharedoptions_detail.html" />
+    <Content Include="app\templates\app\sharedoptions_form.html" />
+    <Content Include="app\templates\app\sharedoptions_list.html" />
+    <Content Include="app\templates\registration\signup.html" />
+    <Content Include="app\templates\app\slots_detail.html" />
+    <Content Include="app\templates\app\slots_form.html" />
+    <Content Include="app\templates\app\slots_list.html" />
+    <Content Include="app\templates\base.html" />
+    <Content Include="app\templates\registration\message.html" />
+    <Content Include="app\templates\registration\login.html" />
+    <Content Include="app\templates\window.html" />
+    <Content Include="requirements.txt" />
+    <Content Include="db.sqlite3" />
+    <Content Include="app\static\app\content\site.css" />
+    <Content Include="app\static\app\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="app\static\app\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="app\static\app\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="app\static\app\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="app\static\app\scripts\bootstrap.js" />
+    <Content Include="app\static\app\scripts\bootstrap.min.js" />
+    <Content Include="app\static\app\scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="app\static\app\scripts\jquery-1.10.2.js" />
+    <Content Include="app\static\app\scripts\jquery-1.10.2.min.js" />
+    <Content Include="app\static\app\scripts\jquery-1.10.2.min.map" />
+    <Content Include="app\static\app\scripts\jquery.validate-vsdoc.js" />
+    <Content Include="app\static\app\scripts\jquery.validate.js" />
+    <Content Include="app\static\app\scripts\jquery.validate.min.js" />
+    <Content Include="app\static\app\scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="app\static\app\scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="app\static\app\scripts\modernizr-2.6.2.js" />
+    <Content Include="app\static\app\scripts\respond.js" />
+    <Content Include="app\static\app\scripts\respond.min.js" />
+    <Content Include="app\static\app\scripts\_references.js" />
+    <Content Include="app\templates\app\about.html" />
+    <Content Include="app\templates\app\contact.html" />
+    <Content Include="app\templates\app\index.html" />
+    <Content Include="app\templates\layout.html" />
+    <Content Include="app\templates\app\loginpartial.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="readme.html">
+      <SubType>WebBrowser</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Interpreter Include="env\">
+      <Id>env</Id>
+      <Version>3.6</Version>
+      <Description>env (Python 3.6 (64-bit))</Description>
+      <InterpreterPath>Scripts\python.exe</InterpreterPath>
+      <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
+      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
+      <Architecture>X64</Architecture>
+    </Interpreter>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Django.targets" />
+  <!-- Specify pre- and post-build commands in the BeforeBuild and 
+       AfterBuild targets below. -->
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <AutoAssignPort>True</AutoAssignPort>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://localhost</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}" User="">
+        <WebProjectProperties>
+          <StartPageUrl>
+          </StartPageUrl>
+          <StartAction>CurrentPage</StartAction>
+          <AspNetDebugging>True</AspNetDebugging>
+          <SilverlightDebugging>False</SilverlightDebugging>
+          <NativeDebugging>False</NativeDebugging>
+          <SQLDebugging>False</SQLDebugging>
+          <ExternalProgram>
+          </ExternalProgram>
+          <StartExternalURL>
+          </StartExternalURL>
+          <StartCmdLineArguments>
+          </StartCmdLineArguments>
+          <StartWorkingDirectory>
+          </StartWorkingDirectory>
+          <EnableENC>False</EnableENC>
+          <AlwaysStartWebServerOnDebug>False</AlwaysStartWebServerOnDebug>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

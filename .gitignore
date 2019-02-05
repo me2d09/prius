@@ -1,0 +1,11 @@
+.vs/
+_misc/
+app/__pycache__/
+app/migrations/__pycache__/
+env/
+obj/
+prius/__pycache__/
+db.sqlite3
+*.pyc
+/static/
+prius/settings.py
