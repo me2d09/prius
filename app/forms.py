@@ -31,12 +31,10 @@ class SignupForm(UserCreationForm):
 
     email = forms.EmailField(max_length=200, help_text='Required')
 
-
     def __init__(self, *args, **kwargs):
         super(SignupForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.add_input(Submit('signup', 'Sign Up'))
-
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
@@ -51,8 +49,6 @@ class SignupForm(UserCreationForm):
         
 
 class ProposalsForm(forms.ModelForm):
-
-
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)

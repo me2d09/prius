@@ -133,7 +133,14 @@ def signup(request):
                         mail_subject, message, to=[to_email]
             )
             email.send()
-            return HttpResponse('Please confirm your email address to complete the registration')
+            return render(
+                request,
+                'registration/message.html',
+                {
+                    'text':'Registration was successful and activation e-mail was send to you.' + 
+                           'Please check your mailbox (and possibly spam folder) and activate your account.',
+                }
+            )
     else:
         form = SignupForm()
     return render(request, 'registration/signup.html', {'form': form})
