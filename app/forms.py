@@ -34,10 +34,7 @@ class SignupForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super(SignupForm, self).__init__(*args, **kwargs)
-
         self.helper = FormHelper()
-        # and then the rest as usual:
-        self.helper.form_show_labels = False
         self.helper.add_input(Submit('signup', 'Sign Up'))
 
 
