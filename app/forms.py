@@ -10,7 +10,7 @@ from .models import Proposals, Instruments, Contacts, Affiliations, Countries, I
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 from dal import autocomplete
-
+ 
 
 class BootstrapAuthenticationForm(AuthenticationForm):
     """Authentication form which uses boostrap CSS."""
@@ -28,7 +28,18 @@ class BootstrapAuthenticationForm(AuthenticationForm):
 
 
 class SignupForm(UserCreationForm):
+
     email = forms.EmailField(max_length=200, help_text='Required')
+
+
+    def __init__(self, *args, **kwargs):
+        super(SignupForm, self).__init__(*args, **kwargs)
+
+        self.helper = FormHelper()
+        # and then the rest as usual:
+        self.helper.form_show_labels = False
+        self.helper.add_input(Submit('signup', 'Sign Up'))
+
 
     def clean_email(self):
         email = self.cleaned_data.get('email')

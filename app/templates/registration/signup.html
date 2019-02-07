@@ -2,9 +2,5 @@
 {% load crispy_forms_tags %}
 {% block message %}
   <h2>Sign up for MGML account</h2>
-  <form method="post">
-    {% csrf_token %}
-    {% crispy form %}
-    <button type="submit" class="btn btn-primary">Sign up</button>
-  </form>
+  {% crispy form %}
 {% endblock %}
