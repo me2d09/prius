@@ -6,7 +6,7 @@
           <ul class="breadcrumb">
             <li class="breadcrumb-item"><a href="index.html">Home</a></li>
             <li class="breadcrumb-item"><a href="{% url 'app_proposals_list' %}">Proposals</a></li>
-            <li class="breadcrumb-item active">p{{ object.id }}</li>
+            <li class="breadcrumb-item active">{{ object.pid }}</li>
           </ul>
         </div>
       </div>
@@ -14,17 +14,24 @@
         <div class="container-fluid">
           <!-- Page Header-->
           <header> 
-            <h1 class="h3 display">Details of proposal p{{ object.id }}</h1>
+            <h1 class="h3 display">Details of proposal {{ object.pid }}</h1>
           </header>
 <table class="table table-hover">
+<tr><td>Proposal name</td><td><b>{{ object.name }}</b></td></tr>
 <tr><td>Created</td><td>{{ object.created }}</td></tr>
 <tr><td>Last updated</td><td>{{ object.last_updated }}</td></tr>
-<tr><td>Proposal name</td><td>{{ object.name }}</td></tr>
+<tr><td>Status</td><td>{{ object.get_last_status_display }}</td></tr>
 <tr><td>Abstract</td><td>{{ object.abstract }}</td></tr>
-<tr><td>Scientific background</td><td>{{ object.scientific_bg }}</td></tr>
-<tr><td>Remarks</td><td>{{ object.remarks }}</td></tr>
+<tr><td>Scientific background</td><td>{% if object.scientific_bg %}<a href="{{ object.scientific_bg.url }}" target="_blank">{{ object.scientific_bg.name }}</a>{% else %}missing{% endif %}</td></tr>
 </table>
-<a class="btn btn-primary" href="{{object.get_update_url}}">Edit Proposals</a>
+<p>
+    {% if object.last_status == "P" %}
+        Proposal is in preparation. You can still edit it as you want. It will not be reviewed, until you click <b>submit</b> below.
+    {% else %}
+        Proposal is submitted, wait for evaluation.
+    {% endif %}
+</p>
+<a class="btn btn-primary" href="{{object.get_update_url}}">Edit Proposals</a>  {% if object.last_status == "P" %}<a class="btn btn-primary" href="/proposals/changestatus/{{object.pk}}/submit">Submit Proposals</a>{% endif %}
             </div>
     </section>
 {% endblock %}

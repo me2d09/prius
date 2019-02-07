@@ -76,6 +76,7 @@ class ProposalsForm(forms.ModelForm):
         model = Proposals
         fields = ['name', 'abstract', 'scientific_bg', 'proposaltype', 'local_contact', 'coproposers']
         widgets = {
+            'scientific_bg': forms.FileInput(attrs={'accept':'.pdf, application/pdf'}),
             'local_contact': autocomplete.ModelSelect2(url='localcontacts-autocomplete',
                                                        attrs={
                                                             'data-placeholder': 'Choose local contact',

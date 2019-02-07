@@ -13,6 +13,10 @@ from django_extensions.db import fields as extension_fields
 from django.contrib.auth.models import User
 from datetime import datetime
 from django.dispatch import receiver
+from django.core.validators import FileExtensionValidator
+from django.core.exceptions import ValidationError
+from PyPDF2 import PdfFileReader
+
 
 
 class Status(models.Model):
@@ -41,6 +45,15 @@ class Status(models.Model):
         ordering = ('-date',)
 
 
+def validate_pdf_lenth(value):
+    try:
+        pdf = PdfFileReader(value.file)
+    except:
+        raise ValidationError(u'Error parsing PDF file - please check if the uploaded file is really PDF file format.')
+        
+    if pdf.getNumPages() > 2:
+        raise ValidationError(u'Uploaded file has too many pages. Maximum allowed is 2.')
+
 class Proposals(models.Model):
 
     PROPOSAL_TYPE = (
@@ -56,7 +69,7 @@ class Proposals(models.Model):
     last_updated = DateTimeField(auto_now=True, editable=False)
     name = CharField(max_length=500)
     abstract = models.TextField(max_length=5000)
-    scientific_bg = FileField(upload_to=".", blank=True, null=True)
+    scientific_bg = FileField(upload_to="userpdf", blank=True, null=True, validators=[FileExtensionValidator(allowed_extensions=['pdf']),validate_pdf_lenth])
     proposaltype = CharField(max_length=1, choices = PROPOSAL_TYPE, default = 'S')
     last_status = CharField(max_length=1, choices = Status.STATUS_TYPES, default='P')
 
@@ -66,6 +79,8 @@ class Proposals(models.Model):
     local_contact = models.ForeignKey('app.Contacts', related_name='proposal_local_contact', on_delete=models.PROTECT)
     coproposers = models.ManyToManyField('app.Contacts',  related_name='proposal_coporposals', blank=True)
     publications = models.ManyToManyField('app.Publications', blank=True)
+    
+
 
     def save(self, *args, **kwargs):
         if not self.pid:

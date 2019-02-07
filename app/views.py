@@ -281,6 +281,20 @@ def change_password(request):
 class ProposalsListView(ListView):
     model = Proposals
 
+    def get_queryset(self):
+        queryset = Proposals.objects.all()
+
+        if self.kwargs['filtering'] == "mine":
+            queryset = queryset.filter(proposer=self.request.user)
+        else:
+            raise NotImplementedError
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filtering'] = self.kwargs['filtering']
+        return context
+
 
 class ProposalsCreateView(CreateView):
     model = Proposals

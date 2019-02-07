@@ -3,7 +3,9 @@ Definition of urls for prius.
 """
 
 from datetime import datetime
+from django.conf import settings
 from django.conf.urls import url, include
+from django.conf.urls.static import static
 
 import django.contrib.auth.views
 
@@ -63,11 +65,13 @@ urlpatterns = [
     url(
         r'^affil-autocomplete/$', views.AffilAutocomplete.as_view(create_field='institution'), name='affil-autocomplete',
     ),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += (
     # urls for Proposals
-    url(r'^proposals/$', views.ProposalsListView.as_view(), name='app_proposals_list'),
+    url(r'^proposals/$', views.ProposalsListView.as_view(), {'filtering':'mine'}, name='app_proposals_list'),
+    url(r'^proposals/all/$', views.ProposalsListView.as_view(), {'filtering':'all'}, name='app_proposals_list_all'),
+    url(r'^proposals/(?P<pk>\S+)/statushistory/$', views.ProposalsDetailView.as_view(), name='app_proposals_detail'),
     url(r'^proposals/create/$', views.ProposalsCreateView.as_view(), name='app_proposals_create'),
     url(r'^proposals/detail/(?P<slug>\S+)/$', views.ProposalsDetailView.as_view(), name='app_proposals_detail'),
     url(r'^proposals/update/(?P<slug>\S+)/$', views.ProposalsUpdateView.as_view(), name='app_proposals_update'),

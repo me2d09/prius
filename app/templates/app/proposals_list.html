@@ -13,27 +13,32 @@
         <div class="container-fluid">
           <!-- Page Header-->
           <header> 
-            <h1 class="h3 display">List of all proposals</h1>
+            <h1 class="h3 display">
+              {% if filtering == "mine" %}List of my proposals
+              {% else %}List of all proposals
+              {% endif %}</h1>
           </header>
 
 <div class="table-responsive">
 <table class="table table-striped table-sm table-hover">
     <thead>
         <tr>
-            <th>ID</th>
+            <th> </th>
             <th>Name</th>
+            <th>Proposer</th>
             <th>created</th>
             <th>last_updated</th>
-            <th>name</th>
+            <th>Status</th>
         </tr>
     </thead>
 {% for object in object_list %}
     <tr>
-        <th scope="row">{{object.pk}}</th>
+        <th scope="row">{{object.pid}}</th>
         <td><a href="{{object.get_absolute_url}}">{{object}}</a></td>
+        <td>{{ object.proposer }}</td>
         <td>{{ object.created }}</td>
         <td>{{ object.last_updated }}</td>
-        <td>{{ object.name }}</td>
+        <td><a href="/proposals/{{object.pk}}/statushistory/">{{ object.get_last_status_display }}</a></td>
     </tr>
 {% endfor %}
 </table>

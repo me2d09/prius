@@ -6,3 +6,4 @@ djangorestframework
 django-autocomplete-light>=2.0.0pre
 Pillow
 argon2-cffi
+PyPDF2
