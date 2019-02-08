@@ -59,7 +59,7 @@ class ProposalsForm(forms.ModelForm):
         self.helper.field_class = 'col-sm-10'
         self.helper.label_class = 'col-sm-2'
 
-        self.helper.add_input(Submit('submit', 'Submit'))
+        self.helper.add_input(Submit('submit', 'Save'))
 
         self.fields['local_contact'].widget.attrs = {
             'data-theme': 'bootstrap4',
