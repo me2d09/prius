@@ -7,10 +7,12 @@
 {% endblock %}
 {% block formcontent %}
 <header> 
-<h1 class="h3 display">Invite new user</h1>
+<h1 class="h3 display">{%if profile %}Create a profile{% else %}Invite new user{% endif %}</h1>
 </header>
+{%if not profile %}
 <p>You can invite new users by entering their name, email and affiliation. Users will get an email, that you have created a profile for them and they can finish registration. 
     After inviting a user to the MGML dashboard, you can immediatelly assign him to your experimental team in proposal application (you don't need to wait for his/her registration).</p>
+{% endif %}
 <div class="card">
     <div class="card-body">  
         {% crispy form %}

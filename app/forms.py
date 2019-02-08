@@ -115,31 +115,6 @@ class UserForm(forms.ModelForm):
         return email
 
 
-class ProfileForm(forms.ModelForm):
-
-    def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop('request', None)
-        super(ProfileForm, self).__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.form_class = 'form-horizontal'
-        self.helper.form_method = 'post'
-        self.helper.field_class = 'col-sm-10'
-        self.helper.label_class = 'col-sm-2'
-
-        self.helper.add_input(Submit('submit', 'Submit'))
-      
-    def save(self, *args, **kwargs):
-       kwargs['commit']=False
-       obj = super(ProfileForm, self).save(*args, **kwargs)
-       if self.request:
-           obj.uid = self.request.user
-       obj.save()
-       return obj
-
-    class Meta:
-        model = Contacts
-        fields = ['name', 'orcid', 'affiliation']
-
 class ContactsForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
@@ -150,7 +125,6 @@ class ContactsForm(forms.ModelForm):
         self.helper.form_method = 'post'
         self.helper.field_class = 'col-sm-10'
         self.helper.label_class = 'col-sm-2'
-
         self.helper.add_input(Submit('submit', 'Submit'))
 
         self.fields['affiliation'].widget.attrs = {
@@ -168,6 +142,10 @@ class ContactsForm(forms.ModelForm):
                                                        }
                                                        )
         }
+
+class ProfileForm(ContactsForm):
+    class Meta(ContactsForm.Meta):
+        fields = ['name', 'orcid', 'affiliation']
 
 
 class AffiliationsForm(forms.ModelForm):
