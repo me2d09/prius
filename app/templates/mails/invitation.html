@@ -1,0 +1,18 @@
+﻿{% autoescape off %}
+Dear {{ newuser.name }},
+
+user {{ user.username }} ({{ user.email }}) has just invited you to use portal <a href="https://user.mgml.eu/">user.mgml.eu</a>.
+This portal is used for proposal submission and allocation of measurement time at MGML laboratory.
+MGML stands for Material Growth &Aacute; Measurement Laboratory in Prague.
+You can learn more about it at <a href="https://www.mgml.eu/">www.mgml.eu</a>
+Now you can be assigned to the proposal as a member of the experimental team.
+
+In order to see your proposals and more, 
+please register at <a href="https://user.mgml.eu/">user.mgml.eu</a> 
+with your email address {{ newuser.email }}.
+
+If you want to merge more user account together or delete your account from database, please reply to this email.
+ 
+Best regards,
+MGML
+{% endautoescape %}

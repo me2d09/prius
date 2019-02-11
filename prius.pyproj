@@ -74,6 +74,7 @@
     <Folder Include="app\templates\" />
     <Folder Include="app\templates\app\" />
     <Folder Include="app\templates\accounts\" />
+    <Folder Include="app\templates\mails\" />
     <Folder Include="app\templates\registration\" />
     <Folder Include="prius\" />
   </ItemGroup>
@@ -84,7 +85,8 @@
     <Content Include="app\static\app\content\select2-bootstrap4.css" />
     <Content Include="app\static\app\scripts\admin.js" />
     <Content Include="app\templates\accounts\change_password.html" />
-    <Content Include="app\templates\acc_active_email.html" />
+    <Content Include="app\templates\mails\invitation.html" />
+    <Content Include="app\templates\mails\activation.html" />
     <Content Include="app\templates\app\affiliations_detail.html" />
     <Content Include="app\templates\app\affiliations_form.html" />
     <Content Include="app\templates\app\affiliations_list.html" />

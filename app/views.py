@@ -7,7 +7,7 @@ from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django.contrib.auth.models import User, Group
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import render, redirect
-from django.http import HttpRequest, HttpResponse, Http404
+from django.http import HttpRequest, HttpResponse, Http404, HttpResponseRedirect
 from django.urls import reverse
 from django.template import RequestContext
 from django.template.loader import render_to_string
@@ -118,8 +118,8 @@ def signup(request):
             user.is_active = False
             user.save()
             current_site = get_current_site(request)
-            mail_subject = 'Activate your MGML account.'
-            message = render_to_string('acc_active_email.html', {
+            mail_subject = 'Activate your MGML account'
+            message = render_to_string('mails/activation.html', {
                 'user': user,
                 'domain': current_site.domain,
                 'uid':urlsafe_base64_encode(force_bytes(user.pk)).decode('utf-8'),
@@ -363,6 +363,33 @@ class ContactsListView(ListView):
 class ContactsCreateView(CreateView):
     model = Contacts
     form_class = ContactsForm
+
+    def form_valid(self, form):
+        self.object = form.save()
+        
+        current_site = get_current_site(self.request)
+        mail_subject = 'Invitation to use MGML user portal'
+        message = render_to_string('mails/invitation.html', {
+            'newuser': self.object,
+            'user': self.request.user,
+        })
+        to_email = form.cleaned_data.get('email')
+        email = EmailMessage(
+                    mail_subject, message, to=[to_email]
+        )
+        try:
+            email.send()
+        except :
+            return render(
+                self.request,
+                'registration/message.html',
+                {
+                    'text':'New contact has been created, but we failed to send him email about it. ' + 
+                            'Please, contact MGML support.',
+                }
+            )
+        return HttpResponseRedirect(self.get_success_url())
+        
 
 
 class ContactsDetailView(DetailView):
