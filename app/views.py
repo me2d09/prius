@@ -253,6 +253,7 @@ class ProfileCreateView(CreateView):
 
     def form_valid(self, form):
         form.instance.uid = self.request.user
+        form.instance.email = self.request.user.email
         #add user to users group
         usergroup = Group.objects.get(name='users') 
         usergroup.user_set.add(self.request.user)
