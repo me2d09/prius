@@ -132,12 +132,24 @@ def signup(request):
             email = EmailMessage(
                         mail_subject, message, to=[to_email]
             )
-            email.send()
+            try:
+                email.send()
+            except :
+                return render(
+                    request,
+                    'registration/message.html',
+                    {
+                        'text':'System was not able to send you email with activation link. ' + 
+                               'Please try again or contact support.',
+                    }
+                )
+                
+            
             return render(
                 request,
                 'registration/message.html',
                 {
-                    'text':'Registration was successful and activation e-mail was send to you.' + 
+                    'text':'Registration was successful and activation e-mail was send to you. ' + 
                            'Please check your mailbox (and possibly spam folder) and activate your account.',
                 }
             )
