@@ -31,7 +31,7 @@
         Proposal is submitted, wait for evaluation.
     {% endif %}
 </p>
-<a class="btn btn-primary" href="{{object.get_update_url}}">Edit Proposals</a>  {% if object.last_status == "P" %}<a class="btn btn-primary" href="/proposals/changestatus/{{object.pk}}/submit">Submit Proposals</a>{% endif %}
+<a class="btn btn-primary" href="{{object.get_update_url}}">Edit Proposal</a>  {% if object.last_status == "P" %}<a class="btn btn-primary" href="/proposals/changestatus/{{object.pk}}/submit">Submit Proposal</a>{% endif %}
             </div>
     </section>
 {% endblock %}
