@@ -148,6 +148,7 @@
     <Content Include="app\templates\base.html" />
     <Content Include="app\templates\registration\message.html" />
     <Content Include="app\templates\registration\login.html" />
+    <Content Include="app\templates\version.html" />
     <Content Include="app\templates\window.html" />
     <Content Include="requirements.txt" />
     <Content Include="db.sqlite3" />
