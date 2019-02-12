@@ -2,8 +2,10 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% block breadcrumbs %}
+    {%if profile %}<li class="breadcrumb-item active">Create a profile</li>{% else %}
     <li class="breadcrumb-item">Contacts</li>
-    <li class="breadcrumb-item active">Invite user</li>
+    <li class="breadcrumb-item active">Invite new user</li>
+    {% endif %}
 {% endblock %}
 {% block formcontent %}
 <header> 
