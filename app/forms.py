@@ -74,11 +74,19 @@ class ProposalsForm(forms.ModelForm):
        if self.request:
            obj.user = self.request.user
        obj.save()
+       self.save_m2m()
        return obj
 
     class Meta:
         model = Proposals
         fields = ['name', 'abstract', 'scientific_bg', 'proposaltype', 'local_contact', 'coproposers']
+        labels = {
+            "name": "Proposal name",
+            "proposaltype": "Type of proposal",
+            "coproposers": "Experimental team",
+            "scientific_bg": "Scientific background",
+            "local_contact": "Local contact",
+        }
         widgets = {
             'scientific_bg': forms.FileInput(attrs={'accept':'.pdf, application/pdf'}),
             'local_contact': autocomplete.ModelSelect2(url='localcontacts-autocomplete',
