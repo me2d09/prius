@@ -8,13 +8,13 @@ from django.contrib.auth.models import User, Group
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import render, redirect
 from django.http import HttpRequest, HttpResponse, Http404, HttpResponseRedirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
 from datetime import datetime
-from django.views.generic import DetailView, ListView, UpdateView, CreateView
+from django.views.generic import DetailView, ListView, UpdateView, CreateView, DeleteView
 from .models import Proposals, Instruments, Contacts, Affiliations, Countries, InstrumentRequest, Options, SharedOptions, InstrumentParameterSets, InstrumentParameters, ParameterValues, Samples, SamplePhotos, SampleRemarks, Publications, Experiments, Slots
 from .forms import ProposalsForm, InstrumentsForm, ContactsForm, AffiliationsForm, CountriesForm, InstrumentRequestForm
 from .forms import OptionsForm, SharedOptionsForm, InstrumentParameterSetsForm, InstrumentParametersForm, ParameterValuesForm, SamplesForm 
@@ -304,14 +304,20 @@ def change_password(request):
 
 class ProposalsListView(ListView):
     model = Proposals
+    paginate_by = 5
 
     def get_queryset(self):
         queryset = Proposals.objects.all()
 
         if self.kwargs['filtering'] == "mine":
-            queryset = queryset.filter(proposer=self.request.user)
+            queryset = queryset.filter(Q(proposer=self.request.user) | 
+                                       Q(coproposers__uid__exact=self.request.user))
         else:
-            raise NotImplementedError
+            #check permissions
+            if not self.request.user.has_perm('app.view_proposals'):
+                raise Http404
+        order_by = request.GET.get('order_by', 'defaultOrderField')
+        queryset.order_by(order_by)
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -332,11 +338,30 @@ class ProposalsCreateView(CreateView):
 class ProposalsDetailView(DetailView):
     model = Proposals
 
+    def get_queryset(self):
+        # check permission
+        if self.request.user.has_perm('app.view_proposals'):
+            qs = super(ProposalsDetailView, self).get_queryset()
+        else: # can view only if it is part of the team
+            qs = super(ProposalsDetailView, self).get_queryset().filter(Q(proposer=self.request.user) | 
+                                       Q(coproposers__uid__exact=self.request.user))
+        return qs
+
 
 class ProposalsUpdateView(UpdateView):
     model = Proposals
     form_class = ProposalsForm
 
+class ProposalsDelete(DeleteView):
+    model = Proposals
+    success_url = reverse_lazy('app_proposals_list')
+
+    def get_object(self, queryset=None):
+        """ Hook to ensure object is owned by request.user. """
+        obj = super(ProposalsDelete, self).get_object()
+        if not obj.proposer == self.request.user and obj.last_status == "P":
+            raise Http404
+        return obj
 
 class InstrumentsListView(ListView):
     model = Instruments

@@ -22,18 +22,31 @@
 <tr><td>Last updated</td><td>{{ object.last_updated }}</td></tr>
 <tr><td>Status</td><td>{{ object.get_last_status_display }}</td></tr>
 <tr><td>Abstract</td><td>{{ object.abstract }}</td></tr>
-<tr><td>Scientific background</td><td>{% if object.scientific_bg %}<a href="{{ object.scientific_bg.url }}" target="_blank">{{ object.scientific_bg.name }}</a>{% else %}missing{% endif %}</td></tr>
+<tr><td>Scientific background</td><td>{% if object.scientific_bg %}<a href="{{ object.scientific_bg.url }}" target="_blank">{{ object.scientific_bg.name }}</a>{% else %}<b class="text-danger">missing</b>{% endif %}</td></tr>
+<tr><td>Proposer</td><td>{{ object.proposer }}</td></tr>
 <tr><td>Local Contact</td><td>{{ object.local_contact }}</td></tr>
 <tr><td>Experimental team</td><td>{% for p in object.coproposers.all %}{{ p.name }}{%if not forloop.last%}, {%endif%}{% endfor %}</td></tr>
 </table>
 <p>
     {% if object.last_status == "P" %}
-        Proposal is in preparation. You can still edit it as you want. It will not be reviewed, until you click <b>submit</b> below.
+        Proposal is in preparation.
+        {% if object.proposer == user %}
+            You can still edit it as you want. It will not be reviewed, until you click <b>Submit Proposal</b>.
+        {% else %}
+            Proposer need to submit it in order to be reviewed.
+        {% endif %}
+        
     {% else %}
         Proposal is submitted, wait for evaluation.
     {% endif %}
 </p>
-<a class="btn btn-primary" href="{{object.get_update_url}}">Edit Proposal</a>  {% if object.last_status == "P" %}<a class="btn btn-primary" href="/proposals/changestatus/{{object.pk}}/submit">Submit Proposal</a>{% endif %}
+    {% if object.proposer == user %}
+       <a class="btn btn-secondary" href="{{object.get_update_url}}">Edit Proposal</a> 
+       {% if object.last_status == "P" %}<a class="btn btn-primary" href="/proposals/changestatus/{{object.pk}}/submit">Submit Proposal</a>
+       <a class="btn btn-danger" href="/proposals/delete/{{object.slug}}/">Delete Proposal</a> {% endif %}
+    {% endif %}
+
+
             </div>
     </section>
 {% endblock %}

@@ -71,10 +71,11 @@ urlpatterns += (
     # urls for Proposals
     url(r'^proposals/$', views.ProposalsListView.as_view(), {'filtering':'mine'}, name='app_proposals_list'),
     url(r'^proposals/all/$', views.ProposalsListView.as_view(), {'filtering':'all'}, name='app_proposals_list_all'),
-    url(r'^proposals/(?P<pk>\S+)/statushistory/$', views.ProposalsDetailView.as_view(), name='app_proposals_detail'),
+    url(r'^proposals/(?P<pk>\S+)/statushistory/$', views.ProposalsDetailView.as_view(), name='app_proposals_status'),
     url(r'^proposals/create/$', views.ProposalsCreateView.as_view(), name='app_proposals_create'),
     url(r'^proposals/detail/(?P<slug>\S+)/$', views.ProposalsDetailView.as_view(), name='app_proposals_detail'),
     url(r'^proposals/update/(?P<slug>\S+)/$', views.ProposalsUpdateView.as_view(), name='app_proposals_update'),
+    url(r'^proposals/delete/(?P<slug>\S+)/$', views.ProposalsDelete.as_view(), name='app_proposals_delete'),
 )
 
 urlpatterns += (

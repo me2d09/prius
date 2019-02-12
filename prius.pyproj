@@ -85,6 +85,7 @@
     <Content Include="app\static\app\content\select2-bootstrap4.css" />
     <Content Include="app\static\app\scripts\admin.js" />
     <Content Include="app\templates\accounts\change_password.html" />
+    <Content Include="app\templates\app\proposals_confirm_delete.html" />
     <Content Include="app\templates\mails\invitation.html" />
     <Content Include="app\templates\mails\activation.html" />
     <Content Include="app\templates\app\affiliations_detail.html" />
