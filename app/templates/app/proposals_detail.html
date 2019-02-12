@@ -23,6 +23,8 @@
 <tr><td>Status</td><td>{{ object.get_last_status_display }}</td></tr>
 <tr><td>Abstract</td><td>{{ object.abstract }}</td></tr>
 <tr><td>Scientific background</td><td>{% if object.scientific_bg %}<a href="{{ object.scientific_bg.url }}" target="_blank">{{ object.scientific_bg.name }}</a>{% else %}missing{% endif %}</td></tr>
+<tr><td>Local Contact</td><td>{{ object.local_contact }}</td></tr>
+<tr><td>Experimental team</td><td>{% for p in object.coproposers.all %}{{ p.name }}{%if not forloop.last%}, {%endif%}{% endfor %}</td></tr>
 </table>
 <p>
     {% if object.last_status == "P" %}
