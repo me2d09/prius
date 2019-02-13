@@ -16,6 +16,7 @@ from django.dispatch import receiver
 from django.core.validators import FileExtensionValidator
 from django.core.exceptions import ValidationError
 from PyPDF2 import PdfFileReader
+from django.core.exceptions import PermissionDenied
 
 
 
@@ -35,14 +36,27 @@ class Status(models.Model):
     #Fields
     date = DateTimeField(auto_now_add=True, editable=False)
     status = CharField(max_length=1, choices = STATUS_TYPES)
-    remarks = models.TextField(max_length=5000)
+    remark = models.TextField(max_length=5000, default = '')
+    hiddenremark = models.TextField(max_length=5000, default = '')
 
     # Relationship Fields
     proposal = models.ForeignKey('app.Proposals', on_delete=models.PROTECT)
-    user = models.ForeignKey('app.Contacts', on_delete=models.PROTECT)
+    user =  models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT)
 
     class Meta:
         ordering = ('-date',)
+        permissions = (
+            ("see_hidden_remarks", "Can see hidden remarks of whole status history"),
+        )
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            prop = self.proposal
+            prop.last_status = self.status
+            prop.save()
+        else:
+            raise PermissionDenied
+        super(Status, self).save(*args, **kwargs)
 
 
 def validate_pdf_lenth(value):
@@ -83,6 +97,7 @@ class Proposals(models.Model):
 
 
     def save(self, *args, **kwargs):
+        adding = self._state.adding
         if not self.pid:
             #search for first free proposal number
             start = self.proposaltype + chr((datetime.now().year - 2019) % 26  + 65)
@@ -92,6 +107,9 @@ class Proposals(models.Model):
                 maxpid = max(maxpid, int(p[0][2:]))
             self.pid = "%s%03d" % (start, maxpid + 1)
         super(Proposals, self).save(*args, **kwargs)
+        #create a line in statuses table, if added
+        if adding: 
+            Status.objects.create(status="P", proposal=self, user=self.proposer)
 
     class Meta:
         ordering = ('-created',)

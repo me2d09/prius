@@ -15,7 +15,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
 from datetime import datetime
 from django.views.generic import DetailView, ListView, UpdateView, CreateView, DeleteView
-from .models import Proposals, Instruments, Contacts, Affiliations, Countries, InstrumentRequest, Options, SharedOptions, InstrumentParameterSets, InstrumentParameters, ParameterValues, Samples, SamplePhotos, SampleRemarks, Publications, Experiments, Slots
+from .models import Proposals, Instruments, Contacts, Affiliations, Countries, InstrumentRequest, Options, SharedOptions, InstrumentParameterSets, InstrumentParameters, ParameterValues, Samples, SamplePhotos, SampleRemarks, Publications, Experiments, Slots, Status
 from .forms import ProposalsForm, InstrumentsForm, ContactsForm, AffiliationsForm, CountriesForm, InstrumentRequestForm
 from .forms import OptionsForm, SharedOptionsForm, InstrumentParameterSetsForm, InstrumentParametersForm, ParameterValuesForm, SamplesForm 
 from .forms import SamplePhotosForm, SampleRemarksForm, PublicationsForm, ExperimentsForm, SlotsForm, SignupForm, ProfileForm, UserForm
@@ -316,8 +316,6 @@ class ProposalsListView(ListView):
             #check permissions
             if not self.request.user.has_perm('app.view_proposals'):
                 raise Http404
-        order_by = request.GET.get('order_by', 'defaultOrderField')
-        queryset.order_by(order_by)
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -346,6 +344,11 @@ class ProposalsDetailView(DetailView):
             qs = super(ProposalsDetailView, self).get_queryset().filter(Q(proposer=self.request.user) | 
                                        Q(coproposers__uid__exact=self.request.user))
         return qs
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(ProposalsDetailView, self).get_context_data(*args, **kwargs)
+        context['status_history'] = Status.objects.filter(proposal=self.object)
+        return context
 
 
 class ProposalsUpdateView(UpdateView):

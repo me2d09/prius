@@ -14,7 +14,6 @@ class ProposalsSerializer(serializers.ModelSerializer):
             'name', 
             'abstract', 
             'scientific_bg', 
-            'remarks', 
         )
 
 

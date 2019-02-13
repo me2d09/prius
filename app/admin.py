@@ -1,6 +1,19 @@
 from django.contrib import admin
 from django import forms
-from .models import Proposals, Instruments, Contacts, Affiliations, Countries, InstrumentRequest, Options, SharedOptions, InstrumentParameterSets, InstrumentParameters, ParameterValues, Samples, SamplePhotos, SampleRemarks, Publications, Experiments, Slots
+from .models import Proposals, Instruments, Contacts, Affiliations, Countries, InstrumentRequest, Options, SharedOptions, InstrumentParameterSets, InstrumentParameters, ParameterValues, Samples, SamplePhotos, SampleRemarks, Publications, Experiments, Slots, Status
+
+class StatusAdminForm(forms.ModelForm):
+    class Meta:
+        model = Status
+        fields = '__all__'
+
+class StatusAdmin(admin.ModelAdmin):
+    form = StatusAdminForm
+    list_display = ['date', 'status', 'remark', 'hiddenremark', 'proposal', 'user']
+    readonly_fields = ['date']
+
+admin.site.register(Status, StatusAdmin)
+
 
 class ProposalsAdminForm(forms.ModelForm):
 
