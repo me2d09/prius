@@ -42,6 +42,10 @@ class ContactAutocomplete(autocomplete.Select2QuerySetView):
         return qs
 
 class LocalContactAutocomplete(autocomplete.Select2QuerySetView):
+
+    def get_result_label(self, item):
+        return "%s (%s)" % (item.name, item.description)
+
     def get_queryset(self):
         # Don't forget to filter out results depending on the visitor !
         if not self.request.user.is_authenticated:
@@ -50,7 +54,7 @@ class LocalContactAutocomplete(autocomplete.Select2QuerySetView):
         qs = Contacts.objects.filter(uid__in = User.objects.filter(groups__name__in=['localcontacts']))
         
         if self.q:
-            qs = qs.filter(name__icontains=self.q)
+            qs = qs.filter(Q(name__icontains=self.q) | Q(description__icontains=self.q))
 
         return qs
 
@@ -77,6 +81,7 @@ def home(request):
         'app/index.html',
         {
             'title':'Home Page',
+            'proposals_todo': 2,
         }
     )
 

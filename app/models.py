@@ -180,6 +180,7 @@ class Contacts(models.Model):
     last_updated = DateTimeField(auto_now=True, editable=False)
     email = EmailField(unique=True)
     orcid = models.CharField(max_length=40,blank=True)
+    description = CharField(max_length=500,blank=True)
 
     # Relationship Fields
     uid = models.ForeignKey(User, on_delete=models.PROTECT, blank=True,null=True)
