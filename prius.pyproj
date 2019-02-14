@@ -75,6 +75,7 @@
     <Folder Include="app\templates\app\" />
     <Folder Include="app\templates\accounts\" />
     <Folder Include="app\templates\mails\" />
+    <Folder Include="app\templates\proposal\" />
     <Folder Include="app\templates\registration\" />
     <Folder Include="prius\" />
   </ItemGroup>
@@ -142,6 +143,7 @@
     <Content Include="app\templates\app\sharedoptions_detail.html" />
     <Content Include="app\templates\app\sharedoptions_form.html" />
     <Content Include="app\templates\app\sharedoptions_list.html" />
+    <Content Include="app\templates\proposal\status.html" />
     <Content Include="app\templates\registration\signup.html" />
     <Content Include="app\templates\app\slots_detail.html" />
     <Content Include="app\templates\app\slots_form.html" />

@@ -42,37 +42,38 @@
 </p>
     {% if object.proposer == user %}
        <a class="btn btn-secondary" href="{{object.get_update_url}}">Edit Proposal</a> 
-       {% if object.last_status == "P" %}<a class="btn btn-primary" href="/proposals/changestatus/{{object.pk}}/submit">Submit Proposal</a>
+       {% if object.last_status == "P" %}<a class="btn btn-primary" href="/proposals/changestatus/{{object.slug}}/S/">Submit Proposal</a>
        <a class="btn btn-danger" href="/proposals/delete/{{object.slug}}/">Delete Proposal</a> {% endif %}
     {% endif %}
-
-          <header> 
+        <header> 
             <h2 class="h3 display">Status history</h2>
-          </header>
-
-
-            <div class="table-responsive">
-            <table class="table table-striped table-sm table-hover">
-                <thead>
-                    <tr>
-                        <th>Status</th>
-                        <th>Date</th>
-                        <th>User</th>
-                        <th>Remark</th>
-                        <th>Hidden Remark</th>
-                    </tr>
-                </thead>
-{% for s in status_history %}
-    <tr>
-        <th scope="row">{{s.get_status_display}}</th>
-        <td>{{s.date}}</td>
-        <td>{{s.user}}</td>
-        <td>{{ s.remark }}</td>
-        <td>{{ s.hiddenremark }}</td>
-    </tr>
-{% endfor %}
-</table>
-                </div>
+        </header>
+        <div class="table-responsive">
+        <table class="table table-striped table-sm table-hover">
+            <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Remark</th>
+                    {% if perms.app.see_hidden_remarks %}
+                    <th>Hidden Remark</th>
+                    <th>User</th>
+                    {% endif %}
+                </tr>
+            </thead>
+        {% for s in status_history %}
+            <tr>
+                <th scope="row">{{ s.get_status_display }}</th>
+                <td>{{ s.date }}</td>
+                <td>{{ s.remark }}</td>
+                {% if perms.app.see_hidden_remarks %}
+                <td>{{ s.hiddenremark }}</td>
+                <td>{{ s.user }}</td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+            </table>
+            </div>
             </div>
     </section>
 {% endblock %}

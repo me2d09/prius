@@ -76,6 +76,8 @@ urlpatterns += (
     url(r'^proposals/detail/(?P<slug>\S+)/$', views.ProposalsDetailView.as_view(), name='app_proposals_detail'),
     url(r'^proposals/update/(?P<slug>\S+)/$', views.ProposalsUpdateView.as_view(), name='app_proposals_update'),
     url(r'^proposals/delete/(?P<slug>\S+)/$', views.ProposalsDelete.as_view(), name='app_proposals_delete'),
+    url(r'^proposals/changestatus/(?P<proposal_slug>\S+)/(?P<new_status>\S+)/$', views.StatusCreateView.as_view(), name='app_status_change'),
+    url(r'^proposals/changestatus/(?P<proposal_slug>\S+)/$', views.StatusCreateView.as_view(), name='app_status_new'),
 )
 
 urlpatterns += (

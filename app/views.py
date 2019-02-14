@@ -16,7 +16,7 @@ from django.utils.encoding import force_bytes, force_text
 from datetime import datetime
 from django.views.generic import DetailView, ListView, UpdateView, CreateView, DeleteView
 from .models import Proposals, Instruments, Contacts, Affiliations, Countries, InstrumentRequest, Options, SharedOptions, InstrumentParameterSets, InstrumentParameters, ParameterValues, Samples, SamplePhotos, SampleRemarks, Publications, Experiments, Slots, Status
-from .forms import ProposalsForm, InstrumentsForm, ContactsForm, AffiliationsForm, CountriesForm, InstrumentRequestForm
+from .forms import ProposalsForm, InstrumentsForm, ContactsForm, AffiliationsForm, CountriesForm, InstrumentRequestForm, StatusForm
 from .forms import OptionsForm, SharedOptionsForm, InstrumentParameterSetsForm, InstrumentParametersForm, ParameterValuesForm, SamplesForm 
 from .forms import SamplePhotosForm, SampleRemarksForm, PublicationsForm, ExperimentsForm, SlotsForm, SignupForm, ProfileForm, UserForm
 from django.contrib.auth.decorators import login_required
@@ -323,6 +323,39 @@ class ProposalsListView(ListView):
         context['filtering'] = self.kwargs['filtering']
         return context
 
+class StatusCreateView(CreateView):
+    model = Status
+    form_class = StatusForm
+    template_name = "proposal/status.html"
+    current_proposal = None
+
+    def get_initial(self):
+        initial = super(StatusCreateView, self).get_initial()
+        if "proposal_slug" in self.kwargs:
+            self.current_proposal = Proposals.objects.get(slug=self.kwargs["proposal_slug"])
+            initial.update({"proposal": self.current_proposal})
+        else:
+            raise Http404
+        if "new_status" in self.kwargs:
+            initial.update({"status": self.kwargs["new_status"]})
+        return initial
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['proposal'] = self.current_proposal
+        return context
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({ 'user': self.request.user})
+        return kwargs
+
+    def get_success_url(self):
+        return reverse('app_proposals_detail', args={ self.kwargs["proposal_slug"]})
 
 class ProposalsCreateView(CreateView):
     model = Proposals

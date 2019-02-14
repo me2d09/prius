@@ -1,0 +1,40 @@
+{% extends "form.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{% url 'app_proposals_list' %}">Proposals</a></li>
+    <li class="breadcrumb-item"><a href="/proposals/detail/{{ proposal.slug }}/">{{ proposal.pid }}</a></li>
+    <li class="breadcrumb-item active">Change status</li>
+{% endblock %}
+{% block formcontent %}
+<header> 
+<h1 class="h3 display">Change status of proposal {{ proposal.pid }}: {{ proposal }}</h1>
+</header>
+<div class="card">
+    <div class="card-body">  
+
+        <form method="post">
+        {% csrf_token %}
+        {{ form.status|as_crispy_field }}
+        {% if form.remark %}
+        <div class="form-row">
+          {% if form.hiddenremark %}
+          <div class="form-group col-md-6 mb-0">
+              {{ form.remark|as_crispy_field }}
+          </div>
+          <div class="form-group col-md-6 mb-0">
+              {{ form.hiddenremark|as_crispy_field }}
+          </div>
+          {% else %}
+              {{ form.remark|as_crispy_field }}
+          {% endif %}
+        </div>
+        {% endif %}
+        
+        
+        
+        <button type="submit" class="btn btn-primary">Change status</button>
+      </form>
+    </div>
+</div>
+{% endblock %}

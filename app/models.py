@@ -36,8 +36,8 @@ class Status(models.Model):
     #Fields
     date = DateTimeField(auto_now_add=True, editable=False)
     status = CharField(max_length=1, choices = STATUS_TYPES)
-    remark = models.TextField(max_length=5000, default = '')
-    hiddenremark = models.TextField(max_length=5000, default = '')
+    remark = models.TextField(max_length=5000, default = '', blank=True)
+    hiddenremark = models.TextField(max_length=5000, default = '', blank=True)
 
     # Relationship Fields
     proposal = models.ForeignKey('app.Proposals', on_delete=models.PROTECT)

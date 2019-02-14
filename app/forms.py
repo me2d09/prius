@@ -6,10 +6,13 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
-from .models import Proposals, Instruments, Contacts, Affiliations, Countries, InstrumentRequest, Options, SharedOptions, InstrumentParameterSets, InstrumentParameters, ParameterValues, Samples, SamplePhotos, SampleRemarks, Publications, Experiments, Slots
+from .models import Proposals, Instruments, Contacts, Affiliations, Countries, InstrumentRequest, Options, SharedOptions
+from .models import InstrumentParameterSets, InstrumentParameters, ParameterValues, Samples, SamplePhotos, SampleRemarks
+from .models import Publications, Experiments, Slots, Status
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 from dal import autocomplete
+from django.http import Http404
  
 
 class BootstrapAuthenticationForm(AuthenticationForm):
@@ -47,6 +50,81 @@ class SignupForm(UserCreationForm):
         model = User
         fields = ('username', 'email', 'password1', 'password2')
         
+
+class StatusForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super(StatusForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_class = 'form-horizontal'
+        self.helper.form_method = 'post'
+        self.helper.field_class = 'col-sm-10'
+        self.helper.label_class = 'col-sm-2'
+
+        self.helper.add_input(Submit('submit', 'Change status'))
+
+        #restrict possible statuses
+
+        prop = self.initial['proposal']
+        
+        allowed = []
+        showRemark = False
+        showHidden = False
+        if self.user.has_perm('app.add_proposals') and prop.proposer == self.user:
+            if prop.last_status == 'P': allowed.append('S')  # will be waiting user office
+            if prop.last_status == 'A': allowed.append('F')  # will be finished
+        if self.user.has_perm('app.change_status'):
+            showRemark = showHidden = True
+            if prop.last_status == 'S': allowed.append('U')  # will be waiting for panel
+            if prop.last_status == 'U': allowed.append('P')  # will be returned
+            if prop.last_status == 'U': allowed.append('T')  # will be waiting for local contact
+            if prop.last_status == 'T': allowed.append('P')  # go back to preparation
+            if prop.last_status == 'T': allowed.append('W')  # go back to preparation
+            if prop.last_status == 'W': allowed.append('R')  # will be in panel
+            if prop.last_status == 'A': allowed.append('F')  # will be finished
+        if self.user.has_perm('app.approve_technical'): 
+            if prop.last_status == 'T': 
+                allowed.append('W')  # will be waiting for panel
+                showRemark = showHidden = True
+        if self.user.has_perm('app.takeover_panel'): 
+            if prop.last_status == 'W': allowed.append('R')     # will be in panel
+        if self.user.has_perm('app.approve_panel'): 
+            if prop.last_status == 'R': 
+                allowed.append('D')      # will be by director
+                allowed.append('X')      # will be rejected permanently
+                allowed.append('P')      # will be in preparation
+                showRemark = showHidden = True
+        if self.user.has_perm('app.approve_director'): 
+            if prop.last_status == 'D': 
+                allowed.append('A')   # will be accepted
+                allowed.append('X')   # will be rejected permanently
+                showRemark = showHidden = True
+        if self.user.has_perm('app.finish_proposal'): 
+            if prop.last_status == 'A': 
+                allowed.append('F')  # will be finished
+                showRemark = True
+
+        self.fields["status"].choices = [c for c in self.fields["status"].choices if c[0] in allowed]
+        if len(self.fields["status"].choices) == 0: raise Http404
+        if not showRemark: self.fields.pop("remark")
+        if not showHidden: self.fields.pop("hiddenremark")
+
+    def save(self, *args, **kwargs):
+       kwargs['commit']=False
+       obj = super(StatusForm, self).save(*args, **kwargs)
+       obj.proposal = self.initial['proposal']
+       obj.save()
+       return obj
+
+    class Meta:
+        model = Status
+        fields = ['status', 'remark', 'hiddenremark']
+        labels = {
+            "status": "New status",
+            "hiddenremark": "Hidden Remark",
+        }
+
 
 class ProposalsForm(forms.ModelForm):
 
