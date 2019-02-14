@@ -19,10 +19,9 @@ admin.autodiscover()
 
 
 urlpatterns = [
-    # Examples:
     url(r'^$', app.views.home, name='home'),
-    url(r'^contact$', app.views.contact, name='contact'),
-    url(r'^about', app.views.about, name='about'),
+    url(r'^how-to/proposal$', app.views.proposal_howto, name='proposal-howto'),
+
     url(r'^profile$', views.ProfileView.as_view(), name='profile'),
     url(r'^profile/(?P<username>[a-zA-Z0-9]*)$', views.ProfileView.as_view()),
     url(r'^create-profile', views.ProfileCreateView.as_view(), name='app_create_profile'),

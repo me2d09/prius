@@ -1,0 +1,47 @@
+﻿{% extends "form.html" %}
+{% block breadcrumbs %}
+    <li class="breadcrumb-item">Help</li>
+    <li class="breadcrumb-item active">Proposals</li>
+{% endblock %}
+{% block formcontent %}
+<header> 
+<h1 class="h3 display">How to write a proposal</h1>
+</header>
+<p>
+In order to submit a proposal, click <a href="/proposals/create/">New Proposal</a> in the left menu. You need to choose name and fill in the abstract + provide scientific background. Scientific background is PDF with maximum size of 2 pages, we reccommend to use <a href="/static/files/mgml_proposal_template.doc">this template</a>.
+    </p>
+<p>If you are student, you need to choose your supervisor. All the people who will be involved in the experiment should be part of the experimental team. If the you are not able find your supervisor or people for the team in the system, please use first link <a href="/contacts/create/">Invite User</a> in the left menu.</p>
+<div class="card">
+    <div class="card-body">  
+        <h1 class="h3 display">Proposal Types</h1>
+        The MGML currently accepts four types of proposals (see details below):
+        <ul>
+            <li>TEST proposal dedicated for internal use only</li>
+            <li>PILOT proposal for testing new ideas and approaches</li>
+            <li>STANDARD proposal for specific narrow studies related to one or few samples</li>
+            <li>LONG TERM proposal for wider studies on larger set(s) of samples, typically bounded to funding by a national or international agency or (in case of student) theses</li>
+        </ul>
+
+        <h4 class="h4 display">PILOT proposals</h4>
+        <ul>
+            <li>aim to test new idea/technology, clarify potential technical or technological issues</li>
+            <li>prepared in close cooperation with local contact or instrument responsible</li>
+            <li>report submitted within a month after the realization of the last instrumental time</li>
+        </ul>
+        <h4 class="h4 display">STANDARD proposals</h4>
+        <ul>
+            <li>dedicated for an enclosed investigation (up to few weeks of time) </li>
+            <li>narrow scientific topic related to a handful of samples (preparation and/or investigation)</li>
+            <li>report submitted within a month after the realization of the last instrumental time</li>
+        </ul>
+        <h4 class="h4 display">LONG TERM proposals (per year evaluation)</h4>
+        <ul>
+            <li>can cover a (relatively) broad set of experiments and materials bound to a common theme</li>
+            <li>usually based on the ongoing (funded) grant of a recognized national or international grant agency with scientific excellence as one of the main evaluation criteria</li>
+            <li>alternatively (in the case of students) related to the topic of respective thesis</li>
+            <li>define estimated annual budget of instrumentation time</li>
+            <li>annual report covering the summary of the last year progress and expectations for the following year is evaluated, final report being extended annual report from the last year</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

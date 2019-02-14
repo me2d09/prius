@@ -80,29 +80,15 @@ def home(request):
         }
     )
 
-def contact(request):
-    """Renders the contact page."""
+@login_required
+def proposal_howto(request):
+    """Renders the home page."""
     assert isinstance(request, HttpRequest)
     return render(
         request,
-        'app/contact.html',
-        {
-            'title':'Contact',
-            'message':'Your contact page.',
-        }
+        'static/proposal-howto.html',
     )
 
-def about(request):
-    """Renders the about page."""
-    assert isinstance(request, HttpRequest)
-    return render(
-        request,
-        'app/about.html',
-        {
-            'title':'About',
-            'message':'Your application description page.',
-        }
-    )
 
 def signup(request):
     if request.method == 'POST':

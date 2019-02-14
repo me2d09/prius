@@ -75,6 +75,7 @@
     <Folder Include="app\templates\app\" />
     <Folder Include="app\templates\accounts\" />
     <Folder Include="app\templates\mails\" />
+    <Folder Include="app\templates\static\" />
     <Folder Include="app\templates\proposal\" />
     <Folder Include="app\templates\registration\" />
     <Folder Include="prius\" />
@@ -151,6 +152,7 @@
     <Content Include="app\templates\base.html" />
     <Content Include="app\templates\registration\message.html" />
     <Content Include="app\templates\registration\login.html" />
+    <Content Include="app\templates\static\proposal-howto.html" />
     <Content Include="app\templates\version.html" />
     <Content Include="app\templates\window.html" />
     <Content Include="requirements.txt" />

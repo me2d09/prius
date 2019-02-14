@@ -61,7 +61,7 @@
             <li><a href="tables.html"> <i class="icon-grid"></i>Booking                             </a></li>
               {% endif %}
             <li><a href="/profile"> <i class="icon-user"></i>My Profile</a></li>
-            <li><a href="https://github.com/me2d09/prius/issues"> <i class="icon-user"></i>Report problem</a></li>
+            
           </ul>
         </div>
         {% if request.user.is_superuser %}
@@ -72,6 +72,13 @@
           </ul>
         </div>
         {% endif %}
+        <div class="main-menu">
+          <h5 class="sidenav-heading">Help</h5>
+          <ul id="side-admin-menu" class="side-menu list-unstyled"> 
+            <li><a href="/how-to/proposal"> <i class="icon-user"></i>How to write proposal?</a></li>
+            <li><a href="https://github.com/me2d09/prius/issues"> <i class="icon-user"></i>Report problem</a></li>
+          </ul>
+        </div>
       </div>
     </nav>
     <div class="page">
