@@ -86,11 +86,14 @@ class Proposals(models.Model):
     scientific_bg = FileField(upload_to="userpdf", blank=True, null=True, validators=[FileExtensionValidator(allowed_extensions=['pdf']),validate_pdf_lenth])
     proposaltype = CharField(max_length=1, choices = PROPOSAL_TYPE, default = 'S')
     last_status = CharField(max_length=1, choices = Status.STATUS_TYPES, default='P')
+    student = BooleanField(default = False)
+    
 
     # Relationship Fields
     proposer =  models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT)
     samples = models.ManyToManyField('app.Samples', blank=True)
     local_contact = models.ForeignKey('app.Contacts', related_name='proposal_local_contact', on_delete=models.PROTECT)
+    supervisor = models.ForeignKey('app.Contacts', related_name='proposal_supervisor', on_delete=models.PROTECT, blank=True, null = True)
     coproposers = models.ManyToManyField('app.Contacts',  related_name='proposal_coporposals', blank=True)
     publications = models.ManyToManyField('app.Publications', blank=True)
     

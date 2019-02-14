@@ -144,6 +144,7 @@ class ProposalsForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
+        self.user = kwargs.pop('user', None)
         super(ProposalsForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_class = 'form-horizontal'
@@ -152,13 +153,19 @@ class ProposalsForm(forms.ModelForm):
         self.helper.label_class = 'col-sm-2'
 
         self.helper.add_input(Submit('submit', 'Save'))
-
+        
         self.fields['local_contact'].widget.attrs = {
             'data-theme': 'bootstrap4',
         }
         self.fields['coproposers'].widget.attrs = {
             'data-theme': 'bootstrap4',
         }
+        self.fields['supervisor'].widget.attrs = {
+            'data-theme': 'bootstrap4',
+        }
+        self.fields['student'].widget.attrs['onclick'] = "javascript:toggleDiv('div_id_supervisor');"
+        if not self.user.groups.filter(name='localcontacts').exists():
+            self.fields["proposaltype"].choices = [t for t in self.fields["proposaltype"].choices if t[0] != 'T']  #remove test proposal
       
     def save(self, *args, **kwargs):
        kwargs['commit']=False
@@ -171,19 +178,26 @@ class ProposalsForm(forms.ModelForm):
 
     class Meta:
         model = Proposals
-        fields = ['name', 'abstract', 'scientific_bg', 'proposaltype', 'local_contact', 'coproposers']
+        fields = ['name', 'abstract', 'scientific_bg', 'proposaltype', 'student', 'supervisor', 'local_contact', 'coproposers']
         labels = {
             "name": "Proposal name",
             "proposaltype": "Type of proposal",
             "coproposers": "Experimental team",
             "scientific_bg": "Scientific background",
             "local_contact": "Local contact",
+            "student": "Student proposal",
         }
         widgets = {
             'scientific_bg': forms.FileInput(attrs={'accept':'.pdf, application/pdf'}),
             'local_contact': autocomplete.ModelSelect2(url='localcontacts-autocomplete',
                                                        attrs={
                                                             'data-placeholder': 'Choose local contact',
+                                                            'width': 'resolve',
+                                                       }
+                                                       ),
+            'supervisor': autocomplete.ModelSelect2(url='contacts-autocomplete',
+                                                       attrs={
+                                                            'data-placeholder': 'Choose supervisor',
                                                             'width': 'resolve',
                                                        }
                                                        ),

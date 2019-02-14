@@ -17,3 +17,17 @@
     </div>
 </div>
 {% endblock %}
+{% block scripts %}
+    <script>
+    function toggleDiv(divId) {
+        $("#"+divId).toggle(500);
+        }
+    $(document).ready(function () {
+        if (!$("#id_student").checked)
+        {
+            $("#div_id_supervisor").hide(0);
+        }
+        });
+
+    </script>
+{% endblock %}

@@ -24,6 +24,7 @@
 <tr><td>Abstract</td><td>{{ object.abstract }}</td></tr>
 <tr><td>Scientific background</td><td>{% if object.scientific_bg %}<a href="{{ object.scientific_bg.url }}" target="_blank">{{ object.scientific_bg.name }}</a>{% else %}<b class="text-danger">missing</b>{% endif %}</td></tr>
 <tr><td>Proposer</td><td>{{ object.proposer }}</td></tr>
+<tr><td>Student</td><td>{% if object.student %}Yes, supervisor {{object.supervisor}}{% else %}No{% endif %}</td></tr>
 <tr><td>Local Contact</td><td>{{ object.local_contact }}</td></tr>
 <tr><td>Experimental team</td><td>{% for p in object.coproposers.all %}{{ p.name }}{%if not forloop.last%}, {%endif%}{% endfor %}</td></tr>
 </table>

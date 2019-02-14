@@ -304,10 +304,10 @@ def change_password(request):
 
 class ProposalsListView(ListView):
     model = Proposals
-    paginate_by = 5
+    paginate_by = 10
 
     def get_queryset(self):
-        queryset = Proposals.objects.all()
+        queryset = Proposals.objects.distinct()
 
         if self.kwargs['filtering'] == "mine":
             queryset = queryset.filter(Q(proposer=self.request.user) | 
@@ -361,6 +361,11 @@ class ProposalsCreateView(CreateView):
     model = Proposals
     form_class = ProposalsForm
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({ 'user': self.request.user})
+        return kwargs
+
     def form_valid(self, form):
         form.instance.proposer = self.request.user
         return super().form_valid(form)
@@ -372,10 +377,10 @@ class ProposalsDetailView(DetailView):
     def get_queryset(self):
         # check permission
         if self.request.user.has_perm('app.view_proposals'):
-            qs = super(ProposalsDetailView, self).get_queryset()
+            qs = super(ProposalsDetailView, self).get_queryset().distinct()
         else: # can view only if it is part of the team
             qs = super(ProposalsDetailView, self).get_queryset().filter(Q(proposer=self.request.user) | 
-                                       Q(coproposers__uid__exact=self.request.user))
+                                       Q(coproposers__uid__exact=self.request.user)).distinct()
         return qs
 
     def get_context_data(self, *args, **kwargs):
@@ -387,6 +392,11 @@ class ProposalsDetailView(DetailView):
 class ProposalsUpdateView(UpdateView):
     model = Proposals
     form_class = ProposalsForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({ 'user': self.request.user})
+        return kwargs
 
 class ProposalsDelete(DeleteView):
     model = Proposals

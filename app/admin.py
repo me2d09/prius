@@ -24,8 +24,8 @@ class ProposalsAdminForm(forms.ModelForm):
 
 class ProposalsAdmin(admin.ModelAdmin):
     form = ProposalsAdminForm
-    list_display = ['slug', 'created', 'last_updated', 'name', 'abstract', 'scientific_bg']
-    readonly_fields = ['slug', 'created', 'last_updated', 'name', 'abstract', 'scientific_bg']
+    list_display = ['slug', 'created', 'last_updated', 'name', 'abstract', 'scientific_bg', 'student', 'supervisor', 'local_contact']
+    readonly_fields = ['slug', 'created', 'last_updated']
 
 admin.site.register(Proposals, ProposalsAdmin)
 
