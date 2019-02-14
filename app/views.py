@@ -291,6 +291,7 @@ def change_password(request):
 class ProposalsListView(ListView):
     model = Proposals
     paginate_by = 10
+    template_name = "proposal/list.html"
 
     def get_queryset(self):
         queryset = Proposals.objects.distinct()
@@ -346,6 +347,7 @@ class StatusCreateView(CreateView):
 class ProposalsCreateView(CreateView):
     model = Proposals
     form_class = ProposalsForm
+    template_name = "proposal/form.html"
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -359,6 +361,7 @@ class ProposalsCreateView(CreateView):
 
 class ProposalsDetailView(DetailView):
     model = Proposals
+    template_name = "proposal/detail.html"
 
     def get_queryset(self):
         # check permission
@@ -378,6 +381,7 @@ class ProposalsDetailView(DetailView):
 class ProposalsUpdateView(UpdateView):
     model = Proposals
     form_class = ProposalsForm
+    template_name = "proposal/form.html"
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -387,6 +391,7 @@ class ProposalsUpdateView(UpdateView):
 class ProposalsDelete(DeleteView):
     model = Proposals
     success_url = reverse_lazy('app_proposals_list')
+    template_name = "proposal/delete.html"
 
     def get_object(self, queryset=None):
         """ Hook to ensure object is owned by request.user. """
