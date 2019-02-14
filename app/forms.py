@@ -62,8 +62,6 @@ class StatusForm(forms.ModelForm):
         self.helper.field_class = 'col-sm-10'
         self.helper.label_class = 'col-sm-2'
 
-        self.helper.add_input(Submit('submit', 'Change status'))
-
         #restrict possible statuses
 
         prop = self.initial['proposal']
@@ -94,6 +92,7 @@ class StatusForm(forms.ModelForm):
                 allowed.append('D')      # will be by director
                 allowed.append('X')      # will be rejected permanently
                 allowed.append('P')      # will be in preparation
+                self.info = "Please fill-in remark (visible to user) and optionaly hidden remark (for internal purposes)."
                 showRemark = showHidden = True
         if self.user.has_perm('app.approve_director'): 
             if prop.last_status == 'D': 
@@ -106,7 +105,22 @@ class StatusForm(forms.ModelForm):
                 showRemark = True
 
         self.fields["status"].choices = [c for c in self.fields["status"].choices if c[0] in allowed]
-        if len(self.fields["status"].choices) == 0: raise Http404
+        c = self.fields["status"].choices
+        if len(c) == 0: raise Http404
+        if len(c) == 1:
+            if c[0][0] == "S": 
+                self.ConfirmText = "Submit proposal"
+                self.info = "Do you really want to submit this proposal? You will not be able to edit it anymore."
+            if c[0][0] == "F": 
+                self.ConfirmText = "Finish proposal"
+                self.info = "Do you really want to finish this proposal? It will be archived and you will not be able to book measurements for it anymore."
+            if c[0][0] == "U": self.ConfirmText = "Takeover proposal"
+            if c[0][0] == "W": 
+                self.ConfirmText = "Submit technical remarks"
+                self.info = "Do you really want to submit technical remarks? Afterwards proposal will go immediatelly for review to the panel."
+            if c[0][0] == "R": 
+                self.ConfirmText = "Takeover proposal"
+                # TODO: do selection of referees
         if not showRemark: self.fields.pop("remark")
         if not showHidden: self.fields.pop("hiddenremark")
 

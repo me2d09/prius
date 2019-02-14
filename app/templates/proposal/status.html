@@ -29,11 +29,10 @@
               {{ form.remark|as_crispy_field }}
           {% endif %}
         </div>
-        {% endif %}
-        
-        
-        
-        <button type="submit" class="btn btn-primary">Change status</button>
+        {% endif %}        
+        <p>{{ form.info }}</p>
+        <button type="submit" class="btn btn-primary">{{ form.ConfirmText }}</button>
+        <a href="/proposals/detail/{{ proposal.slug }}/" class="btn btn-danger">Cancel</a>
       </form>
     </div>
 </div>
