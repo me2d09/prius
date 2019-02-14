@@ -9,4 +9,4 @@ db.sqlite3
 *.pyc
 /static/
 prius/settings.py
-files/
+/files/
