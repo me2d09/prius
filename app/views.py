@@ -81,7 +81,8 @@ def home(request):
         'app/index.html',
         {
             'title':'Home Page',
-            'proposals_todo': 2,
+            'proposals_todo': Proposals.objects.filter(proposer=request.user, last_status='P').count(),
+            'proposals_accepted': Proposals.objects.filter(proposer=request.user, last_status='A').count(),
         }
     )
 
