@@ -23,6 +23,10 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMessage
 from django.db.models import Q
 from .token import account_activation_token
+from .tables import ProposalTable, ProposalFilter
+
+from django_tables2.views import SingleTableView, SingleTableMixin
+from django_filters.views import FilterView
 
 from dal import autocomplete
 from app.models import Contacts
@@ -294,10 +298,13 @@ def change_password(request):
         'form': form
     })
 
-class ProposalsListView(ListView):
+class ProposalsListView(SingleTableMixin, FilterView):
     model = Proposals
+    table_class = ProposalTable
     paginate_by = 10
     template_name = "proposal/list.html"
+
+    filterset_class = ProposalFilter
 
     def get_queryset(self):
         queryset = Proposals.objects.distinct()

@@ -4,6 +4,9 @@ django-crispy-forms
 django-bootstrap4
 djangorestframework
 django-autocomplete-light>=2.0.0pre
+django-tables2
+django-filter
 Pillow
 argon2-cffi
 PyPDF2
+pip
