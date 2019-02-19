@@ -2,7 +2,8 @@
 Definition of views.
 """
 
-from django.contrib.auth import login, authenticate
+from django.contrib import messages
+from django.contrib.auth import login, authenticate, update_session_auth_hash
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django.contrib.auth.models import User, Group
 from django.contrib.sites.shortcuts import get_current_site
@@ -281,7 +282,7 @@ class UserUpdateView(UpdateView):
     def get_success_url(self):
         return reverse('profile')
 
-
+@login_required
 def change_password(request):
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
@@ -289,7 +290,7 @@ def change_password(request):
             user = form.save()
             update_session_auth_hash(request, user)  # Important!
             messages.success(request, 'Your password was successfully updated!')
-            return redirect('change_password')
+            return redirect('profile')
         else:
             messages.error(request, 'Please correct the error below.')
     else:

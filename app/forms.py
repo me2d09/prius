@@ -3,7 +3,7 @@ Definition of forms.
 """
 
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordResetForm, SetPasswordForm
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from .models import Proposals, Instruments, Contacts, Affiliations, Countries, InstrumentRequest, Options, SharedOptions
@@ -49,7 +49,20 @@ class SignupForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'email', 'password1', 'password2')
+
+class CrispyPasswordReset(PasswordResetForm):
+    def __init__(self, *args, **kwargs):
+        super(CrispyPasswordReset, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.add_input(Submit('submit', 'Request password reset'))
         
+class CrispySetPassword(SetPasswordForm):
+    def __init__(self, *args, **kwargs):
+        super(CrispySetPassword, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.add_input(Submit('submit', 'Set new password'))
+        
+
 
 class StatusForm(forms.ModelForm):
 
