@@ -7,7 +7,7 @@ from django.conf import settings
 from django.conf.urls import url, include
 from django.conf.urls.static import static
 
-import django.contrib.auth.views
+from django.contrib.auth import views as auth_views
 
 import app.forms
 import app.views as views
@@ -28,15 +28,20 @@ urlpatterns = [
     url(r'^edit-profile/$', views.ProfileEditView.as_view(), name='app_edit_profile'),
     url(r'^edit-user/$', views.UserUpdateView.as_view(), name='app_edit_user'),
     url(r'^password/$', views.change_password, name='change_password'),
+    url(r'^password_reset/$', auth_views.PasswordResetView.as_view(form_class=app.forms.CrispyPasswordReset), name='password_reset'),
+    url(r'^password_reset/done/$', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
+    url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+        auth_views.PasswordResetConfirmView.as_view(form_class=app.forms.CrispySetPassword), name='password_reset_confirm'),
+    url(r'^reset/done/$', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
     url(r'^login',
-        django.contrib.auth.views.LoginView.as_view(),
+        auth_views.LoginView.as_view(),
         {
             'template_name': 'app/login.html',
             'authentication_form': app.forms.BootstrapAuthenticationForm,
         },
         name='login'),
     url(r'^logout',
-        django.contrib.auth.views.LogoutView.as_view(),
+        auth_views.LogoutView.as_view(),
         {
             'next_page': '/login/',
         },

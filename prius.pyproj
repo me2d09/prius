@@ -148,6 +148,14 @@
     <Content Include="app\templates\app\sharedoptions_form.html" />
     <Content Include="app\templates\app\sharedoptions_list.html" />
     <Content Include="app\templates\proposal\status.html" />
+    <Content Include="app\templates\registration\password_reset_complete.html" />
+    <Content Include="app\templates\registration\password_reset_confirm.html" />
+    <Content Include="app\templates\registration\password_reset_email.html" />
+    <Content Include="app\templates\registration\password_reset_done.html" />
+    <Content Include="app\templates\registration\password_reset_form.html" />
+    <Content Include="app\templates\registration\password_reset_subject.txt">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="app\templates\registration\signup.html" />
     <Content Include="app\templates\app\slots_detail.html" />
     <Content Include="app\templates\app\slots_form.html" />

@@ -3075,3 +3075,8 @@ a > code {
     margin-left: 15px;
   }
 }
+
+
+.alert {
+    z-index: 99999;
+}
