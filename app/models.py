@@ -117,7 +117,7 @@ class Proposals(models.Model):
     class Meta:
         ordering = ('-created',)
         permissions = (
-            ("change_status", "Can set proposal to any status"),
+            ("change_status", "Can set proposal to any status, edit proposal type anytime"),
             ("approve_technical", "Can submit technical comments"),
             ("takeover_panel", "Can put proposal to review"),
             ("approve_panel", "Can submit panel decision"),

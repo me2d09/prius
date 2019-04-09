@@ -158,6 +158,8 @@ class ProposalsForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
         self.user = kwargs.pop('user', None)
+        self.status = kwargs.pop('status', None)
+
         super(ProposalsForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_class = 'form-horizontal'
@@ -179,6 +181,16 @@ class ProposalsForm(forms.ModelForm):
         self.fields['student'].widget.attrs['onclick'] = "javascript:toggleDiv('div_id_supervisor');"
         if not self.user.groups.filter(name='localcontacts').exists():
             self.fields["proposaltype"].choices = [t for t in self.fields["proposaltype"].choices if t[0] != 'T']  #remove test proposal
+        if self.status != "P":
+            for f in self.fields.values():
+                f.disabled = True
+            # user office can change some stuff
+            if self.user.has_perm('change_status'):
+                self.fields['local_contact'].disabled = False
+                self.fields['proposaltype'].disabled = False
+            if self.status == "A":
+                self.fields['coproposers'].disabled = False
+
       
     def save(self, *args, **kwargs):
        kwargs['commit']=False

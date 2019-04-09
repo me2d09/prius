@@ -400,6 +400,7 @@ class ProposalsUpdateView(UpdateView):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs.update({ 'user': self.request.user})
+        kwargs.update({ 'status': super().get_object().last_status})
         return kwargs
 
 class ProposalsDelete(DeleteView):
