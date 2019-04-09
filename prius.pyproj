@@ -49,6 +49,12 @@
     <Compile Include="app\tables.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="app\templatetags\extratags.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="app\templatetags\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="app\tests.py" />
     <Compile Include="app\token.py">
       <SubType>Code</SubType>
@@ -69,6 +75,7 @@
   <ItemGroup>
     <Folder Include="app\" />
     <Folder Include="app\migrations\" />
+    <Folder Include="app\templatetags\" />
     <Folder Include="app\static\" />
     <Folder Include="app\static\app\" />
     <Folder Include="app\static\app\content\" />
