@@ -1670,7 +1670,8 @@ button {
   .login-page a.signup,
   .register-page a.forgot-pass,
   .register-page a.signup {
-    font-size: 0.8em;
+    font-size: 1.0em;
+    font-weight: bold;
   }
   .login-page small,
   .register-page small {
