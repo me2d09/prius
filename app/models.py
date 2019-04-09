@@ -101,7 +101,7 @@ class Proposals(models.Model):
 
     def save(self, *args, **kwargs):
         adding = self._state.adding
-        if not self.pid:
+        if not self.pid or self.pid[0] != self.proposaltype:
             #search for first free proposal number
             start = self.proposaltype + chr((datetime.now().year - 2019) % 26  + 65)
             qs = Proposals.objects.filter(pid__startswith = start).values_list('pid')
