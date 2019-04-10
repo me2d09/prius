@@ -88,6 +88,7 @@ def home(request):
             'title':'Home Page',
             'proposals_todo': Proposals.objects.filter(proposer=request.user, last_status='P').count(),
             'proposals_accepted': Proposals.objects.filter(proposer=request.user, last_status='A').count(),
+            'proposals_director': Proposals.objects.filter(last_status='D').count(),
         }
     )
 

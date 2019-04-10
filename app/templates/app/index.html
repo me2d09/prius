@@ -1,5 +1,5 @@
 ﻿{% extends "base.html" %}
-
+{% load extratags %}
 {% block content %}
       <section>
         <div class="container-fluid">
@@ -12,6 +12,25 @@
           </header>
         </div>
       </section>
+      {% if request.user|has_group:"director" %}
+      <!-- Director Section -->
+      <section class="dashboard-director">
+        <div class="container-fluid">
+          <div class="row">
+
+            <!-- Count item widget-->
+            <div class="card col-xl-6 col-md-12 col-12">
+                <h2>Director tasks</h2>
+              <a href="/proposals/?last_status=D" class="btn"><div class="wrapper count-title d-flex">
+                <div class="icon"><i class="icon-padnote"></i></div>
+                <div class="name"><strong class="text-uppercase">Proposals</strong><span>waiting for director decision</span></div>
+                <div class="count-number">{{ proposals_director }}</div>
+              </div></a>
+            </div>
+          </div>
+        </div>
+      </section>
+      {% endif %}
       {% if perms.app.add_proposals %}
       <!-- Counts Section -->
       <section class="dashboard-counts">
@@ -22,7 +41,7 @@
             <div class="col-xl-3 col-md-6 col-6">
               <a href="/proposals/?last_status=P" class="btn"><div class="wrapper count-title d-flex">
                 <div class="icon"><i class="icon-padnote"></i></div>
-                <div class="name"><strong class="text-uppercase">Proposals</strong><span>requiring some action</span>
+                <div class="name"><strong class="text-uppercase">My Proposals</strong><span>requiring some action</span>
                   <div class="count-number">{{ proposals_todo }}</div>
                 </div>
               </div></a>
@@ -58,6 +77,7 @@
         </div>
       </section>
       {% endif %}
+      
       <!-- Updates Section -->
       {% if False %}
       <section class="mt-30px mb-30px">

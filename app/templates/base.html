@@ -37,9 +37,10 @@
           <div class="sidenav-header-inner text-center"><img src="/static/img/avatar.png" alt="person" class="img-fluid rounded-circle">
             {% if user.is_authenticated %}
               <h2 class="h5">{{ user.username }}</h2>
-              {% if request.user|has_group:"users" %}<span>user</span>{% endif %}
-              {% if request.user|has_group:"localcontacts" %}<span>local contact</span>{% endif %}
-              {% if request.user|has_group:"admins" %}<span>admin</span>{% endif %}
+              {% if request.user|has_group:"director" %}<span>director</span>
+              {% elif request.user|has_group:"admins" %}<span>admin</span>
+              {% elif request.user|has_group:"localcontacts" %}<span>local contact</span>
+              {% elif request.user|has_group:"users" %}<span>user</span>{% endif %}
             {% else %}
               <p>You are not logged in</p>
               <a href="{% url 'login' %}">login</a>
