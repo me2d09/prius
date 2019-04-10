@@ -111,6 +111,7 @@ class StatusForm(forms.ModelForm):
             if prop.last_status == 'D': 
                 allowed.append('A')   # will be accepted
                 allowed.append('X')   # will be rejected permanently
+                self.info = "This is the last step in proposal evaluation. It is possible (but not needed) to fill-in remark (visible to user) and optionaly hidden remark (for internal purposes)."
                 showRemark = showHidden = True
         if self.user.has_perm('app.finish_proposal'): 
             if prop.last_status == 'A': 
@@ -119,6 +120,7 @@ class StatusForm(forms.ModelForm):
 
         self.fields["status"].choices = [c for c in self.fields["status"].choices if c[0] in allowed]
         c = self.fields["status"].choices
+        self.ConfirmText = "Confirm"
         if len(c) == 0: raise Http404
         if len(c) == 1:
             if c[0][0] == "S": 

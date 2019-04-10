@@ -37,21 +37,34 @@
             Proposer need to submit it in order to be reviewed.
         {% endif %}
         
-    {% else %}
+    {% elif object.last_status == "S" %}
         Proposal is submitted, wait for evaluation.
+    {% elif object.last_status in "U,T,W,R,D" %}
+        Proposal is in review process, wait for evaluation.
+    {% elif object.last_status == "A" %}
+        Proposal is accepted, you can measure!
+    {% elif object.last_status == "F" %}
+        Proposal is finished, time to publish your research!
+    {% elif object.last_status == "X" %}
+        Proposal is rejected, sorry.
     {% endif %}
 </p>
+    {% if perms.app.approve_director and object.last_status == "D" %}
+            <a class="btn btn-primary" href="/proposals/changestatus/{{object.slug}}/A/">Approve Proposal</a>
+            <a class="btn btn-danger" href="/proposals/changestatus/{{object.slug}}/X/">Reject Proposal</a>
+    {% endif %}
     {% if object.proposer == user and object.last_status == "P" %}
        <a class="btn btn-secondary" href="{{object.get_update_url}}">Edit Proposal</a> 
        {% if object.last_status == "P" %}<a class="btn btn-primary" href="/proposals/changestatus/{{object.slug}}/S/">Submit Proposal</a>
        <a class="btn btn-danger" href="/proposals/delete/{{object.slug}}/">Delete Proposal</a> {% endif %}
     {% endif %}
-    {% if perms.app.change_status %}
+    {% if perms.app.change_status and object.last_status in "P,S,U" %}
        <a class="btn btn-secondary" href="{{object.get_update_url}}">Edit proposal type and/or local contact</a> 
     {% endif %}
     {% if object.proposer == user and object.last_status == "A" %}
        <a class="btn btn-secondary" href="{{object.get_update_url}}">Edit experimental team</a> 
     {% endif %}
+    
         <header> 
             <h2 class="h3 display">Status history</h2>
         </header>
