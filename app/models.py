@@ -183,7 +183,7 @@ class Contacts(models.Model):
     description = CharField(max_length=500,blank=True)
 
     # Relationship Fields
-    uid = models.ForeignKey(User, on_delete=models.PROTECT, blank=True,null=True)
+    uid = models.OneToOneField(User, on_delete=models.CASCADE, blank=True,null=True, related_name='contact')
     affiliation = models.ForeignKey('app.Affiliations', on_delete=models.PROTECT)
 
     class Meta:
