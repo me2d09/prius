@@ -7,6 +7,7 @@ import django_filters
 class ProposalTable(tables.Table):
 
     name = tables.LinkColumn('app_proposals_detail', args=[A('slug')])
+    proposer  = tables.LinkColumn('app_contacts_detail', args=[A('proposer.contact.pk')], text=lambda record: record.proposer.contact.name)
     pid = tables.Column(attrs={'td': {'class': 'font-weight-bold'}})
 
     def render_supervisor(self, record):

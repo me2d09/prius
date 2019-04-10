@@ -827,43 +827,43 @@ nav.navbar a.menu-btn:hover {
 }
 
 
-.dashboard-director .card h2 {
+.dashboard-header h2 {
     font-size: 0.9em;
     text-transform: capitalize;
     font-variant: small-caps;
     margin-top: 5px;
 }
 
-.dashboard-director .card .count-number {
-    font-size:2.8em;
+.dashboard-header .card .count-number {
+    font-size: 2.8em;
     margin-left: 20px;
     font-weight: bold;
 }
 
-.dashboard-director .card canvas {
+.dashboard-header .card canvas {
     width: 100%;
     max-width: 200px;
     border: none;
 }
 
-.dashboard-director .card strong {
+.dashboard-header .card strong {
     font-size: 1.5em;
     display: block;
 }
 
-.dashboard-director .card small {
+.dashboard-header .card small {
     font-size: 0.85em;
     font-weight: 300;
     color: #aaa;
 }
 
-.dashboard-director .cardspan {
+.dashboard-header .cardspan {
     font-size: 0.95em;
     color: #aaa;
     display: block;
 }
 
-.dashboard-director .card p {
+.dashboard-header .card p {
     margin-top: 10px;
     margin-bottom: 0;
 }

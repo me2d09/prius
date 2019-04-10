@@ -38,6 +38,7 @@
             {% if user.is_authenticated %}
               <h2 class="h5">{{ user.username }}</h2>
               {% if request.user|has_group:"director" %}<span>director</span>
+              {% elif request.user|has_group:"useroffice" %}<span>user office</span>
               {% elif request.user|has_group:"admins" %}<span>admin</span>
               {% elif request.user|has_group:"localcontacts" %}<span>local contact</span>
               {% elif request.user|has_group:"users" %}<span>user</span>{% endif %}

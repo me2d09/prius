@@ -14,14 +14,14 @@
       </section>
       {% if request.user|has_group:"director" %}
       <!-- Director Section -->
-      <section class="dashboard-director">
+      <section class="dashboard-header">
         <div class="container-fluid">
+          <h2>Director tasks</h2>
           <div class="row">
 
             <!-- Count item widget-->
             <div class="card col-xl-6 col-md-12 col-12">
-                <h2>Director tasks</h2>
-              <a href="/proposals/?last_status=D" class="btn"><div class="wrapper count-title d-flex">
+              <a href="/proposals/all/?last_status=D" class="btn"><div class="wrapper count-title d-flex">
                 <div class="icon"><i class="icon-padnote"></i></div>
                 <div class="name"><strong class="text-uppercase">Proposals</strong><span>waiting for director decision</span></div>
                 <div class="count-number">{{ proposals_director }}</div>
@@ -31,6 +31,59 @@
         </div>
       </section>
       {% endif %}
+
+      {% if request.user|has_group:"localcontacts" %}
+      <!-- Local contact Section -->
+      <section class="dashboard-header">
+        <div class="container-fluid">
+          <h2>Local contact tasks</h2>
+          <div class="row">
+
+            <!-- Count item widget-->
+            <div class="card col-xl-4 col-md-6 col-6">
+              <a href="/proposals/all/?last_status=T&local_contact={{ user.contact.pk }}" class="btn"><div class="wrapper count-title d-flex">
+                <div class="icon"><i class="icon-padnote"></i></div>
+                <div class="name"><strong class="text-uppercase">Proposals</strong><span>waiting for technical review</span></div>
+                <div class="count-number">{{ proposals_localcontact }}</div>
+              </div></a>
+            </div>
+          </div>
+        </div>
+      </section>
+      {% endif %}
+
+
+      {% if request.user|has_group:"useroffice" %}
+      <!-- User office contact Section -->
+      <section class="dashboard-header">
+        <div class="container-fluid">
+          <h2>User office tasks</h2>
+          <div class="row">
+
+            <!-- Count item widget-->
+            <div class="card col-xl-4 col-md-6 col-6">
+                
+              <a href="/proposals/all/?last_status=S" class="btn"><div class="wrapper count-title d-flex">
+                <div class="icon"><i class="icon-padnote"></i></div>
+                <div class="name"><strong class="text-uppercase">Proposals</strong><span>to takeover</span></div>
+                <div class="count-number">{{ proposals_userofficeS }}</div>
+              </div></a>
+            </div>
+
+            <!-- Count item widget-->
+            <div class="card col-xl-4 col-md-6 col-6">
+              <a href="/proposals/all/?last_status=U" class="btn"><div class="wrapper count-title d-flex">
+                <div class="icon"><i class="icon-padnote"></i></div>
+                <div class="name"><strong class="text-uppercase">Proposals</strong><span>to check</span></div>
+                <div class="count-number">{{ proposals_userofficeU }}</div>
+              </div></a>
+            </div>
+          </div>
+        </div>
+      </section>
+      {% endif %}
+
+
       {% if perms.app.add_proposals %}
       <!-- Counts Section -->
       <section class="dashboard-counts">

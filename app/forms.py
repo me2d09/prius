@@ -90,8 +90,8 @@ class StatusForm(forms.ModelForm):
             if prop.last_status == 'S': allowed.append('U')  # will be waiting for panel
             if prop.last_status == 'U': allowed.append('P')  # will be returned
             if prop.last_status == 'U': allowed.append('T')  # will be waiting for local contact
-            if prop.last_status == 'T': allowed.append('P')  # go back to preparation
-            if prop.last_status == 'T': allowed.append('W')  # go back to preparation
+            #if prop.last_status == 'T': allowed.append('P')  # go back to preparation
+            if prop.last_status == 'T': allowed.append('W')  # will wait for panel
             if prop.last_status == 'W': allowed.append('R')  # will be in panel
             if prop.last_status == 'A': allowed.append('F')  # will be finished
         if self.user.has_perm('app.approve_technical'): 
@@ -132,7 +132,8 @@ class StatusForm(forms.ModelForm):
             if c[0][0] == "U": self.ConfirmText = "Takeover proposal"
             if c[0][0] == "W": 
                 self.ConfirmText = "Submit technical remarks"
-                self.info = "Do you really want to submit technical remarks? Afterwards proposal will go immediatelly for review to the panel."
+                self.info = """Please, fill-in comments for the panel to the 'Hidden Remark' field, user will not see this. You can optionally also write some comments to the Remark section and user (and panel) will see it, but it is not necessary.
+               Proposal will go immediatelly for review to the panel after pressing Submit."""
             if c[0][0] == "R": 
                 self.ConfirmText = "Takeover proposal"
                 # TODO: do selection of referees

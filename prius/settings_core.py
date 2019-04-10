@@ -129,6 +129,7 @@ USE_I18N = True
 USE_L10N = False
 USE_TZ = True
 DATETIME_FORMAT = 'jS F Y H:i:s'
+SHORT_DATETIME_FORMAT = 'd.m.y H:i'
 
 
 # Static files (CSS, JavaScript, Images)

@@ -53,6 +53,17 @@
             <a class="btn btn-primary" href="/proposals/changestatus/{{object.slug}}/A/">Approve Proposal</a>
             <a class="btn btn-danger" href="/proposals/changestatus/{{object.slug}}/X/">Reject Proposal</a>
     {% endif %}
+    {% if perms.app.change_status and object.last_status == "S" %}
+            <a class="btn btn-primary" href="/proposals/changestatus/{{object.slug}}/U/">Takeover Proposal</a>
+    {% endif %}
+    {% if perms.app.change_status and object.last_status == "U" %}
+            <a class="btn btn-primary" href="/proposals/changestatus/{{object.slug}}/T/">Pass to local contact</a>
+            <a class="btn btn-danger" href="/proposals/changestatus/{{object.slug}}/P/">Return to user</a>
+    {% endif %}
+    {% if perms.app.approve_technical and object.last_status == "T" %}
+            <a class="btn btn-primary" href="/proposals/changestatus/{{object.slug}}/W/">Submit technical comments</a>
+            <a class="btn btn-secondary" href="{{object.get_update_url}}">Change local contact</a> 
+    {% endif %}
     {% if object.proposer == user and object.last_status == "P" %}
        <a class="btn btn-secondary" href="{{object.get_update_url}}">Edit Proposal</a> 
        {% if object.last_status == "P" %}<a class="btn btn-primary" href="/proposals/changestatus/{{object.slug}}/S/">Submit Proposal</a>

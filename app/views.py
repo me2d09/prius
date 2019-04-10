@@ -89,6 +89,9 @@ def home(request):
             'proposals_todo': Proposals.objects.filter(proposer=request.user, last_status='P').count(),
             'proposals_accepted': Proposals.objects.filter(proposer=request.user, last_status='A').count(),
             'proposals_director': Proposals.objects.filter(last_status='D').count(),
+            'proposals_userofficeS': Proposals.objects.filter(last_status__in='S').count(),
+            'proposals_userofficeU': Proposals.objects.filter(last_status__in='U').count(),
+            'proposals_localcontact': Proposals.objects.filter(local_contact__uid=request.user, last_status='T').count(),
         }
     )
 
