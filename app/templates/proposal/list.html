@@ -9,10 +9,9 @@
     <header> 
     <h1 class="h3 display">
         {% if filtering == "mine" %}List of my proposals
-        {% else %}List of all proposals
+        {% else %}List of proposals
         {% endif %}</h1>
     </header>
-
     {% if filter %}
     <div class="mb-3">
         <form action="" method="get" class="form form-inline">
@@ -21,8 +20,6 @@
         </form>
     </div>
     {% endif %}
-
-
     {% render_table table %}
     <a class="btn btn-primary" href="{% url 'app_proposals_create' %}">Create new Proposal</a>
 {% endblock %}

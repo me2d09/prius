@@ -1,6 +1,6 @@
 # app/tables.py
 import django_tables2 as tables
-from .models import Proposals
+from .models import Proposals, Contacts, User
 from django_tables2.utils import A  # alias for Accessor
 import django_filters
 
@@ -22,10 +22,22 @@ class ProposalTable(tables.Table):
         attrs  = { 'class': 'table table-striped table-sm table-hover'}
         
 
+def localcontacts(request):
+    if request is None or not request.user.is_authenticated:
+        return Contacts.objects.none()
+
+    qs = Contacts.objects.filter(uid__in = User.objects.filter(groups__name__in=['localcontacts']))
+    return qs
 
 class ProposalFilter(django_filters.FilterSet):
 
     #owner = django_filters.filters.ChoiceFilter(choices=('mine', 'all'))
+    local_contact = django_filters.ModelChoiceFilter(queryset=localcontacts, empty_label='local contact')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if 'filtering' in self.request.resolver_match.kwargs and self.request.resolver_match.kwargs['filtering']  == "mine":
+            self.filters.pop("local_contact")
 
     class Meta:
         model = Proposals
