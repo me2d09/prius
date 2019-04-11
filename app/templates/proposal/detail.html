@@ -99,7 +99,7 @@
                 <td>{{ s.remark }}</td>
                 {% if perms.app.see_hidden_remarks %}
                 <td>{{ s.hiddenremark }}</td>
-                <td>{{ s.user }}</td>
+                <td>{{ s.user.contact.name }}</td>
                 {% endif %}
             </tr>
         {% endfor %}
