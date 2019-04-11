@@ -184,13 +184,15 @@ class ProposalsForm(forms.ModelForm):
         self.fields['student'].widget.attrs['onclick'] = "javascript:toggleDiv('div_id_supervisor');"
         if not self.user.groups.filter(name='localcontacts').exists():
             self.fields["proposaltype"].choices = [t for t in self.fields["proposaltype"].choices if t[0] != 'T']  #remove test proposal
-        if self.status != "P":
+        if self.status and self.status != "P":
             for f in self.fields.values():
                 f.disabled = True
             # user office can change some stuff
-            if self.user.has_perm('change_status'):
+            if self.user.has_perm('change_status') and self.status in "SU":
                 self.fields['local_contact'].disabled = False
                 self.fields['proposaltype'].disabled = False
+            if self.user.has_perm('approve_technical') and self.status == "T":
+                self.fields['local_contact'].disabled = False
             if self.status == "A":
                 self.fields['coproposers'].disabled = False
 
