@@ -188,10 +188,10 @@ class ProposalsForm(forms.ModelForm):
             for f in self.fields.values():
                 f.disabled = True
             # user office can change some stuff
-            if self.user.has_perm('change_status') and self.status in "SU":
+            if self.user.has_perm('app.change_status') and self.status in "SU":
                 self.fields['local_contact'].disabled = False
                 self.fields['proposaltype'].disabled = False
-            if self.user.has_perm('approve_technical') and self.status == "T":
+            if self.user.has_perm('app.approve_technical') and self.status == "T":
                 self.fields['local_contact'].disabled = False
             if self.status == "A":
                 self.fields['coproposers'].disabled = False
