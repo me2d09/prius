@@ -60,7 +60,7 @@
             <a class="btn btn-primary" href="/proposals/changestatus/{{object.slug}}/T/">Pass to local contact</a>
             <a class="btn btn-danger" href="/proposals/changestatus/{{object.slug}}/P/">Return to user</a>
     {% endif %}
-    {% if perms.app.approve_technical and object.last_status == "T" %}
+    {% if perms.app.approve_technical and object.last_status == "T" and object.local_contact.uid == user %}
             <a class="btn btn-primary" href="/proposals/changestatus/{{object.slug}}/W/">Submit technical comments</a>
             <a class="btn btn-secondary" href="{{object.get_update_url}}">Change local contact</a> 
     {% endif %}

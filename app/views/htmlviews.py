@@ -16,21 +16,20 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
 from datetime import datetime
 from django.views.generic import DetailView, ListView, UpdateView, CreateView, DeleteView
-from .models import Proposals, Instruments, Contacts, Affiliations, Countries, InstrumentRequest, Options, SharedOptions, InstrumentParameterSets, InstrumentParameters, ParameterValues, Samples, SamplePhotos, SampleRemarks, Publications, Experiments, Slots, Status
-from .forms import ProposalsForm, InstrumentsForm, ContactsForm, AffiliationsForm, CountriesForm, InstrumentRequestForm, StatusForm
-from .forms import OptionsForm, SharedOptionsForm, InstrumentParameterSetsForm, InstrumentParametersForm, ParameterValuesForm, SamplesForm 
-from .forms import SamplePhotosForm, SampleRemarksForm, PublicationsForm, ExperimentsForm, SlotsForm, SignupForm, ProfileForm, UserForm
+from app.models import Proposals, Instruments, Contacts, Affiliations, Countries, InstrumentRequest, Options, SharedOptions, InstrumentParameterSets, InstrumentParameters, ParameterValues, Samples, SamplePhotos, SampleRemarks, Publications, Experiments, Slots, Status
+from app.forms import ProposalsForm, InstrumentsForm, ContactsForm, AffiliationsForm, CountriesForm, InstrumentRequestForm, StatusForm
+from app.forms import OptionsForm, SharedOptionsForm, InstrumentParameterSetsForm, InstrumentParametersForm, ParameterValuesForm, SamplesForm 
+from app.forms import SamplePhotosForm, SampleRemarksForm, PublicationsForm, ExperimentsForm, SlotsForm, SignupForm, ProfileForm, UserForm
 from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMessage
 from django.db.models import Q
-from .token import account_activation_token
-from .tables import ProposalTable, ProposalFilter
+from app.token import account_activation_token
+from app.tables import ProposalTable, ProposalFilter
 
 from django_tables2.views import SingleTableView, SingleTableMixin
 from django_filters.views import FilterView
 
 from dal import autocomplete
-from app.models import Contacts
 
 
 class ContactAutocomplete(autocomplete.Select2QuerySetView):
@@ -405,6 +404,7 @@ class ProposalsUpdateView(UpdateView):
         kwargs = super().get_form_kwargs()
         kwargs.update({ 'user': self.request.user})
         kwargs.update({ 'status': super().get_object().last_status})
+        kwargs.update({ 'local_contact': super().get_object().local_contact})
         return kwargs
 
 class ProposalsDelete(DeleteView):
