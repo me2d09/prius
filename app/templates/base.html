@@ -62,6 +62,8 @@
             <li><a href="/proposals/all/"> <i class="icon-form"></i>All Proposals</a></li>{% endif %}
               {% if perms.app.add_contacts %}
             <li><a href="/contacts/create/"> <i class="icon-form"></i>Invite User</a></li>{% endif %}
+              {% if perms.app.view_contacts %}
+            <li><a href="/contacts/"> <i class="icon-form"></i>User list</a></li>{% endif %}
               {% if request.user.is_superuser %}
             <li><a href="charts.html"> <i class="fa fa-bar-chart"></i>Statistics</a></li>
             <li><a href="tables.html"> <i class="icon-grid"></i>Booking                             </a></li>

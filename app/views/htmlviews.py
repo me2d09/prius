@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.contrib.auth import login, authenticate, update_session_auth_hash
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django.contrib.auth.models import User, Group
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import render, redirect
 from django.http import HttpRequest, HttpResponse, Http404, HttpResponseRedirect
@@ -437,7 +438,8 @@ class InstrumentsUpdateView(UpdateView):
     form_class = InstrumentsForm
 
 
-class ContactsListView(ListView):
+class ContactsListView(PermissionRequiredMixin, ListView):
+    permission_required = 'app.view_contacts'
     model = Contacts
 
 
