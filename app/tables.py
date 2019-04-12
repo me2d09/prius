@@ -5,12 +5,24 @@ from django_tables2.utils import A  # alias for Accessor
 import django_filters
 from django.db.models import Q
 
+
+class TruncatedTextColumn(tables.Column):
+    """A Column to limit to 100 characters and add an ellipsis"""
+
+    def render(self, value):
+        if len(value) > 102:
+            return value[0:99] + '...'
+        return str(value)
+
 class ProposalTable(tables.Table):
 
-    name = tables.Column(linkify=True)
+    name = TruncatedTextColumn(linkify=True)
     proposer  = tables.LinkColumn('app_contacts_detail', args=[A('proposer.contact.pk')], text=lambda record: record.proposer.contact.name, order_by = A('proposer.contact.name'))
     pid = tables.Column(attrs={'td': {'class': 'font-weight-bold'}})
     pdf = tables.LinkColumn('proposal_pdf_detail_view', args=[A('pid')], text="PDF",  attrs={'a': {'target': '_blank'}}, orderable = False)
+
+    
+
 
     def render_supervisor(self, record):
         if record.student:
