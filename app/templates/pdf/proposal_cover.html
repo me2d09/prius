@@ -1,0 +1,48 @@
+﻿{% load static %}
+{% load extratags %}
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style>
+        {% include "pdf/pdffonts.css" %}
+    </style>
+    <link rel='stylesheet' href='{% static "pdfstyle.css" %}'/>
+</head>
+<body>
+    <h1>MGML Proposal: {{ proposal.pid }}</h1>
+    <h2>{{ proposal.name }}</h2>
+    <table>
+        <tr><th>Proposer:</th><td><span>{{ proposal.proposer.contact.name }}</span></td></tr>
+        <tr><th>Affiliation:</th><td>{{ proposal.proposer.contact.affiliation }}</td></tr>
+        <tr><th class="row" colspan="2">Experimental team:</th></tr>
+        <tr><td class="row" colspan="2">{% for p in proposal.coproposers.all %}{{ p.name }}{%if not forloop.last%}, {%endif%}{% endfor %}</td></tr>
+        <tr><th>Local contact:</th><td>{{ proposal.local_contact }}</td></tr>
+        <tr><th>Proposal type:</th><td>{{ proposal.get_proposaltype_display }}</td></tr>
+    </table>
+    <h3>Abstract</h3>
+    <p>{{ proposal.abstract|linebreaks  }}</p>
+    <!-- switch page templates -->
+    <pdf:nextpage  />
+    <h1>Status history of {{ proposal.pid }}</h1>
+            <table>
+                <tr>
+                    <th>Status</th>
+                    <th>Remark</th>
+                </tr>
+        {% for s in status_history %}
+            <tr>
+                <td>{{ s.date|date:"SHORT_DATETIME_FORMAT" }}<br />
+                    <span>{{ s.status|get_status_action }}</span>
+                {% if perms.app.see_hidden_remarks %}<br />
+                    <i>{{ s.user.contact.name }}</i>{% endif %}
+                </td>
+                <td>{{ s.remark }}
+                {% if perms.app.see_hidden_remarks %}
+                <br /><i>{{ s.hiddenremark }}</i>
+                {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+            </table>
+</body>
+</html>

@@ -60,7 +60,11 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="app\urls.py" />
-    <Compile Include="app\views.py" />
+    <Compile Include="app\views\pdfviews.py" />
+    <Compile Include="app\views\htmlviews.py" />
+    <Compile Include="app\views\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="app\__init__.py" />
     <Compile Include="app\migrations\__init__.py" />
     <Compile Include="manage.py" />
@@ -75,6 +79,9 @@
   <ItemGroup>
     <Folder Include="app\" />
     <Folder Include="app\migrations\" />
+    <Folder Include="app\static\fonts\" />
+    <Folder Include="app\templates\pdf\" />
+    <Folder Include="app\views\" />
     <Folder Include="app\templatetags\" />
     <Folder Include="app\static\" />
     <Folder Include="app\static\app\" />
@@ -96,7 +103,14 @@
     <Content Include="app\static\app\content\fontastic.css" />
     <Content Include="app\static\app\content\select2-bootstrap4.css" />
     <Content Include="app\static\app\scripts\admin.js" />
+    <Content Include="app\static\fonts\OpenSans-Bold.ttf" />
+    <Content Include="app\static\fonts\OpenSans-Italic.ttf" />
+    <Content Include="app\static\fonts\OpenSans-Regular.ttf" />
+    <Content Include="app\static\pdfstyle.css" />
     <Content Include="app\templates\accounts\change_password.html" />
+    <Content Include="app\templates\mails\nofity-accept.html" />
+    <Content Include="app\templates\pdf\pdffonts.css" />
+    <Content Include="app\templates\pdf\proposal_cover.html" />
     <Content Include="app\templates\proposal\delete.html" />
     <Content Include="app\templates\mails\invitation.html" />
     <Content Include="app\templates\mails\activation.html" />

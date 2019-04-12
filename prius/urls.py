@@ -91,3 +91,9 @@ urlpatterns += (
     url(r'^contacts/detail/(?P<pk>\S+)/$', views.ContactsDetailView.as_view(), name='app_contacts_detail'),
     url(r'^contacts/update/(?P<pk>\S+)/$', views.ContactsUpdateView.as_view(), name='app_contacts_update'),
 )
+
+urlpatterns += (
+    # urls for PDF
+    url(r'^proposal_pdf/(?P<pid>\S+)/', views.ProposalPdfDetailView.as_view(), name='proposal_pdf_detail_view',),
+)
+

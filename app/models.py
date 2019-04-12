@@ -43,6 +43,21 @@ class Status(models.Model):
     proposal = models.ForeignKey('app.Proposals', on_delete=models.PROTECT)
     user =  models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT)
 
+    def getActionFromStatus(status):
+        return {
+            'P': 'preparation',
+            'S': 'submitted',
+            'U': 'useroffice takeover',
+            'T': 'useroffice check',
+            'W': 'technical review',
+            'R': 'start review',
+            'D': 'panel acceptance',
+            'A': 'director approval',
+            'F': 'finished',
+            'X': 'rejected',
+        }[status]
+
+
     class Meta:
         ordering = ('-date',)
         permissions = (

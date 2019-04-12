@@ -10,3 +10,4 @@ Pillow
 argon2-cffi
 PyPDF2
 pip
+django-xhtml2pdf
