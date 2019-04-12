@@ -9,10 +9,11 @@
             <h1 class="h3 display">User contact details: {{ object.name }}</h1>
           </header>
 <table class="table table-hover">
-<tr><td>name</td><td>{{ object.name }}</td></tr>
-<tr><td>created</td><td>{{ object.created }}</td></tr>
-<tr><td>last_updated</td><td>{{ object.last_updated }}</td></tr>
-<tr><td>email</td><td>{{ object.email }}</td></tr>
-<tr><td>orcid</td><td>{{ object.orcid }}</td></tr>
+<tr><td>Name:</td><td>{{ object.name }}</td></tr>
+<tr><td>Created:</td><td>{{ object.created }}</td></tr>
+<tr><td>Last changed:</td><td>{{ object.last_updated }}</td></tr>
+<tr><td>Affiliation:</td><td>{{ object.affiliation }}</td></tr>
+<tr><td>E-mail:</td><td>{{ object.email }}</td></tr>
+<tr><td>Orcid:</td><td>{{ object.orcid }}</td></tr>
 </table>
 {% endblock %}

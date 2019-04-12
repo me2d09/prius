@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load extratags %}
 {% block content %}
 <div class="breadcrumb-holder">
         <div class="container-fluid">
@@ -20,10 +21,10 @@
 <tr><td>Proposal name</td><td><b>{{ object.name }}</b></td></tr>
 <tr><td>Created</td><td>{{ object.created }}</td></tr>
 <tr><td>Last updated</td><td>{{ object.last_updated }}</td></tr>
-<tr><td>Status</td><td>{{ object.get_last_status_display }}</td></tr>
+<tr><td>Status</td><td><b>{{ object.get_last_status_display }}</b></td></tr>
 <tr><td>Abstract</td><td>{{ object.abstract }}</td></tr>
 <tr><td>Scientific background</td><td>{% if object.scientific_bg %}<a href="{{ object.scientific_bg.url }}" target="_blank">{{ object.scientific_bg.name }}</a>{% else %}<b class="text-danger">missing</b>{% endif %}</td></tr>
-<tr><td>Proposer</td><td>{{ object.proposer }}</td></tr>
+<tr><td>Proposer</td><td><b>{{ object.proposer.contact }}</b><br />{{ object.proposer.contact.affiliation }}</td></tr>
 <tr><td>Student</td><td>{% if object.student %}Yes, supervisor {{object.supervisor}}{% else %}No{% endif %}</td></tr>
 <tr><td>Local Contact</td><td>{{ object.local_contact }}</td></tr>
 <tr><td>Experimental team</td><td>{% for p in object.coproposers.all %}{{ p.name }}{%if not forloop.last%}, {%endif%}{% endfor %}</td></tr>
@@ -49,6 +50,7 @@
         Proposal is rejected, sorry.
     {% endif %}
 </p>
+            <a class="btn btn-info" target="_blank" href="/proposal_pdf/{{object.pid}}/">PDF</a> 
     {% if perms.app.approve_director and object.last_status == "D" %}
             <a class="btn btn-primary" href="/proposals/changestatus/{{object.slug}}/A/">Approve Proposal</a>
             <a class="btn btn-danger" href="/proposals/changestatus/{{object.slug}}/X/">Reject Proposal</a>
@@ -81,26 +83,22 @@
         </header>
         <div class="table-responsive">
         <table class="table table-striped table-sm table-hover">
-            <thead>
-                <tr>
+            <tr>
                     <th>Status</th>
-                    <th>Date</th>
                     <th>Remark</th>
-                    {% if perms.app.see_hidden_remarks %}
-                    <th>Hidden Remark</th>
-                    <th>User</th>
-                    {% endif %}
                 </tr>
-            </thead>
         {% for s in status_history %}
             <tr>
-                <th scope="row">{{ s.get_status_display }}</th>
-                <td>{{ s.date }}</td>
-                <td>{{ s.remark }}</td>
+                <td>{{ s.date|date:"SHORT_DATETIME_FORMAT" }}<br />
+                    <b>{{ s.status|get_status_action }}</b>
+                {% if perms.app.see_hidden_remarks %}<br />
+                    <i>{{ s.user.contact.name }}</i>{% endif %}
+                </td>
+                <td>{{ s.remark }}
                 {% if perms.app.see_hidden_remarks %}
-                <td>{{ s.hiddenremark }}</td>
-                <td>{{ s.user.contact.name }}</td>
+                <br /><i>{{ s.hiddenremark }}</i>
                 {% endif %}
+                </td>
             </tr>
         {% endfor %}
             </table>
