@@ -10,7 +10,7 @@ from .models import Proposals, Instruments, Contacts, Affiliations, Countries, I
 from .models import InstrumentParameterSets, InstrumentParameters, ParameterValues, Samples, SamplePhotos, SampleRemarks
 from .models import Publications, Experiments, Slots, Status
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit
+from crispy_forms.layout import Layout, Submit, HTML, Fieldset, ButtonHolder
 from dal import autocomplete
 from django.http import Http404
  
@@ -175,8 +175,16 @@ class ProposalsForm(forms.ModelForm):
         self.helper.form_method = 'post'
         self.helper.field_class = 'col-sm-10'
         self.helper.label_class = 'col-sm-2'
-
-        self.helper.add_input(Submit('submit', 'Save'))
+        self.helper.layout = Layout(
+            Fieldset(
+                None, 'name', 'abstract', 'scientific_bg', 'proposaltype', 'student', 'supervisor', 'local_contact', 'coproposers'
+            ),
+            ButtonHolder(
+                Submit('submit', 'Submit', css_class='button white'),
+                HTML("""<a role="button" class="btn btn-default"
+                        href="{% url "app_proposals_detail" object.slug %}">Cancel</a>"""),
+            )
+        )
         
         self.fields['local_contact'].widget.attrs = {
             'data-theme': 'bootstrap4',

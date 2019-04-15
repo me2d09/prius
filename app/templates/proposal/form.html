@@ -30,7 +30,7 @@
         $("#"+divId).toggle(500);
         }
     $(document).ready(function () {
-        if (!$("#id_student").checked)
+        if (!$("#id_student").is(":checked"))
         {
             $("#div_id_supervisor").hide(0);
         }
