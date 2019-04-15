@@ -1,3 +1,20 @@
+
+*, html {
+    font-family: "Opensans";
+    font-size: 11pt;
+    color: black;
+}
+
+span {
+    font-weight: bold;
+    color: #a00810;
+}
+
+i {
+    font-weight: normal;
+    font-style: italic;
+}
+
 h1 {
     background-color: #a00810;
     color: white;
@@ -38,7 +55,7 @@ td, th {
     text-align: left;
     padding: 3px;
 }
-th {
+th[scope=row] {
     width: 30%;
 }
 td.row {
@@ -48,18 +65,11 @@ th.row {
     padding-bottom: 0px;
 }
 
-*, html {
-    font-family: "Opensans";
-    font-size: 11pt;
-    color: black;
-}
 
-span {
-    font-weight: bold;
-    color: #a00810;
+.status td {
+   width: 25%;
+   vertical-align: top;
 }
-
-i {
-    font-weight: normal;
-    font-style: italic;
-}
+.status td.max {
+        width: 75%;
+    }

@@ -9,22 +9,28 @@
     <link rel='stylesheet' href='{% static "pdfstyle.css" %}'/>
 </head>
 <body>
+    {% if not page or page == 1 %}
     <h1>MGML Proposal: {{ proposal.pid }}</h1>
     <h2>{{ proposal.name }}</h2>
     <table>
-        <tr><th>Proposer:</th><td><span>{{ proposal.proposer.contact.name }}</span></td></tr>
-        <tr><th>Affiliation:</th><td>{{ proposal.proposer.contact.affiliation }}</td></tr>
+        <tr><th scope="row">Proposer:</th><td><span>{{ proposal.proposer.contact.name }}</span></td></tr>
+        <tr><th scope="row">Affiliation:</th><td>{{ proposal.proposer.contact.affiliation }}</td></tr>
         <tr><th class="row" colspan="2">Experimental team:</th></tr>
         <tr><td class="row" colspan="2">{% for p in proposal.coproposers.all %}{{ p.name }}{%if not forloop.last%}, {%endif%}{% endfor %}</td></tr>
-        <tr><th>Local contact:</th><td>{{ proposal.local_contact }}</td></tr>
-        <tr><th>Proposal type:</th><td>{{ proposal.get_proposaltype_display }}</td></tr>
+        <tr><th scope="row">Local contact:</th><td>{{ proposal.local_contact }}</td></tr>
+        <tr><th scope="row">Proposal type:</th><td>{{ proposal.get_proposaltype_display }}</td></tr>
     </table>
     <h3>Abstract</h3>
     <p>{{ proposal.abstract|linebreaks  }}</p>
-    <!-- switch page templates -->
-    <pdf:nextpage  />
+    {% if perms.app.see_hidden_remarks and tech %}
+    <h3>Latest Technical review</h3>
+    <p>{{ tech.hidden_remark|linebreaks  }}</p>
+    {% endif %}
+    {% endif %}
+    {% if not page %}<pdf:nextpage  />{% endif %}
+    {% if not page or page == 2 %}
     <h1>Status history of {{ proposal.pid }}</h1>
-            <table>
+            <table class="status">
                 <tr>
                     <th>Status</th>
                     <th>Remark</th>
@@ -36,13 +42,14 @@
                 {% if perms.app.see_hidden_remarks %}<br />
                     <i>{{ s.user.contact.name }}</i>{% endif %}
                 </td>
-                <td>{{ s.remark }}
+                <td class="max">{{ s.remark }}
                 {% if perms.app.see_hidden_remarks %}
-                <br /><i>{{ s.hiddenremark }}</i>
+                {% if s.remark %}<br />{% endif %}<i>{{ s.hiddenremark }}</i>
                 {% endif %}
                 </td>
             </tr>
         {% endfor %}
             </table>
+    {% endif %}
 </body>
 </html>
