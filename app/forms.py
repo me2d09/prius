@@ -132,8 +132,12 @@ class StatusForm(forms.ModelForm):
             if c[0][0] == "U": self.ConfirmText = "Takeover proposal"
             if c[0][0] == "W": 
                 self.ConfirmText = "Submit technical remarks"
-                self.info = """Please, fill-in comments for the panel to the 'Hidden Remark' field, user will not see this. You can optionally also write some comments to the Remark section and user (and panel) will see it, but it is not necessary.
-               Proposal will go immediatelly for review to the panel after pressing Submit."""
+                self.fields["hiddenremark"].label = "Technical Review (user won't see)"
+                self.info = """Please, fill-in comments (about the feasibility of given proposal from the point of view of instrumentation, technology and expertise of the
+team) for the panel to the 'Technical Review' field, user will not see this.
+Also, you can optionally write some comments to the "Remarks to user" 
+section and user (and panel) will see it (e.g. to improve next proposals). Proposal will go immediately for the review to the Panel after pressing Submit.
+"""
             if c[0][0] == "R": 
                 self.ConfirmText = "Takeover proposal"
                 # TODO: do selection of referees
@@ -152,7 +156,8 @@ class StatusForm(forms.ModelForm):
         fields = ['status', 'remark', 'hiddenremark']
         labels = {
             "status": "New status",
-            "hiddenremark": "Hidden Remark",
+            "hiddenremark": "Hidden Remark (user won't see)",
+            "remark": "Remarks to user (user will see)"
         }
 
 
