@@ -25,7 +25,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMessage
 from django.db.models import Q
 from app.token import account_activation_token
-from app.tables import ProposalTable, ProposalFilter
+from app.tables import ProposalTable, ProposalFilter, ContactsTable
 
 from django_tables2.views import SingleTableView, SingleTableMixin
 from django_filters.views import FilterView
@@ -438,9 +438,11 @@ class InstrumentsUpdateView(UpdateView):
     form_class = InstrumentsForm
 
 
-class ContactsListView(PermissionRequiredMixin, ListView):
+class ContactsListView(SingleTableMixin, PermissionRequiredMixin, ListView):
     permission_required = 'app.view_contacts'
     model = Contacts
+    table_class = ContactsTable
+    paginate_by = 20
 
 
 class ContactsCreateView(CreateView):

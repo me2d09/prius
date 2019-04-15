@@ -21,9 +21,6 @@ class ProposalTable(tables.Table):
     pid = tables.Column(attrs={'td': {'class': 'font-weight-bold'}})
     pdf = tables.LinkColumn('proposal_pdf_detail_view', args=[A('pid')], text="PDF",  attrs={'a': {'target': '_blank'}}, orderable = False)
 
-    
-
-
     def render_supervisor(self, record):
         if record.student:
             return "✔ (%s)" % record.supervisor
@@ -67,3 +64,18 @@ class ProposalFilter(django_filters.FilterSet):
     class Meta:
         model = Proposals
         fields = ['proposaltype', 'last_status'] #, 'owner']
+
+
+
+class ContactsTable(tables.Table):
+    
+    name = tables.Column(linkify=True)
+    uid = tables.Column(default='---', verbose_name="Username")
+    
+    class Meta:
+        model = Contacts
+        template_name = 'django_tables2/bootstrap4.html'
+        exclude = ('created', 'last_updated', 'orcid', 'description', 'id') 
+        #sequence = ('pid', 'name', 'pdf', '...')
+        attrs  = { 'class': 'table table-striped table-sm table-hover'}
+   
