@@ -175,14 +175,20 @@ class ProposalsForm(forms.ModelForm):
         self.helper.form_method = 'post'
         self.helper.field_class = 'col-sm-10'
         self.helper.label_class = 'col-sm-2'
+        if self.status:
+            cancelbuttoncode = """<a role="button" class="btn btn-default"
+                        href="{% url "app_proposals_detail" object.slug %}">Cancel</a>"""
+        else:
+            cancelbuttoncode = """<a role="button" class="btn btn-default"
+                        href="{% url "home" %}">Cancel</a>"""
+
         self.helper.layout = Layout(
             Fieldset(
                 None, 'name', 'abstract', 'scientific_bg', 'proposaltype', 'student', 'supervisor', 'local_contact', 'coproposers'
             ),
             ButtonHolder(
                 Submit('submit', 'Submit', css_class='button white'),
-                HTML("""<a role="button" class="btn btn-default"
-                        href="{% url "app_proposals_detail" object.slug %}">Cancel</a>"""),
+                HTML(cancelbuttoncode),
             )
         )
         
