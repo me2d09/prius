@@ -37,12 +37,12 @@
                 </tr>
         {% for s in status_history %}
             <tr>
-                <td>{{ s.date|date:"SHORT_DATETIME_FORMAT" }}<br />
+                <td {% if forloop.counter|divisibleby:2 %} class="odd"{% endif %}>{{ s.date|date:"SHORT_DATETIME_FORMAT" }}<br />
                     <span>{{ s.status|get_status_action }}</span>
                 {% if perms.app.see_hidden_remarks %}<br />
                     <i>{{ s.user.contact.name }}</i>{% endif %}
                 </td>
-                <td class="max">{{ s.remark }}
+                <td class="max{% if forloop.counter|divisibleby:2 %}  odd{% endif %}">{{ s.remark }}
                 {% if perms.app.see_hidden_remarks %}
                 {% if s.remark %}<br />{% endif %}<i>{{ s.hiddenremark }}</i>
                 {% endif %}
