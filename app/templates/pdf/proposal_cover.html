@@ -24,7 +24,7 @@
     <p>{{ proposal.abstract|linebreaks  }}</p>
     {% if perms.app.see_hidden_remarks and tech %}
     <h3>Latest Technical review</h3>
-    <p>{{ tech.hidden_remark|linebreaks  }}</p>
+    <p>{{ tech.hiddenremark|linebreaks  }}</p>
     {% endif %}
     {% endif %}
     {% if not page %}<pdf:nextpage  />{% endif %}
