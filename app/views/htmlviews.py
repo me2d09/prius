@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.contrib.auth import login, authenticate, update_session_auth_hash
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django.contrib.auth.models import User, Group
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import render, redirect
 from django.http import HttpRequest, HttpResponse, Http404, HttpResponseRedirect
@@ -182,7 +182,7 @@ def activate(request, uidb64, token):
             }
         )
 
-class ProfileView(DetailView):
+class ProfileView(LoginRequiredMixin, DetailView):
     model = Contacts
     template_name = "app/user_profile.html"
     context_object_name = "contact"
@@ -222,7 +222,7 @@ class ProfileView(DetailView):
 
 
 
-class ProfileEditView(UpdateView):
+class ProfileEditView(LoginRequiredMixin, UpdateView):
     model = Contacts
     form_class = ProfileForm
     template_name = "app/user_profile_update.html"
@@ -257,7 +257,7 @@ class ProfileEditView(UpdateView):
         return reverse('profile')
 
 
-class ProfileCreateView(CreateView):
+class ProfileCreateView(LoginRequiredMixin, CreateView):
     model = Contacts
     form_class = ProfileForm
 
@@ -275,7 +275,7 @@ class ProfileCreateView(CreateView):
         context['profile'] = True
         return context
 
-class UserUpdateView(UpdateView):
+class UserUpdateView(LoginRequiredMixin, UpdateView):
     form_class = UserForm
     model = User
     template_name = 'app/user_profile_update.html'
@@ -445,7 +445,7 @@ class ContactsListView(SingleTableMixin, PermissionRequiredMixin, ListView):
     paginate_by = 20
 
 
-class ContactsCreateView(CreateView):
+class ContactsCreateView(LoginRequiredMixin, CreateView):
     model = Contacts
     form_class = ContactsForm
 
