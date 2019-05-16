@@ -108,6 +108,7 @@ class Proposals(models.Model):
     proposer =  models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT)
     samples = models.ManyToManyField('app.Samples', blank=True)
     local_contact = models.ForeignKey('app.Contacts', related_name='proposal_local_contact', on_delete=models.PROTECT)
+    reporter = models.ForeignKey('app.Contacts', related_name='proposal_reporter', on_delete=models.PROTECT, blank=True, null = True)
     supervisor = models.ForeignKey('app.Contacts', related_name='proposal_supervisor', on_delete=models.PROTECT, blank=True, null = True)
     coproposers = models.ManyToManyField('app.Contacts',  related_name='proposal_coporposals', blank=True)
     publications = models.ManyToManyField('app.Publications', blank=True)
@@ -134,7 +135,7 @@ class Proposals(models.Model):
         permissions = (
             ("change_status", "Can set proposal to any status, edit proposal type anytime"),
             ("approve_technical", "Can submit technical comments"),
-            ("takeover_panel", "Can put proposal to review"),
+            ("takeover_panel", "Can assign a reviewer and submit any review"),
             ("approve_panel", "Can submit panel decision"),
             ("approve_director", "Can submit director approval"),
             ("finish_proposal", "Can finish approved proposal"),

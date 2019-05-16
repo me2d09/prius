@@ -94,18 +94,23 @@ class StatusForm(forms.ModelForm):
             if prop.last_status == 'T': allowed.append('W')  # will wait for panel
             if prop.last_status == 'W': allowed.append('R')  # will be in panel
             if prop.last_status == 'A': allowed.append('F')  # will be finished
-        if self.user.has_perm('app.approve_technical'): 
+        if self.user.has_perm('app.approve_technical') and prop.local_contact.uid == self.user: 
             if prop.last_status == 'T': 
                 allowed.append('W')  # will be waiting for panel
                 showRemark = showHidden = True
-        if self.user.has_perm('app.takeover_panel'): 
-            if prop.last_status == 'W': allowed.append('R')     # will be in panel
-        if self.user.has_perm('app.approve_panel'): 
-            if prop.last_status == 'R': 
+        if self.user.has_perm('app.takeover_panel') and prop.last_status == 'W': 
+                allowed.append('R')     # will be in panel
+                showRemark = showHidden = False
+        if  self.user.has_perm('app.takeover_panel') or (self.user.has_perm('app.approve_panel') and prop.reporter.uid == self.user): 
+            if prop.last_status == 'R':
                 allowed.append('D')      # will be by director
                 allowed.append('X')      # will be rejected permanently
                 allowed.append('P')      # will be in preparation
-                self.info = "Please fill-in remark (visible to user) and optionaly hidden remark (for internal purposes)."
+                self.info = """Please, fill-in panel report and select your decision. You can accept proposal (new status "by director"), 
+                return it to user (status "in preparation") or you can completelly reject it (status "rejected").
+The panel report has two parts - visible and hidden to the user."""
+                self.fields["remark"].label = "Panel report (user will see)"
+                self.fields["hiddenremark"].label = "Hidden panel report (user won't see)"
                 showRemark = showHidden = True
         if self.user.has_perm('app.approve_director'): 
             if prop.last_status == 'D': 
@@ -140,6 +145,7 @@ section and user (and panel) will see it (e.g. to improve next proposals). Propo
 """
             if c[0][0] == "R": 
                 self.ConfirmText = "Takeover proposal"
+                self.fields['reporter'] = forms.ModelChoiceField(queryset=Contacts.objects.filter(uid__groups__name="panel"))
                 # TODO: do selection of referees
         if not showRemark: self.fields.pop("remark")
         if not showHidden: self.fields.pop("hiddenremark")
@@ -148,6 +154,9 @@ section and user (and panel) will see it (e.g. to improve next proposals). Propo
        kwargs['commit']=False
        obj = super(StatusForm, self).save(*args, **kwargs)
        obj.proposal = self.initial['proposal']
+       if "reporter" in self.cleaned_data:
+           obj.proposal.reporter = self.cleaned_data["reporter"]
+       obj.proposal.save()
        obj.save()
        return obj
 

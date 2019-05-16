@@ -27,6 +27,7 @@
 <tr><td>Proposer</td><td><b>{{ object.proposer.contact }}</b><br />{{ object.proposer.contact.affiliation }}</td></tr>
 <tr><td>Student</td><td>{% if object.student %}Yes, supervisor {{object.supervisor}}{% else %}No{% endif %}</td></tr>
 <tr><td>Local Contact</td><td>{{ object.local_contact }}</td></tr>
+{% if object.reporter and perms.app.approve_panel %}<tr><td>Reporter</td><td>{{ object.reporter }}</td></tr>{% endif %}
 <tr><td>Experimental team</td><td>{% for p in object.coproposers.all %}{{ p.name }}{%if not forloop.last%}, {%endif%}{% endfor %}</td></tr>
 </table>
 <p>
@@ -65,6 +66,14 @@
     {% if perms.app.approve_technical and object.last_status == "T" and object.local_contact.uid == user %}
             <a class="btn btn-primary" href="/proposals/changestatus/{{object.slug}}/W/">Submit technical comments</a>
             <a class="btn btn-secondary" href="{{object.get_update_url}}">Change local contact</a> 
+    {% endif %}
+    {% if perms.app.takeover_panel and object.last_status == "W" %}
+            <a class="btn btn-primary" href="/proposals/changestatus/{{object.slug}}/R/">Assign reporter</a>
+    {% endif %}
+    {% if perms.app.takeover_panel and object.last_status == "R" or perms.app.approve_panel and object.reporter.uid == user and object.last_status == "R" %}
+            <a class="btn btn-primary" href="/proposals/changestatus/{{object.slug}}/D/">Submit panel report</a>
+            <a class="btn btn-secondary" href="/proposals/changestatus/{{object.slug}}/P/">Return proposal to user</a>
+            <a class="btn btn-danger" href="/proposals/changestatus/{{object.slug}}/X/">Reject proposal</a>
     {% endif %}
     {% if object.proposer == user and object.last_status == "P" %}
        <a class="btn btn-secondary" href="{{object.get_update_url}}">Edit Proposal</a> 

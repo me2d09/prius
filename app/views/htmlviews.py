@@ -92,6 +92,8 @@ def home(request):
             'proposals_userofficeS': Proposals.objects.filter(last_status__in='S').count(),
             'proposals_userofficeU': Proposals.objects.filter(last_status__in='U').count(),
             'proposals_localcontact': Proposals.objects.filter(local_contact__uid=request.user, last_status='T').count(),
+            'proposals_panel': Proposals.objects.filter(last_status='W').count(),
+            'proposals_my_panel': Proposals.objects.filter(reporter__uid=request.user, last_status='R').count(),
         }
     )
 

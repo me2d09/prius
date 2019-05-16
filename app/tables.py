@@ -21,6 +21,17 @@ class ProposalTable(tables.Table):
     pid = tables.Column(attrs={'td': {'class': 'font-weight-bold'}})
     pdf = tables.LinkColumn('proposal_pdf_detail_view', args=[A('pid')], text="PDF",  attrs={'a': {'target': '_blank'}}, orderable = False)
 
+    def __init__(self, *args, **kwargs):
+        #if self.request.user.has_perm('app.approve_panel'):
+        #    self.Meta.exclude.pop("reporter")
+        super().__init__(*args, **kwargs)
+
+    def before_render(self, request):
+        if request.user.has_perm('app.approve_panel'):
+            self.columns.show('reporter')
+        else:
+            self.columns.hide('reporter')
+
     def render_supervisor(self, record):
         if record.student:
             return "✔ (%s)" % record.supervisor
@@ -29,7 +40,7 @@ class ProposalTable(tables.Table):
     class Meta:
         model = Proposals
         template_name = 'django_tables2/bootstrap4.html'
-        exclude = ('id', 'abstract', 'slug', 'student', 'scientific_bg') 
+        exclude = ('id', 'abstract', 'slug', 'student', 'scientific_bg') #, 'reporter') 
         sequence = ('pid', 'name', 'pdf', '...')
         attrs  = { 'class': 'table table-striped table-sm table-hover'}
         
@@ -41,12 +52,20 @@ def localcontacts(request):
     qs = Contacts.objects.filter(uid__in = User.objects.filter(groups__name__in=['localcontacts']))
     return qs
 
+def reporters(request):
+    if request is None or not request.user.is_authenticated:
+        return Contacts.objects.none()
+
+    qs = Contacts.objects.filter(uid__in = User.objects.filter(groups__name__in=['panel']))
+    return qs
+
 class ProposalFilter(django_filters.FilterSet):
 
     #owner = django_filters.filters.ChoiceFilter(choices=('mine', 'all'))
     proposaltype = django_filters.ChoiceFilter(choices=Proposals.PROPOSAL_TYPE, empty_label='all proposals')
     last_status = django_filters.ChoiceFilter(choices=Status.STATUS_TYPES, empty_label='all statuses')
     local_contact = django_filters.ModelChoiceFilter(queryset=localcontacts, empty_label='all local contacts')
+    reporter = django_filters.ModelChoiceFilter(queryset=reporters, empty_label='all reporters')
     search_all = django_filters.CharFilter(method='filter_search_all', label='search proposals')
 
 
@@ -55,6 +74,9 @@ class ProposalFilter(django_filters.FilterSet):
         if 'filtering' in self.request.resolver_match.kwargs and self.request.resolver_match.kwargs['filtering']  == "mine":
             self.filters.pop("local_contact")
             self.filters.pop("search_all")
+            self.filters.pop("reporter")
+        elif not self.request.user.has_perm('app.approve_panel'):
+            self.filters.pop("reporter")
 
     def filter_search_all(self, queryset, name, value):
         return queryset.filter(

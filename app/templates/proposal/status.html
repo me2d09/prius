@@ -30,6 +30,9 @@
           {% endif %}
         </div>
         {% endif %}        
+        {% if form.reporter %}
+            {{ form.reporter|as_crispy_field }}
+        {% endif %}  
         <p>{{ form.info }}</p>
         <button type="submit" class="btn btn-primary">{{ form.ConfirmText }}</button>
         <a href="/proposals/detail/{{ proposal.slug }}/" class="btn btn-danger">Cancel</a>

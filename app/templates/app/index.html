@@ -32,6 +32,36 @@
       </section>
       {% endif %}
 
+      {% if request.user|has_group:"panel" %}
+      <!-- Director Section -->
+      <section class="dashboard-header">
+        <div class="container-fluid">
+          <h2>Panel tasks</h2>
+          <div class="row">
+              {% if perms.app.takeover_panel %}
+            <!-- Panel head-->
+            <div class="card col-xl-6 col-md-12 col-12">
+              <a href="/proposals/all/?last_status=W" class="btn"><div class="wrapper count-title d-flex">
+                <div class="icon"><i class="icon-padnote"></i></div>
+                <div class="name"><strong class="text-uppercase">Proposals</strong><span>waiting for panel takeover</span></div>
+                <div class="count-number">{{ proposals_panel }}</div>
+              </div></a>
+            </div>
+              {% endif %}
+
+              <!-- Count item widget-->
+            <div class="card col-xl-6 col-md-12 col-12">
+              <a href="/proposals/all/?last_status=R&reporter={{ user.contact.pk }}" class="btn"><div class="wrapper count-title d-flex">
+                <div class="icon"><i class="icon-padnote"></i></div>
+                <div class="name"><strong class="text-uppercase">Proposals</strong><span>waiting for my decision</span></div>
+                <div class="count-number">{{ proposals_my_panel }}</div>
+              </div></a>
+            </div>
+          </div>
+        </div>
+      </section>
+      {% endif %}
+
       {% if request.user|has_group:"localcontacts" %}
       <!-- Local contact Section -->
       <section class="dashboard-header">
