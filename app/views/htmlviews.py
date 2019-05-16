@@ -306,7 +306,7 @@ def change_password(request):
 class ProposalsListView(SingleTableMixin, FilterView):
     model = Proposals
     table_class = ProposalTable
-    paginate_by = 10
+    paginate_by = 25
     template_name = "proposal/list.html"
 
     filterset_class = ProposalFilter
@@ -442,7 +442,7 @@ class ContactsListView(SingleTableMixin, PermissionRequiredMixin, ListView):
     permission_required = 'app.view_contacts'
     model = Contacts
     table_class = ContactsTable
-    paginate_by = 20
+    paginate_by = 25
 
 
 class ContactsCreateView(LoginRequiredMixin, CreateView):
