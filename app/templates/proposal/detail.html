@@ -26,7 +26,7 @@
 <tr><td>Scientific background</td><td>{% if object.scientific_bg %}<a href="{{ object.scientific_bg.url }}" target="_blank">{{ object.scientific_bg.name }}</a>{% else %}<b class="text-danger">missing</b>{% endif %}</td></tr>
 <tr><td>Proposer</td><td><b>{{ object.proposer.contact }}</b><br />{{ object.proposer.contact.affiliation }}</td></tr>
 <tr><td>Student</td><td>{% if object.student %}Yes, supervisor {{object.supervisor}}{% else %}No{% endif %}</td></tr>
-<tr><td>Local Contact</td><td>{{ object.local_contact }}</td></tr>
+<tr><td>Local Contacts</td><td>{% for p in object.local_contacts.all %}{{ p.name }}{%if not forloop.last%}, {%endif%}{% endfor %}</td></tr>
 {% if object.reporter and perms.app.approve_panel %}<tr><td>Reporter</td><td>{{ object.reporter }}</td></tr>{% endif %}
 <tr><td>Experimental team</td><td>{% for p in object.coproposers.all %}{{ p.name }}{%if not forloop.last%}, {%endif%}{% endfor %}</td></tr>
 </table>
@@ -63,7 +63,7 @@
             <a class="btn btn-primary" href="/proposals/changestatus/{{object.slug}}/T/">Pass to local contact</a>
             <a class="btn btn-danger" href="/proposals/changestatus/{{object.slug}}/P/">Return to user</a>
     {% endif %}
-    {% if perms.app.approve_technical and object.last_status == "T" and object.local_contact.uid == user %}
+    {% if perms.app.approve_technical and object.last_status == "T" and user.contact in object.local_contacts.all %}
             <a class="btn btn-primary" href="/proposals/changestatus/{{object.slug}}/W/">Submit technical comments</a>
             <a class="btn btn-secondary" href="{{object.get_update_url}}">Change local contact</a> 
     {% endif %}

@@ -94,7 +94,7 @@ class StatusForm(forms.ModelForm):
             if prop.last_status == 'T': allowed.append('W')  # will wait for panel
             if prop.last_status == 'W': allowed.append('R')  # will be in panel
             if prop.last_status == 'A': allowed.append('F')  # will be finished
-        if self.user.has_perm('app.approve_technical') and prop.local_contact.uid == self.user: 
+        if self.user.has_perm('app.approve_technical') and self.user in prop.local_contacts.values_list("uid", flat=True): 
             if prop.last_status == 'T': 
                 allowed.append('W')  # will be waiting for panel
                 showRemark = showHidden = True
@@ -176,7 +176,7 @@ class ProposalsForm(forms.ModelForm):
         self.request = kwargs.pop('request', None)
         self.user = kwargs.pop('user', None)
         self.status = kwargs.pop('status', None)
-        self.local_contact = kwargs.pop('local_contact', None)
+        self.local_contacts = kwargs.pop('local_contacts', None)
 
         super(ProposalsForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
@@ -193,7 +193,7 @@ class ProposalsForm(forms.ModelForm):
 
         self.helper.layout = Layout(
             Fieldset(
-                None, 'name', 'abstract', 'scientific_bg', 'proposaltype', 'student', 'supervisor', 'local_contact', 'coproposers'
+                None, 'name', 'abstract', 'scientific_bg', 'proposaltype', 'student', 'thesis_topic', 'supervisor', 'grants', 'local_contacts', 'coproposers'
             ),
             ButtonHolder(
                 Submit('submit', 'Submit', css_class='button white'),
@@ -201,7 +201,7 @@ class ProposalsForm(forms.ModelForm):
             )
         )
         
-        self.fields['local_contact'].widget.attrs = {
+        self.fields['local_contacts'].widget.attrs = {
             'data-theme': 'bootstrap4',
         }
         self.fields['coproposers'].widget.attrs = {
@@ -210,7 +210,7 @@ class ProposalsForm(forms.ModelForm):
         self.fields['supervisor'].widget.attrs = {
             'data-theme': 'bootstrap4',
         }
-        self.fields['student'].widget.attrs['onclick'] = "javascript:toggleDiv('div_id_supervisor');"
+        self.fields['student'].widget.attrs['onclick'] = "javascript:toggleDivs();"
         if not self.user.groups.filter(name='localcontacts').exists():
             self.fields["proposaltype"].choices = [t for t in self.fields["proposaltype"].choices if t[0] != 'T']  #remove test proposal
         if self.status and self.status != "P":
@@ -218,10 +218,10 @@ class ProposalsForm(forms.ModelForm):
                 f.disabled = True
             # user office can change some stuff
             if self.user.has_perm('app.change_status') and self.status in "SU":
-                self.fields['local_contact'].disabled = False
+                self.fields['local_contacts'].disabled = False
                 self.fields['proposaltype'].disabled = False
-            if self.user.has_perm('app.approve_technical') and self.status == "T" and self.local_contact.uid == self.user:
-                self.fields['local_contact'].disabled = False
+            if self.user.has_perm('app.approve_technical') and self.status == "T" and self.user.contact in self.local_contacts:
+                self.fields['local_contacts'].disabled = False
             if self.status == "A":
                 self.fields['coproposers'].disabled = False
 
@@ -237,20 +237,21 @@ class ProposalsForm(forms.ModelForm):
 
     class Meta:
         model = Proposals
-        fields = ['name', 'abstract', 'scientific_bg', 'proposaltype', 'student', 'supervisor', 'local_contact', 'coproposers']
+        fields = ['name', 'abstract', 'scientific_bg', 'proposaltype', 'student', 'supervisor', 'thesis_topic', 'local_contacts', 'grants', 'coproposers']
         labels = {
             "name": "Proposal name",
             "proposaltype": "Type of proposal",
             "coproposers": "Experimental team",
             "scientific_bg": "Scientific background",
-            "local_contact": "Local contact",
+            "local_contacts": "Local contacts",
             "student": "Student proposal",
         }
         widgets = {
             'scientific_bg': forms.FileInput(attrs={'accept':'.pdf, application/pdf'}),
-            'local_contact': autocomplete.ModelSelect2(url='localcontacts-autocomplete',
+            'local_contacts': autocomplete.ModelSelect2Multiple(url='localcontacts-autocomplete',
                                                        attrs={
                                                             'data-placeholder': 'Choose local contact',
+                                                            'data-minimum-input-length': 1,
                                                             'width': 'resolve',
                                                        }
                                                        ),

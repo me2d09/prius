@@ -102,17 +102,24 @@ class Proposals(models.Model):
     proposaltype = CharField(max_length=1, choices = PROPOSAL_TYPE, default = 'S')
     last_status = CharField(max_length=1, choices = Status.STATUS_TYPES, default='P')
     student = BooleanField(default = False)
-    
+    thesis_topic = CharField(max_length=1000, blank=True, null=True)
+    grants = CharField(max_length=1000, blank=True, null=True)
 
     # Relationship Fields
     proposer =  models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT)
     samples = models.ManyToManyField('app.Samples', blank=True)
-    local_contact = models.ForeignKey('app.Contacts', related_name='proposal_local_contact', on_delete=models.PROTECT)
+    local_contacts = models.ManyToManyField('app.Contacts',  related_name='proposal_local_contacts', blank=True)
     reporter = models.ForeignKey('app.Contacts', related_name='proposal_reporter', on_delete=models.PROTECT, blank=True, null = True)
     supervisor = models.ForeignKey('app.Contacts', related_name='proposal_supervisor', on_delete=models.PROTECT, blank=True, null = True)
     coproposers = models.ManyToManyField('app.Contacts',  related_name='proposal_coporposals', blank=True)
     publications = models.ManyToManyField('app.Publications', blank=True)
     
+    @property
+    def local_contacts_short(self):
+        if self.local_contacts.count() > 1:
+            return "%s (+%d)" % (self.local_contacts.first().name, self.local_contacts.count() - 1)
+        else:
+            return self.local_contacts.first().name
 
 
     def save(self, *args, **kwargs):

@@ -91,7 +91,7 @@ def home(request):
             'proposals_director': Proposals.objects.filter(last_status='D').count(),
             'proposals_userofficeS': Proposals.objects.filter(last_status__in='S').count(),
             'proposals_userofficeU': Proposals.objects.filter(last_status__in='U').count(),
-            'proposals_localcontact': Proposals.objects.filter(local_contact__uid=request.user, last_status='T').count(),
+            'proposals_localcontact': Proposals.objects.filter(local_contacts__uid__exact=request.user, last_status='T').count(),
             'proposals_panel': Proposals.objects.filter(last_status='W').count(),
             'proposals_my_panel': Proposals.objects.filter(reporter__uid=request.user, last_status='R').count(),
         }
@@ -407,7 +407,7 @@ class ProposalsUpdateView(UpdateView):
         kwargs = super().get_form_kwargs()
         kwargs.update({ 'user': self.request.user})
         kwargs.update({ 'status': super().get_object().last_status})
-        kwargs.update({ 'local_contact': super().get_object().local_contact})
+        kwargs.update({ 'local_contacts': super().get_object().local_contacts})
         return kwargs
 
 class ProposalsDelete(DeleteView):

@@ -10,12 +10,12 @@ class TruncatedTextColumn(tables.Column):
     """A Column to limit to 100 characters and add an ellipsis"""
 
     def render(self, value):
-        if len(value) > 102:
-            return value[0:99] + '...'
+        if len(value) > 52:
+            return value[0:49] + '...'
         return str(value)
 
 class ProposalTable(tables.Table):
-
+    local_contacts_short = TruncatedTextColumn(verbose_name= 'Local contact', orderable = False)
     name = TruncatedTextColumn(linkify=True)
     proposer  = tables.LinkColumn('app_contacts_detail', args=[A('proposer.contact.pk')], text=lambda record: record.proposer.contact.name, order_by = A('proposer.contact.name'))
     pid = tables.Column(attrs={'td': {'class': 'font-weight-bold'}})
@@ -40,7 +40,7 @@ class ProposalTable(tables.Table):
     class Meta:
         model = Proposals
         template_name = 'django_tables2/bootstrap4.html'
-        exclude = ('id', 'abstract', 'slug', 'student', 'scientific_bg') #, 'reporter') 
+        exclude = ('id', 'abstract', 'slug', 'student', 'scientific_bg', 'thesis_topic', 'grants') #, 'reporter') 
         sequence = ('pid', 'name', 'pdf', '...')
         attrs  = { 'class': 'table table-striped table-sm table-hover'}
         
@@ -64,7 +64,7 @@ class ProposalFilter(django_filters.FilterSet):
     #owner = django_filters.filters.ChoiceFilter(choices=('mine', 'all'))
     proposaltype = django_filters.ChoiceFilter(choices=Proposals.PROPOSAL_TYPE, empty_label='all proposals')
     last_status = django_filters.ChoiceFilter(choices=Status.STATUS_TYPES, empty_label='all statuses')
-    local_contact = django_filters.ModelChoiceFilter(queryset=localcontacts, empty_label='all local contacts')
+    local_contacts = django_filters.ModelChoiceFilter(queryset=localcontacts) #, empty_label='all local contacts')
     reporter = django_filters.ModelChoiceFilter(queryset=reporters, empty_label='all reporters')
     search_all = django_filters.CharFilter(method='filter_search_all', label='search proposals')
 
@@ -72,7 +72,7 @@ class ProposalFilter(django_filters.FilterSet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if 'filtering' in self.request.resolver_match.kwargs and self.request.resolver_match.kwargs['filtering']  == "mine":
-            self.filters.pop("local_contact")
+            self.filters.pop("local_contacts")
             self.filters.pop("search_all")
             self.filters.pop("reporter")
         elif not self.request.user.has_perm('app.approve_panel'):

@@ -26,13 +26,15 @@
 {% endblock %}
 {% block scripts %}
     <script>
-    function toggleDiv(divId) {
-        $("#"+divId).toggle(500);
+    function toggleDivs() {
+        $("#div_id_supervisor").toggle(500);
+        $("#div_id_thesis_topic").toggle(500);
         }
     $(document).ready(function () {
         if (!$("#id_student").is(":checked"))
         {
             $("#div_id_supervisor").hide(0);
+            $("#div_id_thesis_topic").hide(0);
         }
         });
 
