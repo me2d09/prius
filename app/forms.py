@@ -196,20 +196,27 @@ class ProposalsForm(forms.ModelForm):
                 None, 'name', 'abstract', 'scientific_bg', 'proposaltype', 'student', 'thesis_topic', 'supervisor', 'grants', 'local_contacts', 'coproposers'
             ),
             ButtonHolder(
-                Submit('submit', 'Submit', css_class='button white'),
+                Submit('submit', 'Save', css_class='button white'),
                 HTML(cancelbuttoncode),
             )
         )
+        self.fields['name'].help_text = "Enter the name of the proposal, maximum length is 500 characters, however we recommend shorter."
+        self.fields['abstract'].help_text = "Mandatory abstract, maximumn length 5000 characters."
+        self.fields['proposaltype'].help_text = "Select type of proposal. See <a href=""/how-to/proposal"" target=""_blank"">help</a> for description and how to choose the correct one."
         
         self.fields['local_contacts'].widget.attrs = {
             'data-theme': 'bootstrap4',
         }
+        self.fields['local_contacts'].help_text = "You need to select at least one local contact. He/she will do feasibility check of your proposal. More local contacts can be added later if needed."
         self.fields['coproposers'].widget.attrs = {
             'data-theme': 'bootstrap4',
         }
+        self.fields['coproposers'].help_text = "You can (optionally) add coporposers to your team. They will see the proposal and will be able to book measurement for it. If the proposal is connected with any funding, <b>PI of the grant MUST be part of the team</b>."
         self.fields['supervisor'].widget.attrs = {
             'data-theme': 'bootstrap4',
         }
+        self.fields['grants'].help_text = "If the proposal is connected with any funding, add its abbreviation and/or number. In case of more fundings, separate by comma. Example: '<i>GAČR 19-000123S, ERC BoBEK 123456</i>'."
+        self.fields['student'].help_text = "Student proposals needs to mention supervisor and thesis topic."
         self.fields['student'].widget.attrs['onclick'] = "javascript:toggleDivs();"
         if not self.user.groups.filter(name='localcontacts').exists():
             self.fields["proposaltype"].choices = [t for t in self.fields["proposaltype"].choices if t[0] != 'T']  #remove test proposal
