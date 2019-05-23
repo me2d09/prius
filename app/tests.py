@@ -6,7 +6,7 @@ when you run "manage.py test".
 import django
 from django.test import TestCase
 import unittest
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.test import Client
 from .models import Proposals, Instruments, Contacts, Affiliations, Countries, InstrumentRequest, Options, SharedOptions, InstrumentParameterSets, InstrumentParameters, ParameterValues, Samples, SamplePhotos, SampleRemarks, Publications, Experiments, Slots
 from django.contrib.auth.models import User

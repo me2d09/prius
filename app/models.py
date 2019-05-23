@@ -18,6 +18,8 @@ from django.core.exceptions import ValidationError
 from PyPDF2 import PdfFileReader
 from django.core.exceptions import PermissionDenied
 
+from pinax.notifications.models import send as notify_send
+
 
 
 class Status(models.Model):
@@ -132,10 +134,52 @@ class Proposals(models.Model):
             for p in qs:
                 maxpid = max(maxpid, int(p[0][2:]))
             self.pid = "%s%03d" % (start, maxpid + 1)
+        old_prop = Proposals.objects.filter(pk=self.pk).first()
         super(Proposals, self).save(*args, **kwargs)
         #create a line in statuses table, if added
         if adding: 
             Status.objects.create(status="P", proposal=self, user=self.proposer)
+        # send emails
+        if old_prop:
+            s = old_prop.last_status + self.last_status
+            if s == "DA":
+                # send email to all coproposers
+                notify_send(list(self.coproposers.values_list()) + [self.proposer], 
+                            'X_proposal_accepted', extra_context = { 'proposal': self})
+                notify_send(list(self.local_contacts.values_list()), 
+                            'l_accepted', extra_context = { 'proposal': self})
+                notify_send(User.objects.filter(groups__name=='admins'), 
+                            'a_accepted', extra_context = { 'proposal': self})
+            else:
+                notify_send(list(self.coproposers.values_list()) + [self.proposer], 
+                            'X_proposal_status_changed', extra_context = { 'proposal': self})
+            if s == "UT":
+                notify_send(list(self.local_contacts.values_list()), 
+                            'L_request_technical', extra_context = { 'proposal': self})
+            elif s == "TW":
+                notify_send(User.objects.filter(groups__name=='panelhead'), 
+                            'H_new_proposal', extra_context = { 'proposal': self})
+            elif s == "WR":
+                notify_send([self.reporter], 
+                            'P_request_review', extra_context = { 'proposal': self})
+            elif s == "RD":
+                notify_send(User.objects.filter(groups__name=='director'), 
+                            'D_accepted', extra_context = { 'proposal': self})
+            elif s == "RX":
+                notify_send(User.objects.filter(groups__name=='director'), 
+                            'd_rejected', extra_context = { 'proposal': self})
+            elif s == "RP":
+                notify_send(User.objects.filter(groups__name=='director'), 
+                            'd_returned', extra_context = { 'proposal': self})
+            elif s == "PS":
+                notify_send(User.objects.filter(groups__name=='useroffice'), 
+                            'U_submited', extra_context = { 'proposal': self})
+                notify_send(User.objects.filter(groups__name=='admins'), 
+                            'a_submited', extra_context = { 'proposal': self})
+
+            
+
+
 
     class Meta:
         ordering = ('-created',)

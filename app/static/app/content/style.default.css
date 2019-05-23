@@ -3125,3 +3125,27 @@ a > code {
 .alert {
     z-index: 99999;
 }
+
+    table.notice-settings {
+        background: #fff;
+    }
+
+    table.notice-settings tr:first-child {
+        background: #BDBDBD;
+        color: #424242;
+    }
+
+    table.notice-settings .notice-type-description {
+        color: #616161;
+        font-weight: 300;
+        font-size: 0.9em;
+    }
+
+    table.notice-settings td.setting {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    table.notice-settings th.setting-header {
+        text-align: center;
+    }

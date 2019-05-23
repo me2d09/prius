@@ -1,0 +1,73 @@
+{% extends "form.html" %}
+{% load extratags %}
+{% load bootstrap4 %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item">Settings</li>
+    <li class="breadcrumb-item active">Notifications</li>
+{% endblock %}
+
+{% block formcontent %}
+
+    {% url "account_settings" as email_url %}
+    {% if not request.user.email %}
+        <div class="no-verified-email">
+            <span>Note</span>:
+            You do not have a verified email address to which notices can be sent. <a href="{{ email_url }}">Add one</a> now.
+        </div>
+    {% endif %}
+    <header> 
+        <h1 class="h3 display">Notification Settings</h1>
+    </header>
+    <form method="post" action=".">
+        {% csrf_token %}
+        <table class="table notice-settings">
+            <tr>
+                <th>Notification Type</th>
+                {% for header in notice_settings.column_headers %}
+                    <th class="setting-header">
+                        {{ header.title }}
+                    </th>
+                {% endfor %}
+            </tr>
+            {% for row in notice_settings.rows %}
+              {% if row.notice_type.label|first in "LPHDUAlphdua" %}
+                  {% if  request.user|has_group:row.notice_type.label %}
+                    <tr class="setting-row">
+                        <td>
+                            <strong>{{ row.notice_type.display }}</strong><br/>
+                            <span class="notice-type-description">
+                                {{ row.notice_type.description }}
+                            </span>
+                        </td>
+                        {% for cell in row.cells %}
+                            <td class="setting">
+                                <input type="checkbox" {% if row.notice_type.label|first in "LPHDUA" %}disabled="disabled" {% endif %}name="{{ cell.0 }}" {% if cell.1 %}checked="yes"{% endif %} />
+                            </td>
+                        {% endfor %}
+                    </tr>
+                  {% endif %}
+              {% else %}
+                <tr class="setting-row">
+                    <td>
+                        <strong>{{ row.notice_type.display }}</strong><br/>
+                        <span class="notice-type-description">
+                            {{ row.notice_type.description }}
+                        </span>
+                    </td>
+                    {% for cell in row.cells %}
+                        <td class="setting">
+                            <input type="checkbox" name="{{ cell.0 }}" {% if cell.1 %}checked="yes"{% endif %} />
+                        </td>
+                    {% endfor %}
+                </tr>
+              {% endif %}
+            {% endfor %}
+        </table>
+        {% buttons %}
+        <div class="form-actions">
+            <button  class="btn btn-primary">Change</button>
+        </div>
+        {% endbuttons %}
+    </form>
+{% endblock %}

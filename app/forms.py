@@ -215,7 +215,7 @@ class ProposalsForm(forms.ModelForm):
         self.fields['supervisor'].widget.attrs = {
             'data-theme': 'bootstrap4',
         }
-        self.fields['grants'].help_text = "If the proposal is connected with any funding, add its abbreviation and/or number. In case of more fundings, separate by comma. Example: '<i>GAČR 19-000123S, ERC BoBEK 123456</i>'."
+        self.fields['grants'].help_text = "If the proposal is connected with any funding, add its abbreviation and/or number. In case of more fundings, separate by comma. Example: <i>'GAČR 19-000123S, ERC BoBEK 123456'</i>."
         self.fields['student'].help_text = "Student proposals needs to mention supervisor and thesis topic."
         self.fields['student'].widget.attrs['onclick'] = "javascript:toggleDivs();"
         if not self.user.groups.filter(name='localcontacts').exists():

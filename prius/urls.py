@@ -97,3 +97,7 @@ urlpatterns += (
     url(r'^proposal_pdf/(?P<pid>\S+)/', views.ProposalPdfDetailView.as_view(), name='proposal_pdf_detail_view',),
 )
 
+urlpatterns += [
+    # other urls
+    url(r"^notifications/", include("pinax.notifications.urls", namespace="pinax_notifications")),
+]

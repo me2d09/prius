@@ -1,0 +1,8 @@
+{% url "pinax_notifications:notice_settings" as notices_url %}Dear {{recipient.contact}},
+
+{{ message }}
+
+Best regards,
+MGML
+
+To change how you receive notifications, please go to {{ default_http_protocol }}://{{ current_site }}{{ notices_url }}

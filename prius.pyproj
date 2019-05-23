@@ -80,7 +80,10 @@
     <Folder Include="app\" />
     <Folder Include="app\migrations\" />
     <Folder Include="app\static\fonts\" />
+    <Folder Include="app\templates\pinax\" />
     <Folder Include="app\templates\pdf\" />
+    <Folder Include="app\templates\pinax\notifications\" />
+    <Folder Include="app\templates\pinax\notifications\proposal_accepted\" />
     <Folder Include="app\views\" />
     <Folder Include="app\templatetags\" />
     <Folder Include="app\static\" />
@@ -111,6 +114,13 @@
     <Content Include="app\templates\mails\nofity-accept.html" />
     <Content Include="app\templates\pdf\pdffonts.css" />
     <Content Include="app\templates\pdf\proposal_cover.html" />
+    <Content Include="app\templates\pinax\notifications\email_body.txt" />
+    <Content Include="app\templates\pinax\notifications\email_subject.txt" />
+    <Content Include="app\templates\pinax\notifications\full.txt" />
+    <Content Include="app\templates\pinax\notifications\notice_settings.html" />
+    <Content Include="app\templates\pinax\notifications\proposal_accepted\full.txt" />
+    <Content Include="app\templates\pinax\notifications\proposal_accepted\short.txt" />
+    <Content Include="app\templates\pinax\notifications\short.txt" />
     <Content Include="app\templates\proposal\delete.html" />
     <Content Include="app\templates\mails\invitation.html" />
     <Content Include="app\templates\mails\activation.html" />
