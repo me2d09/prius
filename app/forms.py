@@ -94,7 +94,7 @@ class StatusForm(forms.ModelForm):
             if prop.last_status == 'T': allowed.append('W')  # will wait for panel
             if prop.last_status == 'W': allowed.append('R')  # will be in panel
             if prop.last_status == 'A': allowed.append('F')  # will be finished
-        if self.user.has_perm('app.approve_technical') and self.user in prop.local_contacts.values_list("uid", flat=True): 
+        if self.user.has_perm('app.approve_technical') and self.user.contact in prop.local_contacts: 
             if prop.last_status == 'T': 
                 allowed.append('W')  # will be waiting for panel
                 showRemark = showHidden = True
