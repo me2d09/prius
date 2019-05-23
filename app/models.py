@@ -148,7 +148,7 @@ class Proposals(models.Model):
                             'X_proposal_accepted', extra_context = { 'proposal': self})
                 notify_send(list(self.local_contacts.values_list()), 
                             'l_accepted', extra_context = { 'proposal': self})
-                notify_send(User.objects.filter(groups__name=='admins'), 
+                notify_send(User.objects.filter(groups_name=='admins'), 
                             'a_accepted', extra_context = { 'proposal': self})
             else:
                 notify_send(list(self.coproposers.values_list()) + [self.proposer], 
@@ -157,24 +157,24 @@ class Proposals(models.Model):
                 notify_send(list(self.local_contacts.values_list()), 
                             'L_request_technical', extra_context = { 'proposal': self})
             elif s == "TW":
-                notify_send(User.objects.filter(groups__name=='panelhead'), 
+                notify_send(User.objects.filter(groups__name='panelhead'), 
                             'H_new_proposal', extra_context = { 'proposal': self})
             elif s == "WR":
                 notify_send([self.reporter], 
                             'P_request_review', extra_context = { 'proposal': self})
             elif s == "RD":
-                notify_send(User.objects.filter(groups__name=='director'), 
+                notify_send(User.objects.filter(groups__name='director'), 
                             'D_accepted', extra_context = { 'proposal': self})
             elif s == "RX":
-                notify_send(User.objects.filter(groups__name=='director'), 
+                notify_send(User.objects.filter(groups__name='director'), 
                             'd_rejected', extra_context = { 'proposal': self})
             elif s == "RP":
-                notify_send(User.objects.filter(groups__name=='director'), 
+                notify_send(User.objects.filter(groups__name='director'), 
                             'd_returned', extra_context = { 'proposal': self})
             elif s == "PS":
-                notify_send(User.objects.filter(groups__name=='useroffice'), 
+                notify_send(User.objects.filter(groups__name='useroffice'), 
                             'U_submited', extra_context = { 'proposal': self})
-                notify_send(User.objects.filter(groups__name=='admins'), 
+                notify_send(User.objects.filter(groups__name='admins'), 
                             'a_submited', extra_context = { 'proposal': self})
 
             
