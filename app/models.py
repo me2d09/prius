@@ -148,7 +148,7 @@ class Proposals(models.Model):
                             'X_proposal_accepted', extra_context = { 'proposal': self})
                 notify_send([x.uid for x in self.local_contacts.select_related("uid").all()], 
                             'l_accepted', extra_context = { 'proposal': self})
-                notify_send(User.objects.filter(groups_name=='admins'), 
+                notify_send(User.objects.filter(groups__name='admins'), 
                             'a_accepted', extra_context = { 'proposal': self})
             else:
                 notify_send([x.uid for x in self.coproposers.select_related("uid").all()] + [self.proposer], 
