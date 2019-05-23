@@ -140,27 +140,27 @@ class Proposals(models.Model):
         if adding: 
             Status.objects.create(status="P", proposal=self, user=self.proposer)
         # send emails
-        if old_prop:
+        if old_prop and old_prop.last_status != self.last_status:
             s = old_prop.last_status + self.last_status
             if s == "DA":
                 # send email to all coproposers
-                notify_send(list(self.coproposers.values_list()) + [self.proposer], 
+                notify_send([x.uid for x in self.coproposers.select_related("uid").all()] + [self.proposer], 
                             'X_proposal_accepted', extra_context = { 'proposal': self})
-                notify_send(list(self.local_contacts.values_list()), 
+                notify_send([x.uid for x in self.local_contacts.select_related("uid").all()], 
                             'l_accepted', extra_context = { 'proposal': self})
                 notify_send(User.objects.filter(groups_name=='admins'), 
                             'a_accepted', extra_context = { 'proposal': self})
             else:
-                notify_send(list(self.coproposers.values_list()) + [self.proposer], 
+                notify_send([x.uid for x in self.coproposers.select_related("uid").all()] + [self.proposer], 
                             'X_proposal_status_changed', extra_context = { 'proposal': self})
             if s == "UT":
-                notify_send(list(self.local_contacts.values_list()), 
+                notify_send([x.uid for x in self.local_contacts.select_related("uid").all()], 
                             'L_request_technical', extra_context = { 'proposal': self})
             elif s == "TW":
                 notify_send(User.objects.filter(groups__name='panelhead'), 
                             'H_new_proposal', extra_context = { 'proposal': self})
             elif s == "WR":
-                notify_send([self.reporter], 
+                notify_send([self.reporter.uid], 
                             'P_request_review', extra_context = { 'proposal': self})
             elif s == "RD":
                 notify_send(User.objects.filter(groups__name='director'), 
