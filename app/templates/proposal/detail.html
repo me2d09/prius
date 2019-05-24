@@ -80,7 +80,7 @@
        {% if object.last_status == "P" %}<a class="btn btn-primary" href="/proposals/changestatus/{{object.slug}}/S/">Submit Proposal</a>
        <a class="btn btn-danger" href="/proposals/delete/{{object.slug}}/">Delete Proposal</a> {% endif %}
     {% endif %}
-    {% if perms.app.change_status and object.last_status in "P,S,U" %}
+    {% if perms.app.change_status and object.last_status in "S,U" %}
        <a class="btn btn-secondary" href="{{object.get_update_url}}">Edit proposal type and/or local contact</a> 
     {% endif %}
     {% if object.proposer == user and object.last_status == "A" %}
