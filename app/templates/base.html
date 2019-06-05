@@ -60,7 +60,7 @@
               {% if perms.app.add_proposals %}
             <li><a href="/proposals/create/"> <i class="icon-form"></i>New Proposal</a></li>
             <li><a href="/proposals/"> <i class="icon-form"></i>My Proposals</a></li>{% endif %}
-              {% if perms.app.view_proposals %}
+              {% if perms.app.view_proposals or request.user|has_group:"localcontacts" %}
             <li><a href="/proposals/all/"> <i class="icon-form"></i>All Proposals</a></li>{% endif %}
               {% if perms.app.add_contacts %}
             <li><a href="/contacts/create/"> <i class="icon-form"></i>Invite User</a></li>{% endif %}

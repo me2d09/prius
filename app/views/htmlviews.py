@@ -322,7 +322,9 @@ class ProposalsListView(SingleTableMixin, FilterView):
         else:
             #check permissions
             if not self.request.user.has_perm('app.view_proposals'):
-                raise Http404
+                queryset = queryset.filter(Q(proposer=self.request.user) | 
+                                       Q(coproposers__uid__exact=self.request.user) | 
+                                       Q(local_contacts__uid__exact=self.request.user))
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -389,7 +391,8 @@ class ProposalsDetailView(DetailView):
             qs = super(ProposalsDetailView, self).get_queryset().distinct()
         else: # can view only if it is part of the team
             qs = super(ProposalsDetailView, self).get_queryset().filter(Q(proposer=self.request.user) | 
-                                       Q(coproposers__uid__exact=self.request.user)).distinct()
+                                       Q(coproposers__uid__exact=self.request.user) | 
+                                       Q(local_contacts__uid__exact=self.request.user)).distinct()
         return qs
 
     def get_context_data(self, *args, **kwargs):
