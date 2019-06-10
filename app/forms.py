@@ -227,7 +227,7 @@ class ProposalsForm(forms.ModelForm):
             if self.user.has_perm('app.change_status') and self.status in "SU":
                 self.fields['local_contacts'].disabled = False
                 self.fields['proposaltype'].disabled = False
-            if self.user.has_perm('app.approve_technical') and self.status == "T" and self.user.contact in self.local_contacts:
+            if self.user.has_perm('app.approve_technical') and self.status == "T" and self.user.contact in self.local_contacts.all():
                 self.fields['local_contacts'].disabled = False
             if self.status == "A":
                 self.fields['coproposers'].disabled = False
