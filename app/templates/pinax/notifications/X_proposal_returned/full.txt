@@ -1,0 +1,2 @@
+{% autoescape off %}we are sorry to inform you that your proposal {{ proposal.pid }} with title "{{ proposal.name }}" has been returned to you for revision.
+Please login to the system and see reasons for our action. After revisiting all the problems you can resubmit your proposal again.{% endautoescape %}

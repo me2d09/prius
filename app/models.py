@@ -164,6 +164,14 @@ class Proposals(models.Model):
                             'l_accepted', extra_context = { 'proposal': self})
                 notify_send(User.objects.filter(groups__name='admins'), 
                             'a_accepted', extra_context = { 'proposal': self})
+            elif s == "RP" or s == "UP":
+                # send email to all coproposers
+                notify_send([x.uid for x in self.coproposers.select_related("uid").all() if x.uid is not None] + [self.proposer], 
+                            'X_proposal_returned', extra_context = { 'proposal': self})
+            elif s == "DX" or s == "RX":
+                # send email to all coproposers
+                notify_send([x.uid for x in self.coproposers.select_related("uid").all() if x.uid is not None] + [self.proposer], 
+                            'X_proposal_rejected', extra_context = { 'proposal': self})
             else:
                 notify_send([x.uid for x in self.coproposers.select_related("uid").all() if x.uid is not None] + [self.proposer], 
                             'X_proposal_status_changed', extra_context = { 'proposal': self})

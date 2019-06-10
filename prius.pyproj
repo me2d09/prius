@@ -84,7 +84,9 @@
     <Folder Include="app\templates\pinax\" />
     <Folder Include="app\templates\pdf\" />
     <Folder Include="app\templates\pinax\notifications\" />
-    <Folder Include="app\templates\pinax\notifications\proposal_accepted\" />
+    <Folder Include="app\templates\pinax\notifications\X_proposal_returned\" />
+    <Folder Include="app\templates\pinax\notifications\X_proposal_rejected\" />
+    <Folder Include="app\templates\pinax\notifications\X_proposal_accepted\" />
     <Folder Include="app\views\" />
     <Folder Include="app\templatetags\" />
     <Folder Include="app\static\" />
@@ -123,8 +125,12 @@
     <Content Include="app\templates\pinax\notifications\email_subject.txt" />
     <Content Include="app\templates\pinax\notifications\full.txt" />
     <Content Include="app\templates\pinax\notifications\notice_settings.html" />
-    <Content Include="app\templates\pinax\notifications\proposal_accepted\full.txt" />
-    <Content Include="app\templates\pinax\notifications\proposal_accepted\short.txt" />
+    <Content Include="app\templates\pinax\notifications\X_proposal_returned\full.txt" />
+    <Content Include="app\templates\pinax\notifications\X_proposal_returned\short.txt" />
+    <Content Include="app\templates\pinax\notifications\X_proposal_rejected\full.txt" />
+    <Content Include="app\templates\pinax\notifications\X_proposal_rejected\short.txt" />
+    <Content Include="app\templates\pinax\notifications\X_proposal_accepted\full.txt" />
+    <Content Include="app\templates\pinax\notifications\X_proposal_accepted\short.txt" />
     <Content Include="app\templates\pinax\notifications\short.txt" />
     <Content Include="app\templates\proposal\delete.html" />
     <Content Include="app\templates\mails\invitation.html" />

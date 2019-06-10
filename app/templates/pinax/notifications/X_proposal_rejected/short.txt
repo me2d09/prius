@@ -1,0 +1,1 @@
+{% autoescape off %}Rejected proposal {{ proposal.pid }}{% endautoescape %}
