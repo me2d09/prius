@@ -4,4 +4,10 @@
 
 {% block errnum %}403{% endblock %}
 
-{% block defaultmessage %}You are not allowed to view this page.{% endblock %}
+{% block defaultmessage %}
+    {% if exception %}
+        {{ exception |safe }}
+    {% else %}
+        You are not allowed to view this page.
+    {% endif %}
+{% endblock %}
