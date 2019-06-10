@@ -96,6 +96,7 @@ class StatusForm(forms.ModelForm):
             if prop.last_status == 'A': allowed.append('F')  # will be finished
         if self.user.has_perm('app.approve_technical') and self.user.contact in prop.local_contacts.all(): 
             if prop.last_status == 'T': 
+                allowed.append('T')  # stay in technical review
                 allowed.append('W')  # will be waiting for panel
                 showRemark = showHidden = True
         if self.user.has_perm('app.takeover_panel') and prop.last_status == 'W': 

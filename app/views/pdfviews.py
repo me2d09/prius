@@ -64,7 +64,13 @@ class ProposalPdfDetailView(FullPdfResponseMixin, DetailView):
         context = super(ProposalPdfDetailView, self).get_context_data(*args, **kwargs)
         context['status_history'] = Status.objects.filter(proposal=self.object).exclude(status__in="UR")
         try:
-            context['tech'] = Status.objects.filter(proposal=self.object).filter(status="W").latest('date')
+            tech = ""
+            for s in Status.objects.filter(proposal=self.object).filter(status__in="WTU"):
+                if not s.hiddenremark or s.status == 'U':
+                    break;
+                tech += "<i>%s</i>: %s<br/>" % (s.user.contact, s.hiddenremark)
+            context['tech'] = tech
+            
         except Status.DoesNotExist:
             context['tech'] = None
         

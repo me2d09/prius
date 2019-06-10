@@ -46,18 +46,32 @@ class Status(models.Model):
     user =  models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT)
 
     def getActionFromStatus(status):
+        if status == 'TT': return 'technical review'
+        if status == 'P': return 'created'
+        if status == 'PR': return 'returned by panel'
+        if status == 'XR': return 'rejected by panel'
+        if status == 'XD': return 'rejected by director'
+        if status == 'PU': return 'returned by user office'
+    
         return {
             'P': 'preparation',
             'S': 'submitted',
             'U': 'useroffice takeover',
-            'T': 'useroffice check',
+            'T': 'checked by useroffice',
             'W': 'technical review',
             'R': 'start review',
             'D': 'panel acceptance',
             'A': 'director approval',
             'F': 'finished',
             'X': 'rejected',
-        }[status]
+        }[status[0]]
+
+    def prev_by_proposal(self):
+        qs = Status.objects.filter(proposal=self.proposal).filter(date__lt=self.date)
+        if len(qs) > 0:
+            return qs[0].status
+        else:
+            return ''
 
 
     class Meta:

@@ -99,7 +99,7 @@
         {% for s in status_history %}
             <tr>
                 <td>{{ s.date|date:"SHORT_DATETIME_FORMAT" }}<br />
-                    <b>{{ s.status|get_status_action }}</b>
+                    <b>{{  s.status |add:s.prev_by_proposal |get_status_action }}</b>
                 {% if perms.app.see_hidden_remarks %}<br />
                     <i>{{ s.user.contact.name }}</i>{% endif %}
                 </td>

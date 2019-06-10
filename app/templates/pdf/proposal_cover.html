@@ -26,7 +26,7 @@
     <p>{{ proposal.abstract|linebreaks  }}</p>
     {% if perms.app.see_hidden_remarks and tech %}
     <h3>Latest Technical review</h3>
-    <p>{{ tech.hiddenremark|linebreaks  }}</p>
+    <p>{{ tech|safe|linebreaks  }}</p>
     {% endif %}
     {% endif %}
     {% if not page %}<pdf:nextpage  />{% endif %}
@@ -40,7 +40,7 @@
         {% for s in status_history %}
             <tr>
                 <td {% if forloop.counter|divisibleby:2 %} class="odd"{% endif %}>{{ s.date|date:"SHORT_DATETIME_FORMAT" }}<br />
-                    <span>{{ s.status|get_status_action }}</span>
+                    <span>{{  s.status |add:s.prev_by_proposal |get_status_action }}</span>
                 {% if perms.app.see_hidden_remarks %}<br />
                     <i>{{ s.user.contact.name }}</i>{% endif %}
                 </td>
