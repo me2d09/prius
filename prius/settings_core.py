@@ -141,3 +141,8 @@ SHORT_DATETIME_FORMAT = 'd.m.y H:i'
 STATIC_URL = '/static/'
 STATIC_ROOT = posixpath.join(*(BASE_DIR.split(os.path.sep) + ['static']))
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# Default settings
+BOOTSTRAP4 = {
+    "css_url": STATIC_URL + "app/content/bootstrap.min.css",
+}
