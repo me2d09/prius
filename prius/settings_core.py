@@ -145,4 +145,5 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # Default settings
 BOOTSTRAP4 = {
     "css_url": STATIC_URL + "app/content/bootstrap.min.css",
+    "success_css_class": "",
 }
