@@ -80,6 +80,7 @@
     <Folder Include="app\" />
     <Folder Include="app\migrations\" />
     <Folder Include="app\static\fonts\" />
+    <Folder Include="app\templates\errors\" />
     <Folder Include="app\templates\pinax\" />
     <Folder Include="app\templates\pdf\" />
     <Folder Include="app\templates\pinax\notifications\" />
@@ -110,7 +111,11 @@
     <Content Include="app\static\fonts\OpenSans-Italic.ttf" />
     <Content Include="app\static\fonts\OpenSans-Regular.ttf" />
     <Content Include="app\static\pdfstyle.css" />
+    <Content Include="app\templates\404.html" />
+    <Content Include="app\templates\500.html" />
+    <Content Include="app\templates\error.html" />
     <Content Include="app\templates\accounts\change_password.html" />
+    <Content Include="app\templates\403.html" />
     <Content Include="app\templates\mails\nofity-accept.html" />
     <Content Include="app\templates\pdf\pdffonts.css" />
     <Content Include="app\templates\pdf\proposal_cover.html" />

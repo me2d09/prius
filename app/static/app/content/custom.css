@@ -1,1 +1,19 @@
 /* your styles go here */
+.full-page-wrapper {
+    display: flex;
+    flex-direction: row;
+    padding-left: 0;
+    padding-right: 0;
+    width: 100%;
+    min-height: 100vh;
+    padding-top: 0;
+}
+
+    .full-page-wrapper a {
+        color: white;
+        text-decoration: underline;
+    }
+    .full-page-wrapper a:hover {
+        color: white;
+        text-decoration: none;
+    }
