@@ -30,6 +30,8 @@ from app.tables import ProposalTable, ProposalFilter, ContactsTable
 from django_tables2.views import SingleTableView, SingleTableMixin
 from django_filters.views import FilterView
 
+from django.core.exceptions import PermissionDenied
+
 from dal import autocomplete
 
 
@@ -366,10 +368,12 @@ class StatusCreateView(CreateView):
     def get_success_url(self):
         return reverse('app_proposals_detail', args={ self.kwargs["proposal_slug"]})
 
-class ProposalsCreateView(CreateView):
+class ProposalsCreateView(PermissionRequiredMixin, CreateView):
     model = Proposals
     form_class = ProposalsForm
     template_name = "proposal/form.html"
+    permission_required = 'app.add_proposals'
+    permission_denied_message = 'You are not allowed to create proposals. You need to to fill your <a href="/profile">profile</a> first.' 
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -450,9 +454,12 @@ class ContactsListView(SingleTableMixin, PermissionRequiredMixin, ListView):
     paginate_by = 25
 
 
-class ContactsCreateView(LoginRequiredMixin, CreateView):
+class ContactsCreateView(PermissionRequiredMixin, CreateView):
     model = Contacts
     form_class = ContactsForm
+    permission_required = 'app.add_contacts'
+    permission_denied_message = 'You are not allowed to invite users. You need to to fill your <a href="/profile">profile</a> first.' 
+
 
     def form_valid(self, form):
         self.object = form.save()
