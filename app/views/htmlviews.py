@@ -59,6 +59,9 @@ class LocalContactAutocomplete(autocomplete.Select2QuerySetView):
             return Contacts.objects.none()
 
         qs = Contacts.objects.filter(uid__in = User.objects.filter(groups__name__in=['localcontacts']))
+
+        if not self.request.user.groups.filter(name='admins').exists():
+            qs = qs.exclude(description__isnull=True).exclude(description__exact='')
         
         if self.q:
             qs = qs.filter(Q(name__icontains=self.q) | Q(description__icontains=self.q))
