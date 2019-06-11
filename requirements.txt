@@ -11,4 +11,4 @@ argon2-cffi
 PyPDF2
 pip
 django-xhtml2pdf
-pinax-notifications
+git+https://github.com/me2d09/pinax-notifications.git
