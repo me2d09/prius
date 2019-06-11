@@ -57,7 +57,7 @@
                     </td>
                     {% for cell in row.cells %}
                         <td class="setting">
-                            <input type="checkbox" name="{{ cell.0 }}" {% if cell.1 %}checked="yes"{% endif %} />
+                            <input type="checkbox" {% if row.notice_type.label|first in "X" %}disabled="disabled" {% endif %}name="{{ cell.0 }}" {% if cell.1 %}checked="yes"{% endif %} />
                         </td>
                     {% endfor %}
                 </tr>

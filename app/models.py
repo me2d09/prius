@@ -156,26 +156,23 @@ class Proposals(models.Model):
         # send emails
         if old_prop and old_prop.last_status != self.last_status:
             s = old_prop.last_status + self.last_status
-            if s == "DA":
+            if s in ["DA", "RP", "UP", "DX", "RX"]: #important change
                 # send email to all coproposers
+                coprop = [x.uid for x in self.coproposers.select_related("uid").all() if x.uid is not None]
+                if self.supervisor and self.supervisor.uid:
+                    coprop += [self.supervisor.uid]
+                notify_send([self.proposer], 'X_proposal_important', extra_context = { 'proposal': self, 'action': s[1]})
+                notify_send(coprop, 'x_proposal_important_team', extra_context = { 'proposal': self, 'action': s[1]})
+            else:
                 notify_send([x.uid for x in self.coproposers.select_related("uid").all() if x.uid is not None] + [self.proposer], 
-                            'X_proposal_accepted', extra_context = { 'proposal': self})
+                            'x_proposal_status_changed', extra_context = { 'proposal': self})
+
+            if s == "DA":
                 notify_send([x.uid for x in self.local_contacts.select_related("uid").all() if x.uid is not None], 
                             'l_accepted', extra_context = { 'proposal': self})
                 notify_send(User.objects.filter(groups__name='admins'), 
                             'a_accepted', extra_context = { 'proposal': self})
-            elif s == "RP" or s == "UP":
-                # send email to all coproposers
-                notify_send([x.uid for x in self.coproposers.select_related("uid").all() if x.uid is not None] + [self.proposer], 
-                            'X_proposal_returned', extra_context = { 'proposal': self})
-            elif s == "DX" or s == "RX":
-                # send email to all coproposers
-                notify_send([x.uid for x in self.coproposers.select_related("uid").all() if x.uid is not None] + [self.proposer], 
-                            'X_proposal_rejected', extra_context = { 'proposal': self})
-            else:
-                notify_send([x.uid for x in self.coproposers.select_related("uid").all() if x.uid is not None] + [self.proposer], 
-                            'X_proposal_status_changed', extra_context = { 'proposal': self})
-            if s == "UT":
+            elif s == "UT":
                 notify_send([x.uid for x in self.local_contacts.select_related("uid").all() if x.uid is not None], 
                             'L_request_technical', extra_context = { 'proposal': self})
             elif s == "TW":

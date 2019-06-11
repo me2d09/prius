@@ -1,0 +1,1 @@
+{% autoescape off %}{% if action == "A" %}Accepted{% elif action == "P" %}Returned{% else %}Rejected{% endif %} proposal {{ proposal.pid }}{% endautoescape %}

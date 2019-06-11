@@ -1,0 +1,7 @@
+{% autoescape off %}{% if action == "A" %}we are pleased to inform you that proposal {{ proposal.pid }} with title "{{ proposal.name }}" where you are part of the team has been accepted by the MGML panel and thus can proceed further. Please arrange the possible dates for your experiment with the local contact {{ proposal.local_contacts.all|first }}.
+If you need further assistance (e.g. accommodation, means of travel etc.), please contact Martina Razova (e-mail address: m.razova@mag.mff.cuni.cz).
+{% elif action == "P" %}we are sorry to inform you that proposal {{ proposal.pid }} with title "{{ proposal.name }}" where you are part of the team has been returned for revision.
+You can login to the system and read the reasons. After revisiting all the problems main proposer can resubmit proposal again.
+{% else %}we are sorry to inform you that proposal {{ proposal.pid }} with title "{{ proposal.name }}" where you are part of the team has been rejected by the MGML panel or director.
+You can login to the system and read the reasons for the rejection.
+{% endif %}{% endautoescape %}

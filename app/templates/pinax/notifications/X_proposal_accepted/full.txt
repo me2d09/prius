@@ -1,2 +1,0 @@
-{% autoescape off %}we are pleased to inform you that your proposal {{ proposal.pid }} with title "{{ proposal.name }}" has been accepted by the MGML panel and thus can proceed further. Please arrange the possible dates for your experiment with the local contact {{ proposal.local_contacts.all|first }}.
-If you need further assistance (e.g. accommodation, means of travel etc.), please contact Martina Razova (e-mail address: m.razova@mag.mff.cuni.cz).{% endautoescape %}

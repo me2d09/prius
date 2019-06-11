@@ -1,2 +1,0 @@
-{% autoescape off %}we are sorry to inform you that your proposal {{ proposal.pid }} with title "{{ proposal.name }}" has been rejected by the MGML panel or director.
-You can login to the system and read the reasons for the rejection.{% endautoescape %}

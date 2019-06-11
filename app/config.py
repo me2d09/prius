@@ -15,10 +15,9 @@ def add_to_default_group(sender, **kwargs):
 def create_notice_types(sender, **kwargs): 
     if "pinax.notifications" in settings.INSTALLED_APPS:
         from pinax.notifications.models import NoticeType
-        NoticeType.create("X_proposal_accepted", "Proposal Accepted", "The proposal you have submitted (or you are part of the team) was accepted.")
-        NoticeType.create("X_proposal_returned", "Proposal Returned", "The proposal you have submitted (or you are part of the team) was returned.")
-        NoticeType.create("X_proposal_rejected", "Proposal Rejected", "The proposal you have submitted (or you are part of the team) was rejected.")
-        NoticeType.create("X_proposal_status_changed", "Proposal status changed", "The proposal you have submitted changed the status.", 1)
+        NoticeType.create("X_proposal_important", "Proposal Decision", "The proposal you have submitted was accepted/returned/rejected. You will always be informed about it.")
+        NoticeType.create("x_proposal_important_team", "Team Proposal Decision", "The proposal you are part of the team was accepted/returned/rejected.")
+        NoticeType.create("x_proposal_status_changed", "Proposal status changed", "The proposal you have submitted changed the status.", 1)
         NoticeType.create("L_request_technical", "Technical review requested (LC)", "You (as a local contact) need to perform technical check of the proposal.")
         NoticeType.create("l_accepted", "Proposal accepted (LC)", "Proposal, where you are local contact was accepted and can be scheduled.", 1)
         NoticeType.create("P_request_review", "Panel review requested (P)", "You (as a panel member) need to perform review of the proposal.")
