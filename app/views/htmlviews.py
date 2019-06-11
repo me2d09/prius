@@ -21,7 +21,7 @@ from app.models import Proposals, Instruments, Contacts, Affiliations, Countries
 from app.forms import ProposalsForm, InstrumentsForm, ContactsForm, AffiliationsForm, CountriesForm, InstrumentRequestForm, StatusForm
 from app.forms import OptionsForm, SharedOptionsForm, InstrumentParameterSetsForm, InstrumentParametersForm, ParameterValuesForm, SamplesForm 
 from app.forms import SamplePhotosForm, SampleRemarksForm, PublicationsForm, ExperimentsForm, SlotsForm, SignupForm, ProfileForm, UserForm
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.core.mail import EmailMessage
 from django.db.models import Q
 from app.token import account_activation_token
@@ -108,45 +108,49 @@ def proposal_howto(request):
         'static/proposal-howto.html',
     )
 
+def sendActivationMail(user, current_site):
+
+    mail_subject = 'Activate your MGML account'
+    uid = urlsafe_base64_encode(force_bytes(user.pk))
+    try:
+        uid = uid.decode('utf-8')
+    except:
+        pass
+    message = render_to_string('mails/activation.html', {
+        'user': user,
+        'domain': current_site.domain,
+        'uid':uid,
+        'token':account_activation_token.make_token(user),
+    })
+    to_email = user.email
+    email = EmailMessage(
+                mail_subject, message, to=[to_email]
+    )
+    email.send()
+    
+                
+
 
 def signup(request):
     if request.method == 'POST':
         form = SignupForm(request.POST)
         if form.is_valid():
-            #form.save()
-            #username = form.cleaned_data.get('username')
-            #raw_password = form.cleaned_data.get('password1')
-            #user = authenticate(username=username, password=raw_password)
-            #login(request, user)
-            #return redirect('home')
             user = form.save(commit=False)
             user.is_active = False
             user.save()
-            current_site = get_current_site(request)
-            mail_subject = 'Activate your MGML account'
-            message = render_to_string('mails/activation.html', {
-                'user': user,
-                'domain': current_site.domain,
-                'uid':urlsafe_base64_encode(force_bytes(user.pk)).decode('utf-8'),
-                'token':account_activation_token.make_token(user),
-            })
-            to_email = form.cleaned_data.get('email')
-            email = EmailMessage(
-                        mail_subject, message, to=[to_email]
-            )
+
             try:
-                email.send()
-            except :
+                sendActivationMail(user, get_current_site(request))
+            except:
                 return render(
                     request,
                     'registration/message.html',
                     {
                         'text':'System was not able to send you email with activation link. ' + 
-                               'Please try again or contact support.',
+                                'Please try again or contact support.',
                     }
                 )
-                
-            
+
             return render(
                 request,
                 'registration/message.html',
@@ -158,6 +162,33 @@ def signup(request):
     else:
         form = SignupForm()
     return render(request, 'registration/signup.html', {'form': form})
+
+@permission_required('auth.can_add_user')
+def resend(request, userpk):
+    user = User.objects.get(pk=userpk)
+    user.is_active = False
+    user.save()
+    sendActivationMail(user, get_current_site(request))
+    try:
+        sendActivationMail(user, get_current_site(request))
+    except:
+        return render(
+            request,
+            'registration/message.html',
+            {
+                'text':'System was not able to send you email with activation link. ' + 
+                        'Please try again or contact support.',
+            }
+        )             
+            
+    return render(
+        request,
+        'registration/message.html',
+        {
+            'text':'An activation e-mail was send. ' + 
+                    'Please check your mailbox (and possibly spam folder) and activate your account.',
+        }
+    )
 
 def activate(request, uidb64, token):
     try:

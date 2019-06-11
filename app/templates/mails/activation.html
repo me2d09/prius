@@ -1,7 +1,4 @@
-﻿{% url 'activate' uidb64=uid token=token as myurl %}
-
-{% autoescape off %}
-Dear {{ user.username }},
+﻿{% url 'activate' uidb64=uid token=token as myurl %}{% autoescape off %}Dear {{ user.username }},
 
 In order to use MGML dashboard, you need to confirm your email address.
 

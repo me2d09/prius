@@ -47,6 +47,7 @@ urlpatterns = [
         },
         name='logout'),
     url(r'^signup/$', app.views.signup, name='signup'),
+    url(r'^resend/(?P<userpk>\S+)/$', app.views.resend, name='resend'),
     url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
         app.views.activate, name='activate'),
 
