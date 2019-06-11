@@ -168,7 +168,6 @@ def resend(request, userpk):
     user = User.objects.get(pk=userpk)
     user.is_active = False
     user.save()
-    sendActivationMail(user, get_current_site(request))
     try:
         sendActivationMail(user, get_current_site(request))
     except:
