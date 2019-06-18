@@ -54,7 +54,7 @@ class ContactsAdminForm(forms.ModelForm):
 
 class ContactsAdmin(admin.ModelAdmin):
     form = ContactsAdminForm
-    list_display = ['name', 'created', 'last_updated', 'email', 'orcid', 'description']
+    list_display = ['name', 'created', 'last_updated', 'email', 'affiliation', 'description']
     readonly_fields = ['created', 'last_updated']
 
 admin.site.register(Contacts, ContactsAdmin)

@@ -321,11 +321,11 @@ class Affiliations(models.Model):
     # Fields
     created = DateTimeField(auto_now_add=True, editable=False)
     last_updated = DateTimeField(auto_now=True, editable=False)
-    department = CharField(max_length=500)
+    department = CharField(max_length=500, blank=True)
     institution = CharField(max_length=500)
-    address1 = CharField(max_length=500)
-    address2 = CharField(max_length=500)
-    city = CharField(max_length=255)
+    address1 = CharField(max_length=500, blank=True)
+    address2 = CharField(max_length=500, blank=True)
+    city = CharField(max_length=255, blank=True)
 
     # Relationship Fields
     country = models.ForeignKey('app.Countries', on_delete=models.PROTECT, blank=True,null=True )
@@ -359,6 +359,9 @@ class Countries(models.Model):
 
     def __unicode__(self):
         return u'%s' % self.pk
+
+    def __str__(self):
+        return '%s (%s)' % (self.name, self.iso)
 
     def get_absolute_url(self):
         return reverse('app_countries_detail', args=(self.pk,))
