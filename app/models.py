@@ -181,6 +181,10 @@ class Proposals(models.Model):
             elif s == "WR":
                 notify_send([self.reporter.uid], 
                             'P_request_review', extra_context = { 'proposal': self})
+                pmembers = list(User.objects.filter(groups__name='panel'))
+                pmembers.remove(self.reporter.uid)
+                notify_send(pmembers, 
+                            'p_request_comments', extra_context = { 'proposal': self})
             elif s == "RD":
                 notify_send(User.objects.filter(groups__name='director'), 
                             'D_accepted', extra_context = { 'proposal': self})

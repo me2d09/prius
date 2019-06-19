@@ -21,6 +21,7 @@ def create_notice_types(sender, **kwargs):
         NoticeType.create("L_request_technical", "Technical review requested (LC)", "You (as a local contact) need to perform technical check of the proposal.")
         NoticeType.create("l_accepted", "Proposal accepted (LC)", "Proposal, where you are local contact was accepted and can be scheduled.", 1)
         NoticeType.create("P_request_review", "Panel review requested (P)", "You (as a panel member) need to perform review of the proposal.")
+        NoticeType.create("p_request_comments", "Panel comments requested (P)", "Another panel member was assigned to the proposal.")
         NoticeType.create("H_new_proposal", "Reporter selection requested (PH)", "You (as a panel head) need to assign reporter to the proposal.")
         NoticeType.create("D_accepted", "Director approval needed (D)", "You (as a director) need approve or reject accepted proposal by the panel.")
         NoticeType.create("d_rejected", "Proposal rejected by the panel (D)", "Inform about any rejection of the proposal.", 1)

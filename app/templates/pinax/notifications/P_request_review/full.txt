@@ -1,0 +1,4 @@
+{% autoescape off %}Panel review requested!
+
+You have been assigned as the reporter of the proposal {{ proposal.pid }}, title: "{{ proposal.name }}"
+Proposer: {{ proposal.proposer.contact }}{% endautoescape %}

@@ -1,0 +1,5 @@
+{% autoescape off %}{{ proposal.reporter }} has been assigned as a reporter of of the proposal:
+{{ proposal.pid }}, title: "{{ proposal.name }}" 
+Proposer: {{ proposal.proposer.contact }}
+
+He/She is expecting your comments on this proposal.{% endautoescape %}
