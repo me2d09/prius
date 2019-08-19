@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'crispy_forms',
     'bootstrap4',
     'pinax.notifications',
-    'bootstrap_datepicker_plus',
     # 'rest_framework',
 ]
 SITE_ID = 1
