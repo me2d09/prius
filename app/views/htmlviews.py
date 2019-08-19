@@ -17,10 +17,10 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
 from datetime import datetime
 from django.views.generic import DetailView, ListView, UpdateView, CreateView, DeleteView
-from app.models import Proposals, Instruments, Contacts, Affiliations, Countries, InstrumentRequest, Options, SharedOptions, InstrumentParameterSets, InstrumentParameters, ParameterValues, Samples, SamplePhotos, SampleRemarks, Publications, Experiments, Slots, Status
-from app.forms import ProposalsForm, InstrumentsForm, ContactsForm, AffiliationsForm, CountriesForm, InstrumentRequestForm, StatusForm
-from app.forms import OptionsForm, SharedOptionsForm, InstrumentParameterSetsForm, InstrumentParametersForm, ParameterValuesForm, SamplesForm 
-from app.forms import SamplePhotosForm, SampleRemarksForm, PublicationsForm, ExperimentsForm, SlotsForm, SignupForm, ProfileForm, UserForm
+from app.models import Proposals, Instruments, Contacts, Affiliations, Countries, Options, SharedOptions, Samples, SamplePhotos, SampleRemarks, Publications, Experiments, Status
+from app.forms import ProposalsForm, InstrumentsForm, ContactsForm, AffiliationsForm, CountriesForm, StatusForm
+from app.forms import OptionsForm, SharedOptionsForm, SamplesForm 
+from app.forms import SamplePhotosForm, SampleRemarksForm, PublicationsForm, ExperimentsForm, SignupForm, ProfileForm, UserForm
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.mail import EmailMessage
 from django.db.models import Q
@@ -92,7 +92,10 @@ def home(request):
         {
             'title':'Home Page',
             'proposals_todo': Proposals.objects.filter(proposer=request.user, last_status='P').count(),
-            'proposals_accepted': Proposals.objects.filter(proposer=request.user, last_status='A').count(),
+            'proposals_accepted': Proposals.objects.filter(Q(last_status='A') & ( 
+                                       Q(proposer=request.user) | 
+                                       Q(coproposers__uid__exact=request.user) | 
+                                       Q(local_contacts__uid__exact=request.user))).distinct().count(),
             'proposals_director': Proposals.objects.filter(last_status='D').count(),
             'proposals_userofficeS': Proposals.objects.filter(last_status__in='S').count(),
             'proposals_userofficeU': Proposals.objects.filter(last_status__in='U').count(),
@@ -352,8 +355,12 @@ class ProposalsListView(SingleTableMixin, FilterView):
         queryset = Proposals.objects.distinct()
 
         if self.kwargs['filtering'] == "mine":
-            queryset = queryset.filter(Q(proposer=self.request.user) | 
-                                       Q(coproposers__uid__exact=self.request.user))
+            queryset = queryset.filter( 
+                                       Q(proposer=self.request.user) | 
+                                       Q(coproposers__uid__exact=self.request.user) | 
+                                       Q(local_contacts__uid__exact=self.request.user)).distinct()
+
+
         else:
             #check permissions
             if not self.request.user.has_perm('app.view_proposals'):
@@ -566,25 +573,7 @@ class CountriesUpdateView(UpdateView):
     model = Countries
     form_class = CountriesForm
 
-
-class InstrumentRequestListView(ListView):
-    model = InstrumentRequest
-
-
-class InstrumentRequestCreateView(CreateView):
-    model = InstrumentRequest
-    form_class = InstrumentRequestForm
-
-
-class InstrumentRequestDetailView(DetailView):
-    model = InstrumentRequest
-
-
-class InstrumentRequestUpdateView(UpdateView):
-    model = InstrumentRequest
-    form_class = InstrumentRequestForm
-
-
+    
 class OptionsListView(ListView):
     model = Options
 
@@ -619,60 +608,6 @@ class SharedOptionsDetailView(DetailView):
 class SharedOptionsUpdateView(UpdateView):
     model = SharedOptions
     form_class = SharedOptionsForm
-
-
-class InstrumentParameterSetsListView(ListView):
-    model = InstrumentParameterSets
-
-
-class InstrumentParameterSetsCreateView(CreateView):
-    model = InstrumentParameterSets
-    form_class = InstrumentParameterSetsForm
-
-
-class InstrumentParameterSetsDetailView(DetailView):
-    model = InstrumentParameterSets
-
-
-class InstrumentParameterSetsUpdateView(UpdateView):
-    model = InstrumentParameterSets
-    form_class = InstrumentParameterSetsForm
-
-
-class InstrumentParametersListView(ListView):
-    model = InstrumentParameters
-
-
-class InstrumentParametersCreateView(CreateView):
-    model = InstrumentParameters
-    form_class = InstrumentParametersForm
-
-
-class InstrumentParametersDetailView(DetailView):
-    model = InstrumentParameters
-
-
-class InstrumentParametersUpdateView(UpdateView):
-    model = InstrumentParameters
-    form_class = InstrumentParametersForm
-
-
-class ParameterValuesListView(ListView):
-    model = ParameterValues
-
-
-class ParameterValuesCreateView(CreateView):
-    model = ParameterValues
-    form_class = ParameterValuesForm
-
-
-class ParameterValuesDetailView(DetailView):
-    model = ParameterValues
-
-
-class ParameterValuesUpdateView(UpdateView):
-    model = ParameterValues
-    form_class = ParameterValuesForm
 
 
 class SamplesListView(ListView):
@@ -745,40 +680,4 @@ class PublicationsDetailView(DetailView):
 class PublicationsUpdateView(UpdateView):
     model = Publications
     form_class = PublicationsForm
-
-
-class ExperimentsListView(ListView):
-    model = Experiments
-
-
-class ExperimentsCreateView(CreateView):
-    model = Experiments
-    form_class = ExperimentsForm
-
-
-class ExperimentsDetailView(DetailView):
-    model = Experiments
-
-
-class ExperimentsUpdateView(UpdateView):
-    model = Experiments
-    form_class = ExperimentsForm
-
-
-class SlotsListView(ListView):
-    model = Slots
-
-
-class SlotsCreateView(CreateView):
-    model = Slots
-    form_class = SlotsForm
-
-
-class SlotsDetailView(DetailView):
-    model = Slots
-
-
-class SlotsUpdateView(UpdateView):
-    model = Slots
-    form_class = SlotsForm
 

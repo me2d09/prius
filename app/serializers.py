@@ -74,17 +74,6 @@ class CountriesSerializer(serializers.ModelSerializer):
         )
 
 
-class InstrumentRequestSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.InstrumentRequest
-        fields = (
-            'pk', 
-            'requested', 
-            'granted', 
-        )
-
-
 class OptionsSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -110,37 +99,6 @@ class SharedOptionsSerializer(serializers.ModelSerializer):
             'active', 
         )
 
-
-class InstrumentParameterSetsSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.InstrumentParameterSets
-        fields = (
-            'pk', 
-            'name', 
-        )
-
-
-class InstrumentParametersSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.InstrumentParameters
-        fields = (
-            'pk', 
-            'name', 
-            'description', 
-            'required', 
-        )
-
-
-class ParameterValuesSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.ParameterValues
-        fields = (
-            'pk', 
-            'value', 
-        )
 
 
 class SamplesSerializer(serializers.ModelSerializer):
@@ -210,19 +168,3 @@ class ExperimentsSerializer(serializers.ModelSerializer):
             'duration', 
             'finalized', 
         )
-
-
-class SlotsSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.Slots
-        fields = (
-            'pk', 
-            'created', 
-            'last_updated', 
-            'start', 
-            'end', 
-            'type', 
-        )
-
-

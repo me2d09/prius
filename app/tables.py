@@ -1,6 +1,6 @@
 # app/tables.py
 import django_tables2 as tables
-from .models import Proposals, Contacts, User, Status
+from .models import Proposals, Contacts, User, Status, Instruments, Experiments
 from django_tables2.utils import A  # alias for Accessor
 import django_filters
 from django.db.models import Q
@@ -101,3 +101,22 @@ class ContactsTable(tables.Table):
         #sequence = ('pid', 'name', 'pdf', '...')
         attrs  = { 'class': 'table table-striped table-sm table-hover'}
    
+def instruments(request):
+    if request is None or not request.user.is_authenticated:
+        return Instruments.objects.none()
+
+    qs = Instruments.objects.filter(active=True, public=True)
+    return qs
+
+class ExperimentFilter(django_filters.FilterSet):
+
+    #owner = django_filters.filters.ChoiceFilter(choices=('mine', 'all'))
+    instrument1 = django_filters.ModelChoiceFilter(queryset=instruments, empty_label='---')
+    instrument2 = django_filters.ModelChoiceFilter(queryset=instruments, empty_label='---')
+    instrument3 = django_filters.ModelChoiceFilter(queryset=instruments, empty_label='---')
+    instrument4 = django_filters.ModelChoiceFilter(queryset=instruments, empty_label='---')
+    
+
+    class Meta:
+        model = Experiments
+        fields = ['instrument'] #, 'owner']

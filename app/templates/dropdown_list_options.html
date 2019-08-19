@@ -1,0 +1,4 @@
+﻿{% if emptyvalue %}<option value="">---------</option>{% endif %}
+{% for o in obj %}
+<option value="{{ o.pk }}">{{ o.name }}</option>
+{% endfor %}

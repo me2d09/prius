@@ -14,8 +14,10 @@
             <p>It seems, that you have newly created a registration in MGML Dashboard and someone else already created a profile for you. In order to complete the registration, you need to check your profile information. Please select <a href="/edit-profile/">edit your profile</a> and then save it.</p>{% endif %}
 <table class="table">
 <tr><td>Username</td><td>{{ userprofile.username }} </td></tr>
-<tr><td>Groups</td><td>{% for g in userprofile.groups.all %}{{ g }}{%if not forloop.last%}, {%endif%}{% endfor %} </td></tr>
-{% if True %} <tr><td>Local contact description</td><td>{{ contact.description }}</td></tr> {% endif %}
+<tr><td>Groups</td><td>{% for g in userprofile.groups.all %}{% if g.name != "allusers" %}{{ g }}{%if not forloop.last%}, {%endif%}{%endif%}{% endfor %} </td></tr>
+{% if contact.description %} <tr><td>Local contact description</td><td>{{ contact.description }}</td></tr> {% endif %}
+<tr><td>Trained for:</td><td>{% for ig in contact.trained_instrumentgroups.all %}{{ ig }} ({% for i in ig.instruments.all %}{{ i }}{%if not forloop.last%}, {%endif%}{% endfor %}){%if not forloop.last%}<br />{%endif%}{% endfor %}<br />
+     <i>In order to get additional training, contact appropriate local contact.</i></td></tr>
 <tr><td>Name</td><td>{{ contact.name }}</td></tr>
 <tr><td>Email</td><td>{{ userprofile.email }}</td></tr>
 <tr><td>Created</td><td>{{ contact.created }}</td></tr>

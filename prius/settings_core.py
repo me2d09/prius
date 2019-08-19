@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'bootstrap4',
     'pinax.notifications',
+    'bootstrap_datepicker_plus',
     # 'rest_framework',
 ]
 SITE_ID = 1
@@ -128,9 +129,9 @@ EMAIL_USE_TLS = True
 
 LANGUAGE_CODE = 'en-uk'
 TIME_ZONE = 'Europe/Prague'
-USE_I18N = True
+USE_I18N = False
 USE_L10N = False
-USE_TZ = True
+USE_TZ = False
 DATETIME_FORMAT = 'jS F Y H:i:s'
 SHORT_DATETIME_FORMAT = 'd.m.y H:i'
 
@@ -145,5 +146,6 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # Default settings
 BOOTSTRAP4 = {
     "css_url": STATIC_URL + "app/content/bootstrap.min.css",
+    "javascript_url": STATIC_URL + "app/scripts/bootstrap.min.js",
     "success_css_class": "",
 }

@@ -11,7 +11,7 @@ from django.contrib.auth.models import User
 from django.db import models as models
 from django_extensions.db import fields as extension_fields
 from django.contrib.auth.models import User
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.dispatch import receiver
 from django.core.validators import FileExtensionValidator
 from django.core.exceptions import ValidationError
@@ -19,6 +19,7 @@ from PyPDF2 import PdfFileReader
 from django.core.exceptions import PermissionDenied
 
 from pinax.notifications.models import send as notify_send
+ 
 
 
 
@@ -137,6 +138,17 @@ class Proposals(models.Model):
         else:
             return self.local_contacts.first().name
 
+    @property
+    def people(self):
+        coll = set(list(self.local_contacts.all()) + list(self.coproposers.all()) + [self.supervisor] + [self.proposer.contact])
+        seen = set()
+        ret = list()
+        for item in coll:
+            if item and not item.pk in seen:
+                seen.add(item.pk)
+                ret.append(item)
+        return ret
+
 
     def save(self, *args, **kwargs):
         adding = self._state.adding
@@ -226,40 +238,7 @@ class Proposals(models.Model):
         return reverse('app_proposals_update', args=(self.slug,))
 
     def __str__(self):
-        return self.name
-
-
-class Instruments(models.Model):
-
-    # Fields
-    name = CharField(max_length=255)
-    slug = extension_fields.AutoSlugField(populate_from='name', blank=True)
-    created = DateTimeField(auto_now_add=True, editable=False)
-    last_updated = DateTimeField(auto_now=True, editable=False)
-    public = BooleanField()
-    active = BooleanField(default=True)
-    description = TextField()
-    time_to_schedule = models.DurationField()
-
-    # Relationship Fields
-    local_contacts = models.ForeignKey('app.Contacts', on_delete=models.PROTECT)
-    admins = models.ForeignKey('app.Contacts', related_name='instrument_admins', on_delete=models.PROTECT)
-    parameter_set = models.ForeignKey('app.InstrumentParameterSets', on_delete=models.PROTECT)
-
-    class Meta:
-        ordering = ('-created',)
-
-    def __unicode__(self):
-        return u'%s' % self.slug
-
-    def get_absolute_url(self):
-        return reverse('app_instruments_detail', args=(self.slug,))
-
-
-    def get_update_url(self):
-        return reverse('app_instruments_update', args=(self.slug,))
-
-
+        return '%s %s' % (self.pid, self.name)
 
 
 
@@ -341,7 +320,7 @@ class Affiliations(models.Model):
         return u'%s' % self.pk
 
     def __str__(self):
-        return ", ".join(list(filter(None, [self.department, self.institution, self.city])))
+        return ", ".join(list(filter(None, [self.department, self.institution, self.city, self.country.iso])))
 
     def get_absolute_url(self):
         return reverse('app_affiliations_detail', args=(self.pk,))
@@ -375,30 +354,109 @@ class Countries(models.Model):
         return reverse('app_countries_update', args=(self.pk,))
 
 
-class InstrumentRequest(models.Model):
+
+class Instruments(models.Model):
 
     # Fields
-    requested = models.DurationField(null=False)
-    granted = models.DurationField()
+    name = CharField(max_length=255)
+    slug = extension_fields.AutoSlugField(populate_from='name', blank=True)
+    created = DateTimeField(auto_now_add=True, editable=False)
+    last_updated = DateTimeField(auto_now=True, editable=False)
+    public = BooleanField(default=True)
+    active = BooleanField(default=True)
+    description = TextField()
+    book_by_hour = BooleanField(default=False)
+    start_hour = FloatField(blank=True, default=0.0)
 
-    # Relationship Fields
-    instrument = models.ForeignKey('app.Instruments', on_delete=models.PROTECT)
-    propsal = models.ForeignKey('app.Proposals', on_delete=models.PROTECT)
-    option = models.ForeignKey('app.Options', on_delete=models.PROTECT)
-    shared_options = models.ManyToManyField('app.SharedOptions', )
+    group = models.ForeignKey('app.InstrumentGroup', related_name='instruments', on_delete=models.PROTECT, default=None, null=True)
 
     class Meta:
-        ordering = ('-pk',)
+        ordering = ('-created',)
+
+    def __unicode__(self):
+        return u'%s' % self.slug
+
+    def __str__(self):
+        return '%s' % self.name
+
+    def get_absolute_url(self):
+        return reverse('app_instruments_detail', args=(self.slug,))
+
+
+    def get_update_url(self):
+        return reverse('app_instruments_update', args=(self.slug,))
+
+
+class InstrumentGroup(models.Model):
+
+    name = CharField(max_length=255)
+    created = DateTimeField(auto_now_add=True, editable=False)
+    last_updated = DateTimeField(auto_now=True, editable=False)
+    
+    trained_users = models.ManyToManyField('app.Contacts',  related_name='trained_instrumentgroups', blank=True)
+
+    class Meta:
+        ordering = ('name',)
+
+    def __str__(self):
+        return '%s' % self.name
+
+
+class Experiments(models.Model):
+
+    # Fields
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
+    start = models.DateTimeField()
+    end = models.DateTimeField()
+    duration = models.DurationField(editable=False)
+
+    # Relationship Fields
+    proposal = models.ForeignKey('app.Proposals', on_delete=models.PROTECT, default=None)
+    option = models.ManyToManyField('app.Options', blank=True)
+    shared_options = models.ManyToManyField('app.SharedOptions', blank=True)
+
+    responsible = models.ForeignKey('app.Contacts', on_delete=models.PROTECT, related_name = "experiment_responsible", null=True)
+    local_contact = models.ForeignKey('app.Contacts', on_delete=models.PROTECT, related_name = "experiment_lc")
+    instrument = models.ForeignKey('app.Instruments', on_delete=models.PROTECT)
+    creator = models.ForeignKey('app.Contacts',  related_name='experiment_creator', on_delete=models.PROTECT)
+
+    @property
+    def real_start(self):
+        if self.instrument and not self.instrument.book_by_hour:
+            return self.start + timedelta(hours = self.instrument.start_hour)
+        else:
+            return self.start
+
+    @property
+    def real_end(self):
+        if self.instrument and not self.instrument.book_by_hour:
+            return self.end + timedelta(days = 1, hours = self.instrument.start_hour)
+        else:
+            return self.end
+
+
+
+    class Meta:
+        ordering = ('-created',)
 
     def __unicode__(self):
         return u'%s' % self.pk
 
     def get_absolute_url(self):
-        return reverse('app_instrumentrequest_detail', args=(self.pk,))
-
+        return reverse('app_experiments_detail', args=(self.pk,))
 
     def get_update_url(self):
-        return reverse('app_instrumentrequest_update', args=(self.pk,))
+        return reverse('app_experiments_update', args=(self.pk,))
+
+    def save(self, *args, **kwargs):
+        # calculate duration
+        self.duration = self.end - self.start
+        if not self.instrument.book_by_hour:
+            self.duration += timedelta(days=1)
+        super(Experiments, self).save(*args, **kwargs)
+
+
 
 
 class Options(models.Model):
@@ -408,7 +466,7 @@ class Options(models.Model):
     slug = AutoSlugField(populate_from='name', blank=True)
     created = DateTimeField(auto_now_add=True, editable=False)
     last_updated = DateTimeField(auto_now=True, editable=False)
-    active = BooleanField()
+    active = BooleanField(default=True)
 
     # Relationship Fields
     instrument = models.ForeignKey('app.Instruments', on_delete=models.PROTECT)
@@ -418,6 +476,9 @@ class Options(models.Model):
 
     def __unicode__(self):
         return u'%s' % self.slug
+
+    def __str__(self):
+        return self.name
 
     def get_absolute_url(self):
         return reverse('app_options_detail', args=(self.slug,))
@@ -453,71 +514,7 @@ class SharedOptions(models.Model):
         return reverse('app_sharedoptions_update', args=(self.slug,))
 
 
-class InstrumentParameterSets(models.Model):
 
-    # Fields
-    name = CharField(max_length=255)
-
-
-    class Meta:
-        ordering = ('-pk',)
-
-    def __unicode__(self):
-        return u'%s' % self.pk
-
-    def get_absolute_url(self):
-        return reverse('app_instrumentparametersets_detail', args=(self.pk,))
-
-
-    def get_update_url(self):
-        return reverse('app_instrumentparametersets_update', args=(self.pk,))
-
-
-class InstrumentParameters(models.Model):
-
-    # Fields
-    name = CharField(max_length=255)
-    description = TextField(max_length=1000)
-    required = BooleanField()
-
-    # Relationship Fields
-    set = models.ForeignKey('app.InstrumentParameterSets', on_delete=models.PROTECT)
-
-    class Meta:
-        ordering = ('-pk',)
-
-    def __unicode__(self):
-        return u'%s' % self.pk
-
-    def get_absolute_url(self):
-        return reverse('app_instrumentparameters_detail', args=(self.pk,))
-
-
-    def get_update_url(self):
-        return reverse('app_instrumentparameters_update', args=(self.pk,))
-
-
-class ParameterValues(models.Model):
-
-    # Fields
-    value = models.CharField(max_length=255)
-
-    # Relationship Fields
-    parameter = models.ForeignKey('app.InstrumentParameters', on_delete=models.PROTECT)
-    request = models.ForeignKey('app.InstrumentRequest', on_delete=models.PROTECT)
-
-    class Meta:
-        ordering = ('-pk',)
-
-    def __unicode__(self):
-        return u'%s' % self.pk
-
-    def get_absolute_url(self):
-        return reverse('app_parametervalues_detail', args=(self.pk,))
-
-
-    def get_update_url(self):
-        return reverse('app_parametervalues_update', args=(self.pk,))
 
 
 class Samples(models.Model):
@@ -621,62 +618,4 @@ class Publications(models.Model):
 
     def get_update_url(self):
         return reverse('app_publications_update', args=(self.pk,))
-
-
-class Experiments(models.Model):
-
-    # Fields
-    created = models.DateTimeField(auto_now_add=True, editable=False)
-    last_updated = models.DateTimeField(auto_now=True, editable=False)
-    start = models.DateTimeField()
-    end = models.DateTimeField()
-    duration = models.DurationField()
-    finalized = models.BooleanField()
-
-    # Relationship Fields
-    request = models.ForeignKey('app.InstrumentRequest', on_delete=models.PROTECT)
-    local_contact = models.ForeignKey('app.Contacts', on_delete=models.PROTECT)
-    instrument = models.ForeignKey('app.Instruments', on_delete=models.PROTECT)
-    creator = models.ForeignKey('app.Contacts',  related_name='experiment_creator', on_delete=models.PROTECT)
-
-    class Meta:
-        ordering = ('-created',)
-
-    def __unicode__(self):
-        return u'%s' % self.pk
-
-    def get_absolute_url(self):
-        return reverse('app_experiments_detail', args=(self.pk,))
-
-
-    def get_update_url(self):
-        return reverse('app_experiments_update', args=(self.pk,))
-
-
-class Slots(models.Model):
-
-    # Fields
-    created = models.DateTimeField(auto_now_add=True, editable=False)
-    last_updated = models.DateTimeField(auto_now=True, editable=False)
-    start = models.DateTimeField()
-    end = models.DateTimeField()
-    type = models.CharField(max_length=1, choices=(('M', 'Maintenance'), ('O', 'Instrument off'), ('F', 'Failure'), ('R', 'Repair'),))
-
-    # Relationship Fields
-    instrument = models.ForeignKey('app.Instruments', on_delete=models.PROTECT)
-    creator = models.ForeignKey('app.Contacts', on_delete=models.PROTECT)
-
-    class Meta:
-        ordering = ('-created',)
-
-    def __unicode__(self):
-        return u'%s' % self.pk
-
-    def get_absolute_url(self):
-        return reverse('app_slots_detail', args=(self.pk,))
-
-
-    def get_update_url(self):
-        return reverse('app_slots_update', args=(self.pk,))
-
 

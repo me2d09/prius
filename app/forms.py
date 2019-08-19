@@ -3,16 +3,18 @@ Definition of forms.
 """
 
 from django import forms
+from django.template.loader import render_to_string
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordResetForm, SetPasswordForm
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
-from .models import Proposals, Instruments, Contacts, Affiliations, Countries, InstrumentRequest, Options, SharedOptions
-from .models import InstrumentParameterSets, InstrumentParameters, ParameterValues, Samples, SamplePhotos, SampleRemarks
-from .models import Publications, Experiments, Slots, Status
+from .models import Proposals, Instruments, Contacts, Affiliations, Countries, Options, SharedOptions
+from .models import Samples, SamplePhotos, SampleRemarks
+from .models import Publications, Experiments, Status
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, HTML, Fieldset, ButtonHolder
+from crispy_forms.layout import Layout, Submit, HTML, Fieldset, Div, ButtonHolder, Field
 from dal import autocomplete
 from django.http import Http404
+from django.db.models import Q
  
 
 class BootstrapAuthenticationForm(AuthenticationForm):
@@ -293,7 +295,7 @@ class ProposalsForm(forms.ModelForm):
 class InstrumentsForm(forms.ModelForm):
     class Meta:
         model = Instruments
-        fields = ['name', 'public', 'active', 'description', 'time_to_schedule', 'local_contacts', 'admins', 'parameter_set']
+        fields = ['name', 'public', 'active', 'description']
 
 class UserForm(forms.ModelForm):
     class Meta:
@@ -353,11 +355,6 @@ class CountriesForm(forms.ModelForm):
         fields = ['name', 'iso']
 
 
-class InstrumentRequestForm(forms.ModelForm):
-    class Meta:
-        model = InstrumentRequest
-        fields = ['requested', 'granted', 'instrument', 'propsal', 'option', 'shared_options']
-
 
 class OptionsForm(forms.ModelForm):
     class Meta:
@@ -370,23 +367,6 @@ class SharedOptionsForm(forms.ModelForm):
         model = SharedOptions
         fields = ['name', 'active', 'instruments']
 
-
-class InstrumentParameterSetsForm(forms.ModelForm):
-    class Meta:
-        model = InstrumentParameterSets
-        fields = ['name']
-
-
-class InstrumentParametersForm(forms.ModelForm):
-    class Meta:
-        model = InstrumentParameters
-        fields = ['name', 'description', 'required', 'set']
-
-
-class ParameterValuesForm(forms.ModelForm):
-    class Meta:
-        model = ParameterValues
-        fields = ['value', 'parameter', 'request']
 
 
 class SamplesForm(forms.ModelForm):
@@ -412,16 +392,111 @@ class PublicationsForm(forms.ModelForm):
         model = Publications
         fields = ['link', 'year', 'authors']
 
+class DateRangeField(Fieldset):
+    template = 'custom_daterange.html'
+
+    def render(self, form, form_style, context, template_pack, **kwargs):
+        if len(self.fields) != 2:
+            raise ValueError("There needs to be legend and two fields for daterange.")
+        return render_to_string(
+            self.template,
+            {'fieldset': self, 'legend': self.legend, 
+             'field1': form[self.fields[0]], 'field2': form[self.fields[1]], 
+             'form_style': form_style}
+)
+
+
 
 class ExperimentsForm(forms.ModelForm):
+    start = forms.DateField(widget=forms.DateInput(format = '%d.%m.%Y'), 
+                                input_formats=('%d.%m.%Y',))
+    end = forms.DateField(widget=forms.DateInput(format = '%d.%m.%Y'), 
+                                input_formats=('%d.%m.%Y',))
     class Meta:
         model = Experiments
-        fields = ['start', 'end', 'duration', 'finalized', 'request', 'local_contact', 'instrument', 'creator']
+        fields = ['start', 'end', 'proposal', 'instrument', 'option', 'shared_options', 'local_contact']
 
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        self.user = kwargs.pop('user', None)
+        self.local_contacts = kwargs.pop('local_contacts', None)
 
-class SlotsForm(forms.ModelForm):
-    class Meta:
-        model = Slots
-        fields = ['start', 'end', 'type', 'instrument', 'creator']
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_class = 'form-horizontal'
+        self.helper.form_method = 'post'
+        self.helper.field_class = 'col-sm-10'
+        self.helper.label_class = 'col-sm-2'
 
+        self.fields['instrument'].queryset = Instruments.objects.filter(group__in = self.user.contact.trained_instrumentgroups.all())
 
+        self.fields['proposal'].queryset = Proposals.objects.filter(Q(last_status='A') & ( 
+                                       Q(proposer=self.user) | 
+                                       Q(coproposers__uid__exact=self.user) | 
+                                       Q(local_contacts__uid__exact=self.user))).distinct()
+        
+       
+        self.fields['local_contact'].queryset = Contacts.objects.none()
+        if 'instrument' in self.data and 'proposal' in self.data:
+            try:
+                instrument_id = int(self.data.get('instrument'))
+                proposal_id = int(self.data.get('proposal'))
+                involved = Proposals.objects.get(pk=proposal_id).people
+                self.fields['local_contact'].queryset = Contacts.objects.filter(uid__groups__name = 'localcontacts', pk__in = [x.pk for x in involved], 
+                                             trained_instrumentgroups__instruments__pk = instrument_id) 
+            except (ValueError, TypeError):
+                pass  # invalid input from the client; ignore and fallback to empty
+        elif self.instance.pk:
+            involved = self.instance.proposal.people
+            self.fields['local_contact'].queryset = Contacts.objects.filter(uid__groups__name = 'localcontacts', pk__in = [x.pk for x in involved], 
+                                             trained_instrumentgroups__instruments = self.instance.instrument)       
+        
+        self.fields['option'].queryset = Options.objects.none()
+        if 'instrument' in self.data:
+            try:
+                instrument_id = int(self.data.get('instrument'))
+                self.fields['option'].queryset = Options.objects.filter(instrument=instrument_id).order_by('name')
+            except (ValueError, TypeError):
+                pass  # invalid input from the client; ignore and fallback to empty
+        elif self.instance.pk:
+            self.fields['option'].queryset = self.instance.instrument.options_set.order_by('name')
+
+        # help texts:
+        self.fields['proposal'].help_text = "You can only book measurement time for accepted proposals, where you are part of the experimental team."
+        self.fields['instrument'].help_text = "You can only book slot on instruments, where you are trained (see <a href='/profile'>your profile</a> for details)."
+        self.fields['option'].help_text = "Select one or more options which you want to use during measurement."
+        self.fields['shared_options'].help_text = "Select shared options which you want to use. They will be booked for same time as you select below. You can optionally change it later."
+        self.fields['local_contact'].help_text = "Select local contact who will be your contact person during measurement. Local contact must be claimed in your proposal and must be responsible for selected instrument."
+        
+        self.helper.layout = Layout(
+            Fieldset(
+                None, 'proposal',  'instrument', 
+            ),
+            Div(
+                Field('option', wrapper_class='col-md-6'),
+                Field('shared_options', wrapper_class='col-md-6'),  
+            css_class='form-row'),
+            Fieldset(
+                None, 'local_contact',
+            ),
+            DateRangeField('Date', 'start', 'end'),
+            ButtonHolder(
+                Submit('submit', 'Save', css_class='button white'),
+                HTML("""<a role="button" class="btn btn-default"
+                        href="{% url "app_experiments_list" %}">Cancel</a>"""),
+            )
+        )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        start = cleaned_data.get("start")
+        end = cleaned_data.get("end")
+        instrument = cleaned_data.get("instrument")
+
+        colision = Experiments.objects.filter(end__gt = start, start__lt = end, instrument = instrument).count()
+        if colision > 0:
+            raise forms.ValidationError(
+                "Your data colide with another experiment on the same instrument. "
+                "Maybe someone was faster then you in booking the slot. "
+                "Select different dates."
+            )

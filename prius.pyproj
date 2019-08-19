@@ -60,6 +60,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="app\urls.py" />
+    <Compile Include="app\views\ajaxviews.py" />
+    <Compile Include="app\views\bookingviews.py" />
     <Compile Include="app\views\pdfviews.py" />
     <Compile Include="app\views\htmlviews.py" />
     <Compile Include="app\views\__init__.py">
@@ -81,9 +83,13 @@
     <Folder Include="app\migrations\" />
     <Folder Include="app\static\fonts\" />
     <Folder Include="app\templates\errors\" />
+    <Folder Include="app\templates\booking\" />
+    <Folder Include="app\templates\ajax\" />
     <Folder Include="app\templates\pinax\" />
     <Folder Include="app\templates\pdf\" />
     <Folder Include="app\templates\pinax\notifications\" />
+    <Folder Include="app\templates\pinax\notifications\P_request_review\" />
+    <Folder Include="app\templates\pinax\notifications\p_request_comments\" />
     <Folder Include="app\templates\pinax\notifications\x_proposal_important_team\" />
     <Folder Include="app\templates\pinax\notifications\X_proposal_important\" />
     <Folder Include="app\views\" />
@@ -114,6 +120,10 @@
     <Content Include="app\static\pdfstyle.css" />
     <Content Include="app\templates\404.html" />
     <Content Include="app\templates\500.html" />
+    <Content Include="app\templates\ajax\fulldays.html" />
+    <Content Include="app\templates\ajax\events.html" />
+    <Content Include="app\templates\custom_daterange.html" />
+    <Content Include="app\templates\dropdown_list_options.html" />
     <Content Include="app\templates\error.html" />
     <Content Include="app\templates\accounts\change_password.html" />
     <Content Include="app\templates\403.html" />
@@ -124,6 +134,8 @@
     <Content Include="app\templates\pinax\notifications\email_subject.txt" />
     <Content Include="app\templates\pinax\notifications\full.txt" />
     <Content Include="app\templates\pinax\notifications\notice_settings.html" />
+    <Content Include="app\templates\pinax\notifications\p_request_comments\full.txt" />
+    <Content Include="app\templates\pinax\notifications\P_request_review\full.txt" />
     <Content Include="app\templates\pinax\notifications\x_proposal_important_team\full.txt" />
     <Content Include="app\templates\pinax\notifications\x_proposal_important_team\short.txt" />
     <Content Include="app\templates\pinax\notifications\X_proposal_important\full.txt" />
@@ -142,32 +154,12 @@
     <Content Include="app\templates\app\user_update.html" />
     <Content Include="app\templates\app\contacts_form.html" />
     <Content Include="app\templates\app\contacts_list.html" />
-    <Content Include="app\templates\app\countries_detail.html" />
-    <Content Include="app\templates\app\countries_form.html" />
-    <Content Include="app\templates\app\countries_list.html" />
-    <Content Include="app\templates\app\experiments_detail.html" />
-    <Content Include="app\templates\app\experiments_form.html" />
-    <Content Include="app\templates\app\experiments_list.html" />
+    <Content Include="app\templates\booking\experiments_detail.html" />
+    <Content Include="app\templates\booking\experiments_form.html" />
+    <Content Include="app\templates\booking\experiments_list.html" />
     <Content Include="app\templates\app\useroffice.html" />
-    <Content Include="app\templates\app\instrumentparametersets_detail.html" />
-    <Content Include="app\templates\app\instrumentparametersets_form.html" />
-    <Content Include="app\templates\app\instrumentparametersets_list.html" />
-    <Content Include="app\templates\app\instrumentparameters_detail.html" />
-    <Content Include="app\templates\app\instrumentparameters_form.html" />
-    <Content Include="app\templates\app\instrumentparameters_list.html" />
-    <Content Include="app\templates\app\instrumentrequest_detail.html" />
-    <Content Include="app\templates\app\instrumentrequest_form.html" />
-    <Content Include="app\templates\app\instrumentrequest_list.html" />
-    <Content Include="app\templates\app\instruments_detail.html" />
-    <Content Include="app\templates\app\instruments_form.html" />
     <Content Include="app\templates\app\instruments_list.html" />
     <Content Include="app\templates\app\layout.html" />
-    <Content Include="app\templates\app\options_detail.html" />
-    <Content Include="app\templates\app\options_form.html" />
-    <Content Include="app\templates\app\options_list.html" />
-    <Content Include="app\templates\app\parametervalues_detail.html" />
-    <Content Include="app\templates\app\parametervalues_form.html" />
-    <Content Include="app\templates\app\parametervalues_list.html" />
     <Content Include="app\templates\proposal\detail.html" />
     <Content Include="app\templates\proposal\form.html" />
     <Content Include="app\templates\proposal\list.html" />
@@ -183,9 +175,6 @@
     <Content Include="app\templates\app\samples_detail.html" />
     <Content Include="app\templates\app\samples_form.html" />
     <Content Include="app\templates\app\samples_list.html" />
-    <Content Include="app\templates\app\sharedoptions_detail.html" />
-    <Content Include="app\templates\app\sharedoptions_form.html" />
-    <Content Include="app\templates\app\sharedoptions_list.html" />
     <Content Include="app\templates\proposal\status.html" />
     <Content Include="app\templates\registration\password_reset_complete.html" />
     <Content Include="app\templates\registration\password_reset_confirm.html" />
@@ -196,9 +185,6 @@
       <SubType>Code</SubType>
     </Content>
     <Content Include="app\templates\registration\signup.html" />
-    <Content Include="app\templates\app\slots_detail.html" />
-    <Content Include="app\templates\app\slots_form.html" />
-    <Content Include="app\templates\app\slots_list.html" />
     <Content Include="app\templates\base.html" />
     <Content Include="app\templates\registration\message.html" />
     <Content Include="app\templates\registration\login.html" />

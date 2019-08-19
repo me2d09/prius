@@ -1,0 +1,11 @@
+﻿{% load extratags %}[
+{% for object in events %}
+    {
+        "title": "{{object.proposal.pid}}: {{object.local_contact}}", 
+        "description": "{% if request.user|in_team:object.proposal %}{{object.proposal.name}} ({{object.proposal.proposer.contact}})<br />{% endif %}{{object.local_contact}}<br />☎ {{object.local_contact.phone}}",
+        "url": "{{object.get_absolute_url}}",
+        "allDay": true,
+        "start": "{{ object.start|date:"c" }}",
+        "end": "{% if not object.instrument.book_by_hour %}{{ object.end|next_day|date:"c" }}{% else %}{{ object.end|date:"c" }}}{% endif %}"
+    }{% if not forloop.last %},{% endif %}{% endfor %}
+]

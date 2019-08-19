@@ -1,0 +1,24 @@
+{% extends "form.html" %}
+{% load static %}
+{% block breadcrumbs %}
+    <li class="breadcrumb-item">Booking</li>
+    <li class="breadcrumb-item active">{{ object.proposal }} ({{ object.real_start|date:"SHORT_DATETIME_FORMAT" }} - {{ object.real_end|date:"SHORT_DATETIME_FORMAT" }})</li>
+{% endblock %}
+{% block formcontent %}
+
+<table class="table">
+<tr><td>Proposal:</td><td>{{ object.proposal }}</td></tr>
+<tr><td>User (sample and experiment responsible):</td><td>{{ object.responsible }}</td></tr>
+<tr><td>Local Contact:</td><td>{{ object.local_contact }}</td></tr>
+<tr><td>Booked at:</td><td>{{ object.created }}</td></tr>
+<tr><td>Date:</td><td>{{ object.real_start }} - {{ object.real_end }}</td></tr>
+<tr><td>Duration:</td><td>{{ object.duration }}</td></tr>
+<tr><td>Instrument:</td><td>{{ object.instrument }}</td></tr>
+<tr><td>Options:</td><td>{% for o in object.option.all %}{{ o }}{% endfor %}</td></tr>
+<tr><td>Shared options:</td><td>{% for so in object.shared_options.all %}{{ so }}{% endfor %}</td></tr>
+</table>
+<p><a class="btn btn-default" href="{% url 'app_experiments_list' %}">Back to calendar</a> 
+   <a class="btn btn-danger" href="#">Cancel Experiment Slot</a>
+</p>
+
+{% endblock %}

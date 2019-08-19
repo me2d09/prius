@@ -43,12 +43,6 @@ class CountriesViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 
-class InstrumentRequestViewSet(viewsets.ModelViewSet):
-    """ViewSet for the InstrumentRequest class"""
-
-    queryset = models.InstrumentRequest.objects.all()
-    serializer_class = serializers.InstrumentRequestSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
 
 class OptionsViewSet(viewsets.ModelViewSet):
@@ -64,30 +58,6 @@ class SharedOptionsViewSet(viewsets.ModelViewSet):
 
     queryset = models.SharedOptions.objects.all()
     serializer_class = serializers.SharedOptionsSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-
-class InstrumentParameterSetsViewSet(viewsets.ModelViewSet):
-    """ViewSet for the InstrumentParameterSets class"""
-
-    queryset = models.InstrumentParameterSets.objects.all()
-    serializer_class = serializers.InstrumentParameterSetsSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-
-class InstrumentParametersViewSet(viewsets.ModelViewSet):
-    """ViewSet for the InstrumentParameters class"""
-
-    queryset = models.InstrumentParameters.objects.all()
-    serializer_class = serializers.InstrumentParametersSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-
-class ParameterValuesViewSet(viewsets.ModelViewSet):
-    """ViewSet for the ParameterValues class"""
-
-    queryset = models.ParameterValues.objects.all()
-    serializer_class = serializers.ParameterValuesSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 
@@ -129,13 +99,3 @@ class ExperimentsViewSet(viewsets.ModelViewSet):
     queryset = models.Experiments.objects.all()
     serializer_class = serializers.ExperimentsSerializer
     permission_classes = [permissions.IsAuthenticated]
-
-
-class SlotsViewSet(viewsets.ModelViewSet):
-    """ViewSet for the Slots class"""
-
-    queryset = models.Slots.objects.all()
-    serializer_class = serializers.SlotsSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-

@@ -6,6 +6,7 @@ from datetime import datetime
 from django.conf import settings
 from django.conf.urls import url, include
 from django.conf.urls.static import static
+from django.urls import path
 
 from django.contrib.auth import views as auth_views
 
@@ -102,3 +103,16 @@ urlpatterns += [
     # other urls
     url(r"^notifications/", include("pinax.notifications.urls", namespace="pinax_notifications")),
 ]
+
+
+urlpatterns += (
+    # urls for Experiments
+    url(r'^experiments/$', views.ExperimentsListView.as_view(), name='app_experiments_list'),
+    url(r'^experiments/create/$', views.ExperimentsCreateView.as_view(), name='app_experiments_create'),
+    url(r'^experiments/detail/(?P<pk>\S+)/$', views.ExperimentsDetailView.as_view(), name='app_experiments_detail'),
+    url(r'^experiments/update/(?P<pk>\S+)/$', views.ExperimentsUpdateView.as_view(), name='app_experiments_update'),
+    path('ajax/load-options/', views.load_options, name='ajax_load_options'), 
+    path('ajax/load-lc/', views.load_lc, name='ajax_load_lc'), 
+    path('ajax/get-fulldays/', views.get_fulldays, name='ajax_full_days'), 
+    path('ajax/get-events/', views.get_events, name='ajax_get_events'), 
+)

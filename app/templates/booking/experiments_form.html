@@ -1,0 +1,81 @@
+{% extends "form.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block head %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker3.css" integrity="sha256-AghQEDQh6JXTN1iI/BatwbIHpJRKQcg2lay7DE5U/RQ=" crossorigin="anonymous" />
+{% endblock %}
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{% url 'app_experiments_list' %}">Calendar</a></li>
+    <li class="breadcrumb-item active">New</li>
+{% endblock %}
+{% block formcontent %}
+<header> 
+<h1 class="h3 display">
+    {% if object %}
+        Edit booking {{ object }}
+    {% else %}
+        Book new experiment
+    {% endif %}
+</h1>
+</header>
+
+<div class="card">
+    <div class="card-body">  
+        {% crispy form %}
+        {{ form_errors }}
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha256-bqVeqGdJ7h/lYPq6xrPv/YGzMEb6dNxlfiTUHSgRCp8=" crossorigin="anonymous"></script>
+<script>
+    function refreshDatePickers(res) {
+      $.getJSON( "{% url 'ajax_full_days' %}", {resource: "I" + res}, function( data ) {
+        var fullDays = data.fdays;
+        $('.input-daterange').datepicker('destroy');
+        $('.input-daterange').datepicker({
+          format: "d.m.yyyy",
+          startDate: "{% now "d.m.Y" %}",
+          weekStart: 1,
+          datesDisabled: fullDays
+        });
+      });
+    }
+
+    function reloadlc(url, instrumentId, proposalId) {
+      $.ajax({          
+        url: url,                    
+        data: {
+          'instrument': instrumentId,
+          'proposal': proposalId,
+        },
+        success: function (data) {  
+          $("#id_local_contact").html(data); 
+        }
+      });
+    }
+
+    $("#id_instrument").change(function () {
+      var url1 = '{% url 'ajax_load_options' %}';  
+      var url2 = '{% url 'ajax_load_lc' %}';  
+      var instrumentId = $(this).val();  
+      refreshDatePickers(instrumentId);
+      $.ajax({          
+        url: url1,                    
+        data: {
+          'instrument': instrumentId     
+        },
+        success: function (data) {  
+          $("#id_option").html(data); 
+        }
+      });
+      reloadlc(url2, instrumentId, $("#id_proposal").val());
+    });
+
+    $("#id_proposal").change(function () {
+      reloadlc('{% url 'ajax_load_lc' %}', $("#id_instrument").val(), $(this).val());
+    });
+
+    $("#id_instrument").change();
+  </script>
+{% endblock %}

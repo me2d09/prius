@@ -17,3 +17,31 @@
         color: white;
         text-decoration: none;
     }
+
+.datepicker table tr td.range {
+    background-color: darkorange;
+}
+.datepicker table tr td.disabled, .datepicker table tr td.disabled:hover {
+    background-color: darkgray;
+}
+
+.datepicker table tr td.range.disabled, .datepicker table tr td.range.disabled:hover {
+    background-color: red;
+}
+
+.event1, .event1:hover, .event1:focus {
+    background-color: #fe4a49;
+}
+.event2, .event2:hover, .event2:focus {
+    background-color: #2ab7ca;
+}
+.event3, .event3:hover, .event3:focus {
+    background-color: #fed766;
+}
+.event4, .event4:hover, .event4:focus {
+    background-color: #88d8b0;
+}
+
+.eventselect option {
+    color: black !important;
+}
