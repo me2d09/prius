@@ -83,7 +83,11 @@ class StatusForm(forms.ModelForm):
         showRemark = False
         showHidden = False
         if self.user.has_perm('app.add_proposals') and prop.proposer == self.user:
-            if prop.last_status == 'P': allowed.append('S')  # will be waiting user office
+            if prop.last_status == 'P': 
+                if prop.proposaltype == 'T':
+                    allowed.append('A')  # will be accepted
+                else:
+                    allowed.append('S')  # will be waiting user office
             if prop.last_status == 'A': allowed.append('F')  # will be finished
         if self.user.has_perm('app.change_status'):
             showRemark = showHidden = True
@@ -91,13 +95,20 @@ class StatusForm(forms.ModelForm):
             if prop.last_status == 'U': allowed.append('P')  # will be returned
             if prop.last_status == 'U': allowed.append('T')  # will be waiting for local contact
             #if prop.last_status == 'T': allowed.append('P')  # go back to preparation
-            if prop.last_status == 'T': allowed.append('W')  # will wait for panel
+            if prop.last_status == 'T': 
+                if prop.proposaltype == 'P':
+                    allowed.append('D')  # will be waiting for director
+                else:
+                    allowed.append('W')  # will be waiting for panel
             if prop.last_status == 'W': allowed.append('R')  # will be in panel
             if prop.last_status == 'A': allowed.append('F')  # will be finished
         if self.user.has_perm('app.approve_technical') and self.user.contact in prop.local_contacts.all(): 
             if prop.last_status == 'T': 
                 allowed.append('T')  # stay in technical review
-                allowed.append('W')  # will be waiting for panel
+                if prop.proposaltype == 'P':
+                    allowed.append('D')  # will be waiting for director
+                else:
+                    allowed.append('W')  # will be waiting for panel
                 showRemark = showHidden = True
         if self.user.has_perm('app.takeover_panel') and prop.last_status == 'W': 
                 allowed.append('R')     # will be in panel
