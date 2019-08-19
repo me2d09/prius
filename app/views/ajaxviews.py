@@ -23,14 +23,17 @@ MonkeyPatch.patch_fromisoformat()
 
 def load_options(request):
     instrument = request.GET.get('instrument')
-    options = Options.objects.filter(instrument=instrument).order_by('name')
+    if instrument:
+        options = Options.objects.filter(instrument=instrument).order_by('name')
+    else:
+        options = Options.objects.none()
     return render(request, 'dropdown_list_options.html', {'obj': options})
 
 def load_lc(request):
     instrument = request.GET.get('instrument')
     proposal = request.GET.get('proposal')
-    involved = Proposals.objects.get(pk=proposal).people
     if instrument and proposal:
+        involved = Proposals.objects.get(pk=proposal).people
         lc = Contacts.objects.filter(uid__groups__name = 'localcontacts', pk__in = [x.pk for x in involved], trained_instrumentgroups__instruments__pk = instrument) 
     else:
         lc = Contacts.objects.none()
