@@ -30,16 +30,19 @@ def load_lc(request):
     instrument = request.GET.get('instrument')
     proposal = request.GET.get('proposal')
     involved = Proposals.objects.get(pk=proposal).people
-    lc = Contacts.objects.filter(uid__groups__name = 'localcontacts', pk__in = [x.pk for x in involved], trained_instrumentgroups__instruments__pk = instrument) 
+    if instrument and proposal:
+        lc = Contacts.objects.filter(uid__groups__name = 'localcontacts', pk__in = [x.pk for x in involved], trained_instrumentgroups__instruments__pk = instrument) 
+    else:
+        lc = Contacts.objects.none()
     return render(request, 'dropdown_list_options.html', {'obj': lc})
 
 def get_events(request):
     resource = request.GET.get('resource')
     start = datetime.fromisoformat(request.GET.get('start')).replace(tzinfo=None)
     end = datetime.fromisoformat(request.GET.get('end')).replace(tzinfo=None)
-    if resource[0] == 'I':
+    if resource[0] == 'I' and resource[1:]:
         events = Experiments.objects.filter(instrument=resource[1:],start__lt=end, end__gt=start)
-    elif resource[0] == 'R':  # TODO
+    elif resource[0] == 'R' and resource[1:]:  # TODO
         events = SharedOptions.objects.filter(instrument=resource[1:],start__lt=end, end__gt=start)
     else:
         events = Experiments.objects.none()
