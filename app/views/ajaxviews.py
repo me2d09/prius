@@ -49,9 +49,9 @@ def get_fulldays(request):
     resource = request.GET.get('resource')
     except_res = request.GET.get('except')
     start = datetime.today()
-    if resource[0] == 'I':
+    if resource[0] == 'I' and resource[1:]:
         events = Experiments.objects.filter(instrument=resource[1:], end__gt=start).exclude(pk = except_res)
-    elif resource[0] == 'R':  # TODO
+    elif resource[0] == 'R' and resource[1:]:  # TODO
         events = SharedOptions.objects.filter(instrument=resource[1:], end__gt=start).exclude(pk = except_res)
     else:
         events = Experiments.objects.none()
