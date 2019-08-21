@@ -122,6 +122,7 @@ class ExperimentFilter(django_filters.FilterSet):
         }),
     })
     instrument = django_filters.ModelChoiceFilter(label = 'Instrument: ', empty_label = "All", queryset=Instruments.objects.all())
+    local_contact = django_filters.ModelChoiceFilter(label = 'Local Contact: ', empty_label = "All", queryset=localcontacts)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
