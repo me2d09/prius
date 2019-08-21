@@ -34,14 +34,29 @@ class ProposalTable(tables.Table):
 
     def render_supervisor(self, record):
         if record.student:
-            return "✔ (%s)" % record.supervisor
-        return "✘"
+            return "? (%s)" % record.supervisor
+        return "?"
 
     class Meta:
         model = Proposals
         template_name = 'django_tables2/bootstrap4.html'
         exclude = ('id', 'abstract', 'slug', 'student', 'scientific_bg', 'thesis_topic', 'grants') #, 'reporter') 
         sequence = ('pid', 'name', 'pdf', '...')
+        attrs  = { 'class': 'table table-striped table-sm table-hover'}
+
+class ExperimentTable(tables.Table):
+
+    def __init__(self, *args, **kwargs):
+        #if self.request.user.has_perm('app.approve_panel'):
+        #    self.Meta.exclude.pop("reporter")
+        super().__init__(*args, **kwargs)
+
+
+    class Meta:
+        model = Experiments
+        template_name = 'django_tables2/bootstrap4.html'
+        #exclude = ('id', 'abstract', 'slug', 'student', 'scientific_bg', 'thesis_topic', 'grants') #, 'reporter') 
+        #sequence = ('pid', 'name', 'pdf', '...')
         attrs  = { 'class': 'table table-striped table-sm table-hover'}
         
 

@@ -107,7 +107,8 @@ urlpatterns += [
 
 urlpatterns += (
     # urls for Experiments
-    url(r'^experiments/$', views.ExperimentsListView.as_view(), name='app_experiments_list'),
+    url(r'^experiments/calendar/$', views.ExperimentsCalendarView.as_view(), name='app_experiments_calendar'),
+    url(r'^experiments/myslots/$', views.ExperimentsListView.as_view(), name='app_experiments_mylist'),
     url(r'^experiments/create/$', views.ExperimentsCreateView.as_view(), name='app_experiments_create'),
     url(r'^experiments/detail/(?P<pk>\S+)/$', views.ExperimentsDetailView.as_view(), name='app_experiments_detail'),
     url(r'^experiments/update/(?P<pk>\S+)/$', views.ExperimentsUpdateView.as_view(), name='app_experiments_update'),

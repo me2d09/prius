@@ -15,10 +15,20 @@ from datetime import datetime
 from django.views.generic import DetailView, ListView, UpdateView, CreateView, DeleteView
 from app.models import Experiments, Instruments, Proposals
 from app.forms import ExperimentsForm
+from app.tables import ExperimentTable
 from django.core.exceptions import PermissionDenied
+from django_tables2.views import SingleTableView, SingleTableMixin
+from django_filters.views import FilterView
 
-class ExperimentsListView(ListView):
+class ExperimentsListView(SingleTableMixin, FilterView):
     template_name = "booking/experiments_list.html"
+    model = Experiments
+    table_class = ExperimentTable
+    paginate_by = 25
+
+
+class ExperimentsCalendarView(ListView):
+    template_name = "booking/experiments_calendar.html"
     model = Experiments
 
     def get_context_data(self, **kwargs):

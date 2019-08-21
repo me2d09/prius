@@ -63,17 +63,25 @@
             <li><a href="/proposals/"> <i class="icon-form"></i>My Proposals</a></li>{% endif %}
               {% if perms.app.view_proposals or request.user|has_group:"localcontacts" %}
             <li><a href="/proposals/all/"> <i class="icon-form"></i>All Proposals</a></li>{% endif %}
-              {% if perms.app.add_contacts %}
-            <li><a href="/contacts/create/"> <i class="icon-form"></i>Invite User</a></li>{% endif %}
-              {% if perms.app.view_contacts %}
-            <li><a href="/contacts/"> <i class="icon-form"></i>User list</a></li>{% endif %}
-              {% if request.user.is_superuser %}
-            <li><a href="/experiments/"> <i class="icon-grid"></i>Booking</a></li>
+          </ul>
+          {% if request.user.is_superuser %}
+          <h5 class="sidenav-heading">Booking</h5>
+          <ul id="side-main-menu" class="side-menu list-unstyled">                  
+            <li><a href="/experiments/calendar/"> <i class="icon-grid"></i>Calendar</a></li>
+            <li><a href="/experiments/create/"> <i class="icon-grid"></i>Book a slot</a></li>
+            <li><a href="/experiments/myslots/"> <i class="icon-grid"></i>My slots</a></li>
+            <li><a href="/experiments/LC/"> <i class="icon-grid"></i>LC overview</a></li>
             <li><a href="charts.html"> <i class="fa fa-bar-chart"></i>Statistics</a></li>
+          </ul>
               {% endif %}
+          <h5 class="sidenav-heading">Settings</h5>
+          <ul id="side-main-menu" class="side-menu list-unstyled">                  
             <li><a href="/profile"> <i class="icon-user"></i>My Profile</a></li>
             <li><a href="/notifications/settings/"> <i class="icon-user"></i>Notifications</a></li>
-            
+            {% if perms.app.add_contacts %}
+            <li><a href="/contacts/create/"> <i class="icon-form"></i>Invite User</a></li>{% endif %}
+            {% if perms.app.view_contacts %}
+            <li><a href="/contacts/"> <i class="icon-form"></i>User list</a></li>{% endif %}
           </ul>
         </div>
         {% if request.user.is_staff %}

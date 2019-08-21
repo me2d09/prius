@@ -483,7 +483,7 @@ class ExperimentsForm(forms.ModelForm):
             ButtonHolder(
                 Submit('submit', 'Save', css_class='button white'),
                 HTML("""<a role="button" class="btn btn-default"
-                        href="{% url "app_experiments_list" %}">Cancel</a>"""),
+                        href="{% url "app_experiments_calendar" %}">Cancel</a>"""),
             )
         )
 

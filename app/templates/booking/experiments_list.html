@@ -2,151 +2,27 @@
 {% load static %}
 {% load extratags %}
 {% load bootstrap4 %}
-{% block head %}
-    <link href='{% static 'vendor/fullcalendar/core/main.css' %}' rel='stylesheet' />
-    <link href='{% static 'vendor/fullcalendar/daygrid/main.css' %}' rel='stylesheet' />
-    <link href='{% static 'vendor/fullcalendar/timegrid/main.css' %}' rel='stylesheet' />
-    <link href='{% static 'vendor/fullcalendar/list/main.css' %}' rel='stylesheet' />
-    <link href='{% static 'vendor/fullcalendar/bootstrap/main.css' %}' rel='stylesheet' />
-
-    <script src='{% static 'vendor/fullcalendar/core/main.js' %}'></script>
-    <script src='{% static 'vendor/fullcalendar/daygrid/main.js' %}'></script>
-    <script src='{% static 'vendor/fullcalendar/timegrid/main.js' %}'></script>
-    <script src='{% static 'vendor/fullcalendar/list/main.js' %}'></script>
-    <script src='{% static 'vendor/fullcalendar/bootstrap/main.js' %}'></script>
-{% endblock %}
+{% load django_tables2 %}
 {% block scripts %}
-    <script>
-
-      document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
-
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            plugins: ['dayGrid', 'timeGrid', 'list', 'bootstrap', ],
-            defaultView: 'dayGridMonth',
-            themeSystem: 'bootstrap',
-            firstDay: 1,
-            height: 600,
-            header: {
-              left:   'today prev,next btnNewExperiment',
-              center: 'title',
-              right:  'dayGridMonth timeGridWeek listWeek',
-            },
-            customButtons: {
-                btnNewExperiment: {
-                  text: 'book a slot',
-                  click: function() {
-                    window.location.href = '{% url 'app_experiments_create' %}';
-                  }
-                }
-              },
-            eventSources: [
-    {
-      id: 'instr1',
-      url: '/ajax/get-events/',
-      method: 'GET',
-      extraParams: function() {
-        return {
-          resource: $('#instr1').val()
-        };
-      },
-      failure: function() {
-        alert('there was an error while fetching events!');
-      },
-      color: '#fe4a49',  
-      textColor: 'black'
-    },{
-      id: 'instr2',
-      url: '/ajax/get-events/',
-      method: 'GET',
-      extraParams: function() {
-        return {
-          resource: $('#instr2').val()
-        };
-      },
-      failure: function() {
-        alert('there was an error while fetching events!');
-      },
-      color: '#2ab7ca',  
-      textColor: 'black'
-    },{
-      id: 'instr3',
-      url: '/ajax/get-events/',
-      method: 'GET',
-      extraParams: function() {
-        return {
-          resource: $('#instr3').val()
-        };
-      },
-      failure: function() {
-        alert('there was an error while fetching events!');
-      },
-      color: '#fed766',  
-      textColor: 'black'
-    },{
-      id: 'instr4',
-      url: '/ajax/get-events/',
-      method: 'GET',
-      extraParams: function() {
-        return {
-          resource: $('#instr4').val()
-        };
-      },
-      failure: function() {
-        alert('there was an error while fetching events!');
-      },
-      color: '#88d8b0',  
-      textColor: 'black'
-    },
-  ],
-
-            eventRender: function (i) {
-                $(i.el).tooltip({title:i.event.extendedProps.description, container: 'body', html: true});
-            }
-        });
-        
-        calendar.render();
-      
-
-        $(".eventselect").change(function(){
-          calendar.getEventSourceById(this.id).refetch();
-        }); 
-
-        });
-    
-
-    </script>
 {% endblock %}
 {% block breadcrumbs %}
     <li class="breadcrumb-item">Booking</li>
-    <li class="breadcrumb-item active">Calendar</li>
+    <li class="breadcrumb-item active">My slots</li>
 {% endblock %}
 {% block formcontent %}
 <header> 
 <h1 class="h3 display">
-    MGML booking calendar
+    My booked experiment slots
 </h1>
 </header>
+    {% if filter %}
     <div class="mb-3">
         <form action="" method="get" class="form form-inline">
-            Resources: 
-            <select class="form-control eventselect event1" id="instr1">
-                <option>-</option>
-                {% for res in instruments %}<option value='I{{res.id}}'>{{ res }}</option>{% endfor %}
-            </select> 
-            <select class="form-control eventselect event2" id="instr2">
-                <option>-</option>
-                {% for res in instruments %}<option value='I{{res.id}}'>{{ res }}</option>{% endfor %}
-            </select> 
-            <select class="form-control eventselect event3" id="instr3">
-                <option>-</option>
-                {% for res in instruments %}<option value='I{{res.id}}'>{{ res }}</option>{% endfor %}
-            </select> 
-            <select class="form-control eventselect event4" id="instr4">
-                <option>-</option>
-                {% for res in instruments %}<option value='I{{res.id}}'>{{ res }}</option>{% endfor %}
-            </select>
+            {% bootstrap_form filter.form layout='inline' %}
+            {% bootstrap_button 'filter' %}
         </form>
     </div>
-<div id='calendar'></div>
+    {% endif %}
+    {% render_table table %}
+    <a class="btn btn-primary" href="{% url 'app_experiments_create' %}">Book a new slot</a>
 {% endblock %}
