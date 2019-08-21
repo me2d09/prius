@@ -358,8 +358,6 @@ class ProposalsListView(SingleTableMixin, FilterView):
                                        Q(proposer=self.request.user) | 
                                        Q(coproposers__uid__exact=self.request.user) | 
                                        Q(local_contacts__uid__exact=self.request.user)).distinct()
-
-
         else:
             #check permissions
             if not self.request.user.has_perm('app.view_proposals'):

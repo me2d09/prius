@@ -15,16 +15,34 @@ from datetime import datetime
 from django.views.generic import DetailView, ListView, UpdateView, CreateView, DeleteView
 from app.models import Experiments, Instruments, Proposals
 from app.forms import ExperimentsForm
-from app.tables import ExperimentTable
+from app.tables import ExperimentTable, ExperimentFilter
 from django.core.exceptions import PermissionDenied
 from django_tables2.views import SingleTableView, SingleTableMixin
 from django_filters.views import FilterView
+from django.db.models import Q
 
 class ExperimentsListView(SingleTableMixin, FilterView):
     template_name = "booking/experiments_list.html"
     model = Experiments
     table_class = ExperimentTable
+    filterset_class = ExperimentFilter
     paginate_by = 25
+
+    def get_queryset(self):
+        queryset = Experiments.objects.distinct()
+
+        if self.kwargs['filtering'] == "mine":
+            queryset = queryset.filter( 
+                                       Q(responsible=self.request.user.contact) | 
+                                       Q(proposal__coproposers=self.request.user.contact) | 
+                                       Q(proposal__proposer=self.request.user) | 
+                                       Q(proposal__local_contacts=self.request.user.contact) | 
+                                       Q(proposal__supervisor=self.request.user.contact)).distinct()
+        else:
+            #check permissions
+            if not self.request.user.has_perm('app.view_slots'):
+                queryset = Experiments.objects.none()
+        return queryset
 
 
 class ExperimentsCalendarView(ListView):
@@ -41,6 +59,7 @@ class ExperimentsCreateView(CreateView):
     template_name = "booking/experiments_form.html"
     model = Experiments
     form_class = ExperimentsForm
+
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

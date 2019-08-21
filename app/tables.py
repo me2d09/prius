@@ -44,22 +44,6 @@ class ProposalTable(tables.Table):
         sequence = ('pid', 'name', 'pdf', '...')
         attrs  = { 'class': 'table table-striped table-sm table-hover'}
 
-class ExperimentTable(tables.Table):
-
-    def __init__(self, *args, **kwargs):
-        #if self.request.user.has_perm('app.approve_panel'):
-        #    self.Meta.exclude.pop("reporter")
-        super().__init__(*args, **kwargs)
-
-
-    class Meta:
-        model = Experiments
-        template_name = 'django_tables2/bootstrap4.html'
-        #exclude = ('id', 'abstract', 'slug', 'student', 'scientific_bg', 'thesis_topic', 'grants') #, 'reporter') 
-        #sequence = ('pid', 'name', 'pdf', '...')
-        attrs  = { 'class': 'table table-striped table-sm table-hover'}
-        
-
 def localcontacts(request):
     if request is None or not request.user.is_authenticated:
         return Contacts.objects.none()
@@ -104,6 +88,34 @@ class ProposalFilter(django_filters.FilterSet):
 
 
 
+class ExperimentTable(tables.Table):
+    real_start = tables.DateTimeColumn(verbose_name= 'Start' )
+    real_end = tables.DateTimeColumn(verbose_name= 'End')
+    proposal  = tables.LinkColumn('app_proposals_detail', args=[A('proposal.slug')])
+
+    def __init__(self, *args, **kwargs):
+        #if self.request.user.has_perm('app.approve_panel'):
+        #    self.Meta.exclude.pop("reporter")
+        super().__init__(*args, **kwargs)
+
+
+    class Meta:
+        model = Experiments
+        template_name = 'django_tables2/bootstrap4.html'
+        fields = ('proposal', 'duration', 'instrument', 'responsible', 'local_contact')
+        sequence = ('proposal', 'instrument', 'real_start', 'real_end', 'duration',  'responsible', 'local_contact')
+        attrs  = { 'class': 'table table-striped table-sm table-hover'}
+ 
+class ExperimentFilter(django_filters.FilterSet):
+
+    #owner = django_filters.filters.ChoiceFilter(choices=('mine', 'all'))
+
+    class Meta:
+        model = Experiments
+        fields = ['instrument'] #, 'owner']
+
+
+
 class ContactsTable(tables.Table):
     
     name = tables.Column(linkify=True)
@@ -123,15 +135,4 @@ def instruments(request):
     qs = Instruments.objects.filter(active=True, public=True)
     return qs
 
-class ExperimentFilter(django_filters.FilterSet):
 
-    #owner = django_filters.filters.ChoiceFilter(choices=('mine', 'all'))
-    instrument1 = django_filters.ModelChoiceFilter(queryset=instruments, empty_label='---')
-    instrument2 = django_filters.ModelChoiceFilter(queryset=instruments, empty_label='---')
-    instrument3 = django_filters.ModelChoiceFilter(queryset=instruments, empty_label='---')
-    instrument4 = django_filters.ModelChoiceFilter(queryset=instruments, empty_label='---')
-    
-
-    class Meta:
-        model = Experiments
-        fields = ['instrument'] #, 'owner']
