@@ -320,7 +320,7 @@ class Affiliations(models.Model):
         return u'%s' % self.pk
 
     def __str__(self):
-        return ", ".join(list(filter(None, [self.department, self.institution, self.city, self.country.iso])))
+        return ", ".join(list(filter(None, [self.department, self.institution, self.city, self.country.iso if self.country else None])))
 
     def get_absolute_url(self):
         return reverse('app_affiliations_detail', args=(self.pk,))
