@@ -18,8 +18,7 @@ from django.utils.encoding import force_bytes, force_text
 from datetime import datetime
 from django.views.generic import DetailView, ListView, UpdateView, CreateView, DeleteView
 from app.models import Proposals, Instruments, Contacts, Affiliations, Countries, Options, SharedOptions, Samples, SamplePhotos, SampleRemarks, Publications, Experiments, Status
-from app.forms import ProposalsForm, InstrumentsForm, ContactsForm, AffiliationsForm, CountriesForm, StatusForm
-from app.forms import OptionsForm, SharedOptionsForm, SamplesForm 
+from app.forms import ProposalsForm, InstrumentsForm, ContactsForm, StatusForm, SamplesForm 
 from app.forms import SamplePhotosForm, SampleRemarksForm, PublicationsForm, ExperimentsForm, SignupForm, ProfileForm, UserForm
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.mail import EmailMessage
@@ -473,20 +472,6 @@ class InstrumentsListView(ListView):
     model = Instruments
 
 
-class InstrumentsCreateView(CreateView):
-    model = Instruments
-    form_class = InstrumentsForm
-
-
-class InstrumentsDetailView(DetailView):
-    model = Instruments
-
-
-class InstrumentsUpdateView(UpdateView):
-    model = Instruments
-    form_class = InstrumentsForm
-
-
 class ContactsListView(SingleTableMixin, PermissionRequiredMixin, ListView):
     permission_required = 'app.view_contacts'
     model = Contacts
@@ -541,73 +526,6 @@ class ContactsUpdateView(UpdateView):
 class AffiliationsListView(ListView):
     model = Affiliations
 
-
-class AffiliationsCreateView(CreateView):
-    model = Affiliations
-    form_class = AffiliationsForm
-
-
-class AffiliationsDetailView(DetailView):
-    model = Affiliations
-
-
-class AffiliationsUpdateView(UpdateView):
-    model = Affiliations
-    form_class = AffiliationsForm
-
-
-class CountriesListView(ListView):
-    model = Countries
-
-
-class CountriesCreateView(CreateView):
-    model = Countries
-    form_class = CountriesForm
-
-
-class CountriesDetailView(DetailView):
-    model = Countries
-
-
-class CountriesUpdateView(UpdateView):
-    model = Countries
-    form_class = CountriesForm
-
-    
-class OptionsListView(ListView):
-    model = Options
-
-
-class OptionsCreateView(CreateView):
-    model = Options
-    form_class = OptionsForm
-
-
-class OptionsDetailView(DetailView):
-    model = Options
-
-
-class OptionsUpdateView(UpdateView):
-    model = Options
-    form_class = OptionsForm
-
-
-class SharedOptionsListView(ListView):
-    model = SharedOptions
-
-
-class SharedOptionsCreateView(CreateView):
-    model = SharedOptions
-    form_class = SharedOptionsForm
-
-
-class SharedOptionsDetailView(DetailView):
-    model = SharedOptions
-
-
-class SharedOptionsUpdateView(UpdateView):
-    model = SharedOptions
-    form_class = SharedOptionsForm
 
 
 class SamplesListView(ListView):

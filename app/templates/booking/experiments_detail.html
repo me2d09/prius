@@ -17,7 +17,7 @@
 <tr><td>Options:</td><td>{% for o in object.option.all %}{{ o }}{% endfor %}</td></tr>
 <tr><td>Shared options:</td><td>{% for so in object.shared_options.all %}{{ so }}{% endfor %}</td></tr>
 </table>
-<p><a class="btn btn-default" href="{% url 'app_experiments_list' %}">Back to calendar</a> 
+<p><a class="btn btn-default" href="{% url 'app_experiments_calendar' %}">Back to calendar</a> 
    <a class="btn btn-danger" href="#">Cancel Experiment Slot</a>
 </p>
 

@@ -26,25 +26,6 @@ urlpatterns = (
 urlpatterns += (
     # urls for Instruments
     url(r'^instruments/$', views.InstrumentsListView.as_view(), name='app_instruments_list'),
-    url(r'^instruments/create/$', views.InstrumentsCreateView.as_view(), name='app_instruments_create'),
-    url(r'^instruments/detail/(?P<slug>\S+)/$', views.InstrumentsDetailView.as_view(), name='app_instruments_detail'),
-    url(r'^instruments/update/(?P<slug>\S+)/$', views.InstrumentsUpdateView.as_view(), name='app_instruments_update'),
-)
-
-urlpatterns += (
-    # urls for Options
-    url(r'^options/$', views.OptionsListView.as_view(), name='app_options_list'),
-    url(r'^options/create/$', views.OptionsCreateView.as_view(), name='app_options_create'),
-    url(r'^options/detail/(?P<slug>\S+)/$', views.OptionsDetailView.as_view(), name='app_options_detail'),
-    url(r'^options/update/(?P<slug>\S+)/$', views.OptionsUpdateView.as_view(), name='app_options_update'),
-)
-
-urlpatterns += (
-    # urls for SharedOptions
-    url(r'^sharedoptions/$', views.SharedOptionsListView.as_view(), name='app_sharedoptions_list'),
-    url(r'^sharedoptions/create/$', views.SharedOptionsCreateView.as_view(), name='app_sharedoptions_create'),
-    url(r'^sharedoptions/detail/(?P<slug>\S+)/$', views.SharedOptionsDetailView.as_view(), name='app_sharedoptions_detail'),
-    url(r'^sharedoptions/update/(?P<slug>\S+)/$', views.SharedOptionsUpdateView.as_view(), name='app_sharedoptions_update'),
 )
 
 urlpatterns += (

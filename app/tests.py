@@ -924,7 +924,7 @@ class ExperimentsViewTest(unittest.TestCase):
         self.client = Client()
 
     def test_list_experiments(self):
-        url = reverse('app_experiments_list')
+        url = reverse('app_experiments_calendar')
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 

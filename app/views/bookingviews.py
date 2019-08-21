@@ -49,6 +49,8 @@ class ExperimentsCreateView(CreateView):
 
     def form_valid(self, form):
         form.instance.creator = self.request.user.contact
+        if not form.instance.responsible:
+            form.instance.responsible = self.request.user.contact
         return super().form_valid(form)
 
 

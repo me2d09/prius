@@ -343,43 +343,15 @@ class ProfileForm(ContactsForm):
         fields = ['name', 'orcid', 'affiliation']
 
 
-class AffiliationsForm(forms.ModelForm):
-    class Meta:
-        model = Affiliations
-        fields = ['department', 'institution', 'address1', 'address2', 'city', 'country']
-
-
-class CountriesForm(forms.ModelForm):
-    class Meta:
-        model = Countries
-        fields = ['name', 'iso']
-
-
-
-class OptionsForm(forms.ModelForm):
-    class Meta:
-        model = Options
-        fields = ['name', 'active', 'instrument']
-
-
-class SharedOptionsForm(forms.ModelForm):
-    class Meta:
-        model = SharedOptions
-        fields = ['name', 'active', 'instruments']
-
-
-
 class SamplesForm(forms.ModelForm):
     class Meta:
         model = Samples
         fields = ['name', 'formula', 'mass', 'volume', 'description', 'type', 'owner']
 
-
 class SamplePhotosForm(forms.ModelForm):
     class Meta:
         model = SamplePhotos
         fields = ['url', 'sample']
-
 
 class SampleRemarksForm(forms.ModelForm):
     class Meta:
@@ -391,6 +363,7 @@ class PublicationsForm(forms.ModelForm):
     class Meta:
         model = Publications
         fields = ['link', 'year', 'authors']
+
 
 class DateRangeField(Fieldset):
     template = 'custom_daterange.html'
