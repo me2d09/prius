@@ -44,6 +44,11 @@ class ExperimentsListView(SingleTableMixin, FilterView):
                 queryset = Experiments.objects.none()
         return queryset
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filtering'] = self.kwargs['filtering']
+        return context
+
 
 class ExperimentsCalendarView(ListView):
     template_name = "booking/experiments_calendar.html"

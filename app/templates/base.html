@@ -72,7 +72,7 @@
             <li><a href="/experiments/create/"> <i class="icon-grid"></i>Book a slot</a></li>
             <li><a href="/experiments/myslots/?end=future"> <i class="icon-grid"></i>My slots</a></li>{% endif %}
             {% if perms.app.view_proposals or request.user|has_group:"localcontacts" %}
-            <li><a href="/experiments/LC/"> <i class="icon-grid"></i>LC overview</a></li>{% endif %}
+            <li><a href="/experiments/LC/?end=future&local_contact={{ user.contact.pk }}"> <i class="icon-grid"></i>LC overview</a></li>{% endif %}
           </ul>
           {% endif %}
           <h5 class="sidenav-heading">Settings</h5>

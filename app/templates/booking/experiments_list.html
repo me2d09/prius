@@ -12,7 +12,9 @@
 {% block formcontent %}
 <header> 
 <h1 class="h3 display">
-    My booked experiment slots
+    {% if filtering == "mine" %}My booked experiment slots
+        {% else %}Local contact overview
+        {% endif %}
 </h1>
 </header>
     {% if filter %}

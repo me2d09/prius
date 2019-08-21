@@ -121,12 +121,16 @@ class ExperimentFilter(django_filters.FilterSet):
             '%s__lt' % name: now()
         }),
     })
-
     instrument = django_filters.ModelChoiceFilter(label = 'Instrument: ', empty_label = "All", queryset=Instruments.objects.all())
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if 'filtering' in self.request.resolver_match.kwargs and self.request.resolver_match.kwargs['filtering']  == "mine":
+            self.filters.pop("local_contact")
 
     class Meta:
         model = Experiments
-        fields = ['instrument', 'end'] #, 'owner']
+        fields = ['instrument', 'end', 'local_contact'] #, 'owner']
 
 
 
