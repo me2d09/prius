@@ -70,7 +70,7 @@
             {% if perms.app.add_proposals %}
             <li><a href="/experiments/calendar/"> <i class="icon-grid"></i>Calendar</a></li>
             <li><a href="/experiments/create/"> <i class="icon-grid"></i>Book a slot</a></li>
-            <li><a href="/experiments/myslots/"> <i class="icon-grid"></i>My slots</a></li>{% endif %}
+            <li><a href="/experiments/myslots/?end=future"> <i class="icon-grid"></i>My slots</a></li>{% endif %}
             {% if perms.app.view_proposals or request.user|has_group:"localcontacts" %}
             <li><a href="/experiments/LC/"> <i class="icon-grid"></i>LC overview</a></li>{% endif %}
           </ul>

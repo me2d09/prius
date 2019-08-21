@@ -4,6 +4,7 @@ from .models import Proposals, Contacts, User, Status, Instruments, Experiments
 from django_tables2.utils import A  # alias for Accessor
 import django_filters
 from django.db.models import Q
+from django.utils.timezone import now
 
 
 class TruncatedTextColumn(tables.Column):
@@ -109,10 +110,23 @@ class ExperimentTable(tables.Table):
 class ExperimentFilter(django_filters.FilterSet):
 
     #owner = django_filters.filters.ChoiceFilter(choices=('mine', 'all'))
+    end = django_filters.DateRangeFilter(label='Ends in: ', empty_label = "All",  choices = [
+        ('future', 'Future'),
+        ('past', 'Past'),
+    ], filters = {
+        'future': lambda qs, name: qs.filter(**{
+            '%s__gt' % name: now()
+        }),
+        'past': lambda qs, name: qs.filter(**{
+            '%s__lt' % name: now()
+        }),
+    })
+
+    instrument = django_filters.ModelChoiceFilter(label = 'Instrument: ', empty_label = "All", queryset=Instruments.objects.all())
 
     class Meta:
         model = Experiments
-        fields = ['instrument'] #, 'owner']
+        fields = ['instrument', 'end'] #, 'owner']
 
 
 

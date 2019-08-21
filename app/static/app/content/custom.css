@@ -45,3 +45,10 @@
 .eventselect option {
     color: black !important;
 }
+
+.form-inline .form-group {
+    margin-right: 10px;
+}
+.form-inline .form-group label {
+    margin-right: 4px;
+}

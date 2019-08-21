@@ -18,7 +18,7 @@
     {% if filter %}
     <div class="mb-3">
         <form action="" method="get" class="form form-inline">
-            {% bootstrap_form filter.form layout='inline' %}
+            {% bootstrap_form filter.form show_label=True %}
             {% bootstrap_button 'filter' %}
         </form>
     </div>
