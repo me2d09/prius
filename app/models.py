@@ -179,7 +179,7 @@ class Proposals(models.Model):
                 notify_send([x.uid for x in self.coproposers.select_related("uid").all() if x.uid is not None] + [self.proposer], 
                             'x_proposal_status_changed', extra_context = { 'proposal': self})
 
-            if s == "DA":
+            if s == "DA" or s == "PA":
                 notify_send([x.uid for x in self.local_contacts.select_related("uid").all() if x.uid is not None], 
                             'l_accepted', extra_context = { 'proposal': self})
                 notify_send(User.objects.filter(groups__name='admins'), 
@@ -197,7 +197,7 @@ class Proposals(models.Model):
                 pmembers.remove(self.reporter.uid)
                 notify_send(pmembers, 
                             'p_request_comments', extra_context = { 'proposal': self})
-            elif s == "RD":
+            elif s == "RD" or s == "TD":
                 notify_send(User.objects.filter(groups__name='director'), 
                             'D_accepted', extra_context = { 'proposal': self})
             elif s == "RX":
