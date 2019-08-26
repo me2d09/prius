@@ -104,11 +104,24 @@
                 $(i.el).tooltip({title:i.event.extendedProps.description, container: 'body', html: true});
             }
         });
-        
         calendar.render();
+        
+
+        // initial loading
+        const urlParams = new URLSearchParams(window.location.search);
+        $(".eventselect").each(function (index, o) {
+              o.value = urlParams.get(o.id);
+              calendar.getEventSourceById(o.id).refetch();
+        });
+
       
 
         $(".eventselect").change(function(){
+          qs = ''
+          $(".eventselect").each(function (index, o) {
+              qs += o.id + '=' + o.value + '&';
+          });
+          window.history.pushState( {} , document.getElementsByTagName('title')[0].innerHTML, '{{ request.path }}?' + qs);
           calendar.getEventSourceById(this.id).refetch();
         }); 
 
