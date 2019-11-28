@@ -10,6 +10,7 @@ from django.views.generic import TemplateView, ListView, DetailView
 from django.http import HttpResponse
 from django_xhtml2pdf.utils import generate_pdf
 from django.contrib.auth import context_processors
+from urllib.parse import unquote
 
 from PyPDF2 import PdfFileMerger
 
@@ -40,7 +41,7 @@ class FullPdfResponseMixin(PdfResponseMixin, ):
 
         if context["object"].scientific_bg:
             filepath = os.path.join(settings.BASE_DIR,context["object"].scientific_bg.url[1:])
-            merger.append(open(filepath, "rb"))
+            merger.append(open(unquote(filepath), "rb"))
         
         pdf_lo = io.BytesIO()
         self.write_pdf(pdf_lo, pagenumber=2)
