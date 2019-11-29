@@ -38,7 +38,10 @@
           startDate: "{% now "d.m.Y" %}",
           weekStart: 1,
           datesDisabled: fullDays
-        });
+        }).on('changeDate', function(e) {
+              x =  $('#id_end').datepicker('getDate') -  $('#id_start').datepicker('getDate');
+              $('#total_days_id_start').html((x/24/3600/1000 + 1) + ' days');
+          });
       });
     }
 

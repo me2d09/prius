@@ -1,6 +1,6 @@
 ﻿{% load crispy_forms_field %}
 
-<div id="div_id_{{ field1.id }}" class="form-group row"> 
+<div id="div_id_{{ field1.id_for_label }}" class="form-group row"> 
     <label for="{{ field1.id_for_label }}" class="col-form-label col-sm-2 {% if field1.field.required %} requiredField{% endif %}">
                 {{ legend|safe }}{% if field1.field.required %}<span class="asteriskField">*</span>{% endif %}
     </label>
@@ -15,8 +15,9 @@
                     <p id="error_{{ forloop.counter }}_{{ field2.auto_id }}" class="invalid-feedback"><strong>{{ error }}</strong></p>
             {% endfor %}{% for error in field2.errors %}
                     <p id="error_{{ forloop.counter }}_{{ field2.auto_id }}" class="invalid-feedback"><strong>{{ error }}</strong></p>
-            {% endfor %}
+            {% endfor %}            
         </div>
+        <small id="total_days_{{ field1.id_for_label }}" class="form-text text-muted">0 days</small>
     </div> 
 </div>
 

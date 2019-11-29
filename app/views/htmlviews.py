@@ -342,7 +342,7 @@ def change_password(request):
         'form': form
     })
 
-class ProposalsListView(SingleTableMixin, FilterView):
+class ProposalsListView(LoginRequiredMixin, SingleTableMixin, FilterView):
     model = Proposals
     table_class = ProposalTable
     paginate_by = 25
@@ -371,7 +371,7 @@ class ProposalsListView(SingleTableMixin, FilterView):
         context['filtering'] = self.kwargs['filtering']
         return context
 
-class StatusCreateView(CreateView):
+class StatusCreateView(LoginRequiredMixin, CreateView):
     model = Status
     form_class = StatusForm
     template_name = "proposal/status.html"
@@ -422,7 +422,7 @@ class ProposalsCreateView(PermissionRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class ProposalsDetailView(DetailView):
+class ProposalsDetailView(LoginRequiredMixin, DetailView):
     model = Proposals
     template_name = "proposal/detail.html"
 
@@ -442,7 +442,7 @@ class ProposalsDetailView(DetailView):
         return context
 
 
-class ProposalsUpdateView(UpdateView):
+class ProposalsUpdateView(LoginRequiredMixin, UpdateView):
     model = Proposals
     form_class = ProposalsForm
     template_name = "proposal/form.html"
@@ -454,7 +454,7 @@ class ProposalsUpdateView(UpdateView):
         kwargs.update({ 'local_contacts': super().get_object().local_contacts})
         return kwargs
 
-class ProposalsDelete(DeleteView):
+class ProposalsDelete(LoginRequiredMixin, DeleteView):
     model = Proposals
     success_url = reverse_lazy('app_proposals_list')
     template_name = "proposal/delete.html"
@@ -470,7 +470,7 @@ class InstrumentsListView(ListView):
     model = Instruments
 
 
-class ContactsListView(SingleTableMixin, PermissionRequiredMixin, ListView):
+class ContactsListView(PermissionRequiredMixin, SingleTableMixin, ListView):
     permission_required = 'app.view_contacts'
     model = Contacts
     table_class = ContactsTable
