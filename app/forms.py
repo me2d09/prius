@@ -225,7 +225,7 @@ class ProposalsForm(forms.ModelForm):
         self.fields['coproposers'].widget.attrs = {
             'data-theme': 'bootstrap4',
         }
-        self.fields['coproposers'].help_text = "You can (optionally) add coporposers to your team. They will see the proposal and will be able to book measurement for it. If the proposal is connected with any funding, <b>PI of the grant MUST be part of the team</b>."
+        self.fields['coproposers'].help_text = "You can (optionally) add coporposers to your team. They will see the proposal and will be able to book measurement for it. If the proposal is connected with any funding, <b>PI of the grant MUST be part of the team</b> (if he/she is not proposer)."
         self.fields['supervisor'].widget.attrs = {
             'data-theme': 'bootstrap4',
         }
