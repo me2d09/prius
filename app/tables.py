@@ -18,6 +18,7 @@ class TruncatedTextColumn(tables.Column):
 class ProposalTable(tables.Table):
     local_contacts_short = TruncatedTextColumn(verbose_name= 'Local contact', orderable = False)
     name = TruncatedTextColumn(linkify=True)
+    proposaltype = tables.Column(verbose_name='Type')
     proposer  = tables.LinkColumn('app_contacts_detail', args=[A('proposer.contact.pk')], text=lambda record: record.proposer.contact.name, order_by = A('proposer.contact.name'))
     pid = tables.Column(attrs={'td': {'class': 'font-weight-bold'}})
     pdf = tables.LinkColumn('proposal_pdf_detail_view', args=[A('pid')], text="PDF",  attrs={'a': {'target': '_blank'}}, orderable = False)
