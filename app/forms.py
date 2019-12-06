@@ -143,7 +143,7 @@ The panel report has two parts - visible and hidden to the user."""
         if len(c) == 0: raise Http404
         if len(c) == 1:
             if c[0][0] == "S": 
-                self.ConfirmText = "Submit proposal"
+                self.ConfirmText = "Confirm submission"
                 self.info = "Do you really want to submit this proposal? You will not be able to edit it anymore."
             if c[0][0] == "F": 
                 self.ConfirmText = "Finish proposal"
