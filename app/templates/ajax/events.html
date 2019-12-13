@@ -2,7 +2,7 @@
 {% for object in events %}
     {
         "title": "{{object.proposal.pid}}: {{object.local_contact}}", 
-        "description": "{% if request.user|in_team:object.proposal %}{{object.proposal.name}} ({{object.proposal.proposer.contact}})<br />{% endif %}{{object.local_contact}}<br />☎ {{object.local_contact.phone}}",
+        "description": "{% if request.user|in_team:object.proposal %}{{object.proposal.name}} ({{object.proposal.proposer.contact}})<br />{% endif %}{{object.local_contact}}<br />{{object.local_contact.nice_phone|safe}}",
         "url": "{{object.get_absolute_url}}",
         "allDay": true,
         "start": "{{ object.start|date:"c" }}",

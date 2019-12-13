@@ -1,24 +1,32 @@
 {% extends "form.html" %}
+{% load extratags %}
 {% load static %}
 {% block breadcrumbs %}
     <li class="breadcrumb-item">Booking</li>
-    <li class="breadcrumb-item active">{{ object.proposal }} ({{ object.real_start|date:"SHORT_DATETIME_FORMAT" }} - {{ object.real_end|date:"SHORT_DATETIME_FORMAT" }})</li>
+    <li class="breadcrumb-item active">{{ object.instrument }} ({{ object.real_start|date:"SHORT_DATETIME_FORMAT" }} - {{ object.real_end|date:"SHORT_DATETIME_FORMAT" }})</li>
 {% endblock %}
 {% block formcontent %}
 
+{% with showDetails=request.user|in_team:object.proposal %}   
 <table class="table">
-<tr><td>Proposal:</td><td>{{ object.proposal }}</td></tr>
+<tr><td>Proposal:</td><td>{% if showDetails or request.user.contact == object.local_contact %}<a href="{% url 'app_proposals_detail' slug=object.proposal.slug  %}">{{ object.proposal }}</a>{% else %}hidden (you are not part of the team){% endif %}</td></tr>
 <tr><td>User (sample and experiment responsible):</td><td>{{ object.responsible }}</td></tr>
-<tr><td>Local Contact:</td><td>{{ object.local_contact }}</td></tr>
+<tr><td>Local Contact:</td><td><a href="mailto:{{ object.local_contact.email }}">{{ object.local_contact }}</a> {{ object.local_contact.nice_phone | safe }}</td></tr>
 <tr><td>Booked at:</td><td>{{ object.created }}</td></tr>
 <tr><td>Date:</td><td>{{ object.real_start }} - {{ object.real_end }}</td></tr>
 <tr><td>Duration:</td><td>{{ object.duration }}</td></tr>
 <tr><td>Instrument:</td><td>{{ object.instrument }}</td></tr>
-<tr><td>Options:</td><td>{% for o in object.option.all %}{% include "comma.html" %}{{ o }}{% endfor %}</td></tr>
-<tr><td>Shared options:</td><td>{% for so in object.shared_options.all %}{% include "comma.html" %}{{ so }}{% endfor %}</td></tr>
+{% if showDetails or request.user.contact == object.local_contact %}
+    <tr><td>Options:</td><td>{% for o in object.option.all %}{% include "comma.html" %}{{ o }}{% endfor %}</td></tr>
+    <tr><td>Shared options:</td><td>{% for so in object.shared_options.all %}{% include "comma.html" %}{{ so }}{% endfor %}</td></tr>
+{% endif %}
 </table>
+{% endwith %}
 <p><a class="btn btn-default" href="{% url 'app_experiments_calendar' %}">Back to calendar</a> 
+  {% if request.user.contact == object.responsible or request.user.contact == object.local_contact or request.user|has_group:"admins" %}
+   <a class="btn btn-info" href="{{object.get_update_url}}">Edit Slot</a>
    <a class="btn btn-danger" href="#">Cancel Experiment Slot</a>
+  {% endif %}
 </p>
 
 {% endblock %}

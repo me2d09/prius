@@ -250,10 +250,22 @@ class Contacts(models.Model):
     email = EmailField(unique=True)
     orcid = models.CharField(max_length=40,blank=True)
     description = CharField(max_length=500,blank=True)
+    phone = CharField(max_length=20,blank=True)
 
     # Relationship Fields
     uid = models.OneToOneField(User, on_delete=models.CASCADE, blank=True,null=True, related_name='contact')
     affiliation = models.ForeignKey('app.Affiliations', on_delete=models.PROTECT)
+
+
+    @property
+    def nice_phone(self):
+        if self.phone:
+            if len(self.phone) == 3:
+                return "<span title='(+420) 220 318 " + self.phone + "'>☎ " + self.phone + "</span>"
+            elif len(self.phone) == 4:
+                return "<span title='(+420) 951 55 " + self.phone + "'>☎ " + self.phone + "</span>"
+            return "☎ " + self.phone
+        return ""
 
     class Meta:
         ordering = ('-created',)

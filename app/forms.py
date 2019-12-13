@@ -328,7 +328,7 @@ class ContactsForm(forms.ModelForm):
 
     class Meta:
         model = Contacts
-        fields = ['name', 'orcid', 'email', 'affiliation']
+        fields = ['name', 'orcid', 'email', 'affiliation', 'phone']
         widgets = {
             'affiliation': autocomplete.ModelSelect2(url='affil-autocomplete',
                                                        attrs={
@@ -340,7 +340,7 @@ class ContactsForm(forms.ModelForm):
 
 class ProfileForm(ContactsForm):
     class Meta(ContactsForm.Meta):
-        fields = ['name', 'orcid', 'affiliation']
+        fields = ['name', 'orcid', 'affiliation', 'phone']
 
 
 class SamplesForm(forms.ModelForm):
