@@ -122,6 +122,7 @@
     <Content Include="app\templates\500.html" />
     <Content Include="app\templates\ajax\fulldays.html" />
     <Content Include="app\templates\ajax\events.html" />
+    <Content Include="app\templates\booking\experiments_delete.html" />
     <Content Include="app\templates\booking\experiments_calendar.html" />
     <Content Include="app\templates\booking\sos_detail.html" />
     <Content Include="app\templates\comma.html" />

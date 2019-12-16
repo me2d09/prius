@@ -1,0 +1,22 @@
+{% extends "form.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block breadcrumbs %}
+    <li class="breadcrumb-item">Booking</li>
+    <li class="breadcrumb-item">{{ object }}</li>
+    <li class="breadcrumb-item active">Deletion</li>
+{% endblock %}
+{% block formcontent %}
+<header> 
+<h1 class="h3 display">Deletion of an experimental slot</h1>
+</header>
+<div class="card">
+    <div class="card-body">  
+        <form method="post">{% csrf_token %}
+            <p>Are you sure you want to delete experiment slot {{ object.ppk }}: "{{ object }}"?</p>
+            <input type="submit" class="btn btn-danger" value="Confirm">
+            <a class="btn btn-primary" href="{% url 'app_experiments_detail' pk=object.pk %}">Cancel</a> 
+        </form>
+    </div>
+</div>
+{% endblock %}

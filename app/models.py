@@ -467,6 +467,9 @@ class Experiments(models.Model):
     def get_update_url(self):
         return reverse('app_experiments_update', args=(self.pk,))
 
+    def get_delete_url(self):
+        return reverse('app_experiments_delete', args=(self.pk,))
+
     def save(self, *args, **kwargs):
         # calculate duration
         self.duration = self.end - self.start
@@ -546,7 +549,7 @@ class SharedOptionSlot(models.Model):
     duration = models.DurationField(editable=False)
 
     # Relationship Fields
-    experiment = models.ForeignKey('app.Experiments', on_delete=models.PROTECT, default=None)
+    experiment = models.ForeignKey('app.Experiments', on_delete=models.CASCADE, default=None)
     shared_option = models.ForeignKey('app.SharedOptions', on_delete=models.PROTECT, default=None)
 
     @property

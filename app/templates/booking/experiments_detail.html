@@ -25,7 +25,7 @@
 <p><a class="btn btn-default" href="{% url 'app_experiments_calendar' %}">Back to calendar</a> 
   {% if request.user.contact == object.responsible or request.user.contact == object.local_contact or request.user|has_group:"admins" %}
    <a class="btn btn-info" href="{{object.get_update_url}}">Edit Slot</a>
-   <a class="btn btn-danger" href="#">Cancel Experiment Slot</a>
+   <a class="btn btn-danger" href="{{object.get_delete_url}}">Cancel Experiment Slot</a>
   {% endif %}
 </p>
 

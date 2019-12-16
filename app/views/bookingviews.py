@@ -95,6 +95,18 @@ class ExperimentsUpdateView(LoginRequiredMixin, UpdateView):
         kwargs.update({ 'user': self.request.user})
         return kwargs
 
+class ExperimentsDeleteView(LoginRequiredMixin, DeleteView):
+    model = Experiments
+    success_url = reverse_lazy('app_experiments_calendar')
+    template_name = "booking/experiments_delete.html"
+
+    def get_object(self, queryset=None):
+        """ Hook to ensure object is owned by request.user. """
+        obj = super().get_object()
+        if not obj.responsible == self.request.user.contact:
+            raise Http404
+        return obj
+
 class SharedOptionSlotDetailView(LoginRequiredMixin, DetailView):
     template_name = "booking/sos_detail.html"
     model = SharedOptionSlot
@@ -111,13 +123,13 @@ class SharedOptionSlotUpdateView(LoginRequiredMixin, UpdateView):
         return kwargs
 
 class SharedOptionSlotDelete(LoginRequiredMixin, DeleteView):
-    model = Proposals
-    success_url = reverse_lazy('app_proposals_list')
-    template_name = "proposal/delete.html"
+    model = SharedOptionSlot
+    success_url = reverse_lazy('app_experiments_calendar')
+    template_name = "booking/experiments_delete.html"
 
     def get_object(self, queryset=None):
         """ Hook to ensure object is owned by request.user. """
-        obj = super(ProposalsDelete, self).get_object()
+        obj = super().get_object()
         if not obj.proposer == self.request.user and obj.last_status == "P":
             raise Http404
         return obj

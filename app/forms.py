@@ -449,7 +449,6 @@ class ExperimentsForm(forms.ModelForm):
         if self.instance and self.instance.pk:
             self.fields['proposal'].disabled = True
             self.fields['instrument'].disabled = True
-            self.fields['option'].disabled = True
             self.fields['shared_options'].disabled = True
             self.fields['start'].disabled = True
             self.fields['end'].disabled = True

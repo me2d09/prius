@@ -113,6 +113,7 @@ urlpatterns += (
     url(r'^experiments/create/$', views.ExperimentsCreateView.as_view(), name='app_experiments_create'),
     url(r'^experiments/detail/(?P<pk>\S+)/$', views.ExperimentsDetailView.as_view(), name='app_experiments_detail'),
     url(r'^experiments/update/(?P<pk>\S+)/$', views.ExperimentsUpdateView.as_view(), name='app_experiments_update'),
+    url(r'^experiments/delete/(?P<pk>\S+)/$', views.ExperimentsDeleteView.as_view(), name='app_experiments_delete'),
     url(r'^sharedslots/detail/(?P<pk>\S+)/$', views.SharedOptionSlotDetailView.as_view(), name='app_sharedoptionslot_detail'),
     url(r'^sharedslots/update/(?P<pk>\S+)/$', views.SharedOptionSlotUpdateView.as_view(), name='app_sharedoptionslot_update'),
 
