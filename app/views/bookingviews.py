@@ -21,7 +21,7 @@ from django_tables2.views import SingleTableView, SingleTableMixin
 from django_filters.views import FilterView
 from django.db.models import Q
 
-class ExperimentsListView(SingleTableMixin, FilterView):
+class ExperimentsListView(LoginRequiredMixin, SingleTableMixin, FilterView):
     template_name = "booking/experiments_list.html"
     model = Experiments
     table_class = ExperimentTable
@@ -50,7 +50,7 @@ class ExperimentsListView(SingleTableMixin, FilterView):
         return context
 
 
-class ExperimentsCalendarView(ListView):
+class ExperimentsCalendarView(LoginRequiredMixin, ListView):
     template_name = "booking/experiments_calendar.html"
     model = Experiments
 
@@ -61,7 +61,7 @@ class ExperimentsCalendarView(ListView):
         return context
 
 
-class ExperimentsCreateView(CreateView):
+class ExperimentsCreateView(LoginRequiredMixin, CreateView):
     template_name = "booking/experiments_form.html"
     model = Experiments
     form_class = ExperimentsForm
@@ -79,13 +79,13 @@ class ExperimentsCreateView(CreateView):
         return super().form_valid(form)
 
 
-class ExperimentsDetailView(DetailView):
+class ExperimentsDetailView(LoginRequiredMixin, DetailView):
     template_name = "booking/experiments_detail.html"
     model = Experiments
 
 
 
-class ExperimentsUpdateView(UpdateView):
+class ExperimentsUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "booking/experiments_form.html"
     model = Experiments
     form_class = ExperimentsForm
@@ -95,12 +95,12 @@ class ExperimentsUpdateView(UpdateView):
         kwargs.update({ 'user': self.request.user})
         return kwargs
 
-class SharedOptionSlotDetailView(DetailView):
+class SharedOptionSlotDetailView(LoginRequiredMixin, DetailView):
     template_name = "booking/sos_detail.html"
     model = SharedOptionSlot
 
 
-class SharedOptionSlotUpdateView(UpdateView):
+class SharedOptionSlotUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "booking/sos_form.html"
     model = SharedOptionSlot
     form_class = SharedOptionSlotForm
@@ -109,3 +109,15 @@ class SharedOptionSlotUpdateView(UpdateView):
         kwargs = super().get_form_kwargs()
         kwargs.update({ 'user': self.request.user})
         return kwargs
+
+class SharedOptionSlotDelete(LoginRequiredMixin, DeleteView):
+    model = Proposals
+    success_url = reverse_lazy('app_proposals_list')
+    template_name = "proposal/delete.html"
+
+    def get_object(self, queryset=None):
+        """ Hook to ensure object is owned by request.user. """
+        obj = super(ProposalsDelete, self).get_object()
+        if not obj.proposer == self.request.user and obj.last_status == "P":
+            raise Http404
+        return obj
