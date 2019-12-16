@@ -160,14 +160,20 @@
             <select class="form-control eventselect event2" id="instr2">
                 <option>-</option>
                 {% for res in instruments %}<option value='I{{res.id}}'>{{ res }}</option>{% endfor %}
+                <option>-</option>
+                {% for res in sharedoptions %}<option value='R{{res.id}}'>{{ res }}</option>{% endfor %}
             </select> 
             <select class="form-control eventselect event3" id="instr3">
                 <option>-</option>
                 {% for res in instruments %}<option value='I{{res.id}}'>{{ res }}</option>{% endfor %}
+                <option>-</option>
+                {% for res in sharedoptions %}<option value='R{{res.id}}'>{{ res }}</option>{% endfor %}
             </select> 
             <select class="form-control eventselect event4" id="instr4">
                 <option>-</option>
                 {% for res in instruments %}<option value='I{{res.id}}'>{{ res }}</option>{% endfor %}
+                <option>-</option>
+                {% for res in sharedoptions %}<option value='R{{res.id}}'>{{ res }}</option>{% endfor %}
             </select>
         </form>
     </div>
