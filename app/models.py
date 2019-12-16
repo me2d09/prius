@@ -446,8 +446,10 @@ class Experiments(models.Model):
             return self.end + timedelta(days = 1, hours = self.instrument.start_hour)
         else:
             return self.end
-
-
+    
+    @property
+    def all_options(self):
+        return ', '.join([x.name for x in self.option.all()] + [x.shared_option.name for x in self.sharedoptionslot_set.all()])
 
     class Meta:
         ordering = ('-created',)

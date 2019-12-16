@@ -93,7 +93,8 @@ class ProposalFilter(django_filters.FilterSet):
 class ExperimentTable(tables.Table):
     real_start = tables.DateTimeColumn(verbose_name= 'Start' )
     real_end = tables.DateTimeColumn(verbose_name= 'End')
-    proposal  = tables.LinkColumn('app_proposals_detail', args=[A('proposal.slug')])
+    all_options = tables.Column(verbose_name= 'Options')
+    proposal  = tables.LinkColumn('app_experiments_detail', args=[A('pk')], verbose_name='Slot')
 
     def __init__(self, *args, **kwargs):
         #if self.request.user.has_perm('app.approve_panel'):
@@ -104,8 +105,8 @@ class ExperimentTable(tables.Table):
     class Meta:
         model = Experiments
         template_name = 'django_tables2/bootstrap4.html'
-        fields = ('proposal', 'duration', 'instrument', 'responsible', 'local_contact')
-        sequence = ('proposal', 'instrument', 'real_start', 'real_end', 'duration',  'responsible', 'local_contact')
+        fields = ('proposal', 'duration', 'instrument', 'responsible', 'local_contact', 'all_options')
+        sequence = ('proposal', 'instrument', 'all_options', 'real_start', 'real_end', 'duration',  'responsible', 'local_contact')
         attrs  = { 'class': 'table table-striped table-sm table-hover'}
  
 class ExperimentFilter(django_filters.FilterSet):
