@@ -108,7 +108,14 @@
         
 
         // initial loading
-        const urlParams = new URLSearchParams(window.location.search);
+        var urlParams;
+        if (window.location.search) {
+            urlParams = new URLSearchParams(window.location.search);
+        } else if (localStorage.priusCalendarQs) {
+            urlParams = new URLSearchParams(localStorage.priusCalendarQs);
+        } else {
+            urlParams = new URLSearchParams();
+        }
         $(".eventselect").each(function (index, o) {
               o.value = urlParams.get(o.id);
               calendar.getEventSourceById(o.id).refetch();
@@ -123,6 +130,7 @@
           });
           window.history.pushState( {} , document.getElementsByTagName('title')[0].innerHTML, '{{ request.path }}?' + qs);
           calendar.getEventSourceById(this.id).refetch();
+          localStorage.priusCalendarQs = qs
         }); 
 
         });
