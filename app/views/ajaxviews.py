@@ -13,7 +13,7 @@ from django.template import RequestContext
 from django.template.loader import render_to_string
 from datetime import datetime
 from django.views.generic import DetailView, ListView, UpdateView, CreateView, DeleteView
-from app.models import Experiments, Options, SharedOptions, Contacts, Proposals
+from app.models import Experiments, Options, SharedOptions, Contacts, Proposals, SharedOptionSlot
 from app.forms import ExperimentsForm
 from django.core.exceptions import PermissionDenied
 from datetime import datetime, timedelta
@@ -27,6 +27,14 @@ def load_options(request):
         options = Options.objects.filter(instrument=instrument).order_by('name')
     else:
         options = Options.objects.none()
+    return render(request, 'dropdown_list_options.html', {'obj': options})
+
+def load_shared_options(request):
+    instrument = request.GET.get('instrument')
+    if instrument:
+        options = SharedOptions.objects.filter(instruments=instrument).order_by('name')
+    else:
+        options = SharedOptions.objects.none()
     return render(request, 'dropdown_list_options.html', {'obj': options})
 
 def load_lc(request):
@@ -45,8 +53,8 @@ def get_events(request):
     end = datetime.fromisoformat(request.GET.get('end')).replace(tzinfo=None)
     if resource[0] == 'I' and resource[1:]:
         events = Experiments.objects.filter(instrument=resource[1:],start__lt=end, end__gt=start)
-    elif resource[0] == 'R' and resource[1:]:  # TODO
-        events = SharedOptions.objects.filter(instrument=resource[1:],start__lt=end, end__gt=start)
+    elif resource[0] == 'R' and resource[1:]:
+        events = SharedOptionSlot.objects.filter(shared_option=resource[1:],start__lt=end, end__gt=start)
     else:
         events = Experiments.objects.none()
     return render(request, 'ajax/events.html', {'events': events}, content_type='application/json')

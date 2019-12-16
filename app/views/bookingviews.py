@@ -13,8 +13,8 @@ from django.template import RequestContext
 from django.template.loader import render_to_string
 from datetime import datetime
 from django.views.generic import DetailView, ListView, UpdateView, CreateView, DeleteView
-from app.models import Experiments, Instruments, Proposals
-from app.forms import ExperimentsForm
+from app.models import Experiments, Instruments, Proposals, SharedOptions, SharedOptionSlot
+from app.forms import ExperimentsForm, SharedOptionSlotForm
 from app.tables import ExperimentTable, ExperimentFilter
 from django.core.exceptions import PermissionDenied
 from django_tables2.views import SingleTableView, SingleTableMixin
@@ -57,6 +57,7 @@ class ExperimentsCalendarView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['instruments'] = Instruments.objects.all()
+        context['sharedoptions'] = SharedOptions.objects.all()
         return context
 
 
@@ -83,6 +84,7 @@ class ExperimentsDetailView(DetailView):
     model = Experiments
 
 
+
 class ExperimentsUpdateView(UpdateView):
     template_name = "booking/experiments_form.html"
     model = Experiments
@@ -93,3 +95,17 @@ class ExperimentsUpdateView(UpdateView):
         kwargs.update({ 'user': self.request.user})
         return kwargs
 
+class SharedOptionSlotDetailView(DetailView):
+    template_name = "booking/sos_detail.html"
+    model = SharedOptionSlot
+
+
+class SharedOptionSlotUpdateView(UpdateView):
+    template_name = "booking/sos_form.html"
+    model = SharedOptionSlot
+    form_class = SharedOptionSlotForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({ 'user': self.request.user})
+        return kwargs

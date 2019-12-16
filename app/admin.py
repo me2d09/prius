@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django import forms
-from .models import Proposals, Instruments, Contacts, Affiliations, Countries,  Options, SharedOptions, Samples, SamplePhotos, SampleRemarks, Publications, Experiments, Status, InstrumentGroup
+from .models import Proposals, Instruments, Contacts, Affiliations, Countries,  Options, SharedOptions, Samples, SamplePhotos, SampleRemarks, Publications, Experiments, Status, InstrumentGroup, SharedOptionSlot
 
 class StatusAdminForm(forms.ModelForm):
     class Meta:
@@ -197,11 +197,9 @@ admin.site.register(Publications, PublicationsAdmin)
 
 
 class ExperimentsAdminForm(forms.ModelForm):
-
     class Meta:
         model = Experiments
         fields = '__all__'
-
 
 class ExperimentsAdmin(admin.ModelAdmin):
     form = ExperimentsAdminForm
@@ -209,4 +207,17 @@ class ExperimentsAdmin(admin.ModelAdmin):
     readonly_fields = ['created', 'last_updated', 'start', 'end', 'duration']
 
 admin.site.register(Experiments, ExperimentsAdmin)
+
+
+class SharedOptionSlotAdminForm(forms.ModelForm):
+    class Meta:
+        model = SharedOptionSlot
+        fields = '__all__'
+
+class SharedOptionSlotAdmin(admin.ModelAdmin):
+    form = SharedOptionSlotAdminForm
+    list_display = ['created', 'last_updated', 'start', 'end', 'duration']
+    readonly_fields = ['created', 'last_updated', 'start', 'end', 'duration']
+
+admin.site.register(SharedOptionSlot, SharedOptionSlotAdmin)
 

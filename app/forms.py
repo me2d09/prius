@@ -8,7 +8,7 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, Pass
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from .models import Proposals, Instruments, Contacts, Affiliations, Countries, Options, SharedOptions
-from .models import Samples, SamplePhotos, SampleRemarks
+from .models import Samples, SamplePhotos, SampleRemarks, SharedOptionSlot
 from .models import Publications, Experiments, Status
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, HTML, Fieldset, Div, ButtonHolder, Field
@@ -385,9 +385,11 @@ class ExperimentsForm(forms.ModelForm):
                                 input_formats=('%d.%m.%Y',))
     end = forms.DateField(widget=forms.DateInput(format = '%d.%m.%Y'), 
                                 input_formats=('%d.%m.%Y',))
+    shared_options = forms.ModelMultipleChoiceField(required=False, queryset=SharedOptions.objects.none())
+    
     class Meta:
         model = Experiments
-        fields = ['start', 'end', 'proposal', 'instrument', 'option', 'shared_options', 'local_contact']
+        fields = ['start', 'end', 'proposal', 'instrument', 'option', 'local_contact']
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
@@ -429,10 +431,12 @@ class ExperimentsForm(forms.ModelForm):
             try:
                 instrument_id = int(self.data.get('instrument'))
                 self.fields['option'].queryset = Options.objects.filter(instrument=instrument_id).order_by('name')
+                self.fields['shared_options'].queryset = SharedOptions.objects.filter(instruments=instrument_id).order_by('name')
             except (ValueError, TypeError):
                 pass  # invalid input from the client; ignore and fallback to empty
         elif self.instance.pk:
             self.fields['option'].queryset = self.instance.instrument.options_set.order_by('name')
+            self.fields['shared_options'].queryset = self.instance.instrument.sharedoptions_set.order_by('name')
 
         # help texts:
         self.fields['proposal'].help_text = "You can only book measurement time for accepted proposals, where you are part of the experimental team."
@@ -441,6 +445,15 @@ class ExperimentsForm(forms.ModelForm):
         self.fields['shared_options'].help_text = "Select shared options which you want to use. They will be booked for same time as you select below. You can optionally change it later."
         self.fields['local_contact'].help_text = "Select local contact who will be your contact person during measurement. Local contact must be claimed in your proposal and must be responsible for selected instrument."
         
+        #disable fields for editing
+        if self.instance and self.instance.pk:
+            self.fields['proposal'].disabled = True
+            self.fields['instrument'].disabled = True
+            self.fields['option'].disabled = True
+            self.fields['shared_options'].disabled = True
+            self.fields['start'].disabled = True
+            self.fields['end'].disabled = True
+
         self.helper.layout = Layout(
             Fieldset(
                 None, 'proposal',  'instrument', 
@@ -465,11 +478,74 @@ class ExperimentsForm(forms.ModelForm):
         start = cleaned_data.get("start")
         end = cleaned_data.get("end")
         instrument = cleaned_data.get("instrument")
+        shared_options = cleaned_data.get("shared_options")
 
-        colision = Experiments.objects.filter(end__gt = start, start__lt = end, instrument = instrument).count()
-        if colision > 0:
-            raise forms.ValidationError(
-                "Your data colide with another experiment on the same instrument. "
-                "Maybe someone was faster then you in booking the slot. "
-                "Select different dates."
+        for so in shared_options:
+            colision = SharedOptionSlot.objects.filter(end__gt = start, start__lt = end, shared_option = so).count()
+            if colision > 0:
+                raise forms.ValidationError(
+                    "Selected dates are in colision for the shared option: %s" % so.name +
+                    "Maybe someone was faster then you in booking the slot. " +
+                    "Select different dates."
+                )
+
+        if "start" in self.changed_data or "start" in self.changed_data:
+            colision = Experiments.objects.filter(end__gt = start, start__lt = end, instrument = instrument).count()
+            if colision > 0:
+                raise forms.ValidationError(
+                    "Your data colide with another experiment on the same instrument. "
+                    "Maybe someone was faster then you in booking the slot. "
+                    "Select different dates."
+                )
+
+
+    def save(self, *args, **kwargs):
+        obj = super().save(*args, **kwargs) 
+
+        for so in self.cleaned_data.get("shared_options"):
+            sos = SharedOptionSlot(start=obj.start, end = obj.end, experiment = obj, shared_option = so)
+            sos.save()
+
+        return obj 
+       
+
+
+class SharedOptionSlotForm(forms.ModelForm):
+    start = forms.DateField(widget=forms.DateInput(format = '%d.%m.%Y'), 
+                                input_formats=('%d.%m.%Y',))
+    end = forms.DateField(widget=forms.DateInput(format = '%d.%m.%Y'), 
+                                input_formats=('%d.%m.%Y',))
+    
+    class Meta:
+        model = SharedOptionSlot
+        fields = ['start', 'end', 'experiment', 'shared_option']
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        self.user = kwargs.pop('user', None)
+        
+
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_class = 'form-horizontal'
+        self.helper.form_method = 'post'
+        self.helper.field_class = 'col-sm-10'
+        self.helper.label_class = 'col-sm-2'
+    
+        if self.instance and self.instance.pk:
+            self.fields['shared_option'].disabled = True
+            self.fields['experiment'].disabled = True
+            self.fields['start'].disabled = True
+            self.fields['end'].disabled = True
+
+        self.helper.layout = Layout(
+            Fieldset(
+                None, 'experiment',  'shared_option', 
+            ),
+            DateRangeField('Date', 'start', 'end'),
+            ButtonHolder(
+                Submit('submit', 'Save', css_class='button white'),
+                HTML("""<a role="button" class="btn btn-default"
+                        href="{% url "app_experiments_calendar" %}">Cancel</a>"""),
             )
+        )

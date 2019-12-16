@@ -113,7 +113,11 @@ urlpatterns += (
     url(r'^experiments/create/$', views.ExperimentsCreateView.as_view(), name='app_experiments_create'),
     url(r'^experiments/detail/(?P<pk>\S+)/$', views.ExperimentsDetailView.as_view(), name='app_experiments_detail'),
     url(r'^experiments/update/(?P<pk>\S+)/$', views.ExperimentsUpdateView.as_view(), name='app_experiments_update'),
+    url(r'^sharedslots/detail/(?P<pk>\S+)/$', views.SharedOptionSlotDetailView.as_view(), name='app_sharedoptionslot_detail'),
+    url(r'^sharedslots/update/(?P<pk>\S+)/$', views.SharedOptionSlotUpdateView.as_view(), name='app_sharedoptionslot_update'),
+
     path('ajax/load-options/', views.load_options, name='ajax_load_options'), 
+    path('ajax/load-shared-options/', views.load_shared_options, name='ajax_shared_load_options'), 
     path('ajax/load-lc/', views.load_lc, name='ajax_load_lc'), 
     path('ajax/get-fulldays/', views.get_fulldays, name='ajax_full_days'), 
     path('ajax/get-events/', views.get_events, name='ajax_get_events'), 

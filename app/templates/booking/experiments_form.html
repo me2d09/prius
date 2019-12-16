@@ -12,7 +12,7 @@
 <header> 
 <h1 class="h3 display">
     {% if object %}
-        Edit booking {{ object }}
+        Edit booking on {{ object.instrument }}
     {% else %}
         Book new experiment
     {% endif %}
@@ -27,6 +27,7 @@
 </div>
 {% endblock %}
 {% block scripts %}
+{% if not object %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha256-bqVeqGdJ7h/lYPq6xrPv/YGzMEb6dNxlfiTUHSgRCp8=" crossorigin="anonymous"></script>
 <script>
     function refreshDatePickers(res) {
@@ -60,11 +61,12 @@
 
     $("#id_instrument").change(function () {
       var url1 = '{% url 'ajax_load_options' %}';  
-      var url2 = '{% url 'ajax_load_lc' %}';  
+      var url2 = '{% url 'ajax_shared_load_options' %}';
+      var url3 = '{% url 'ajax_load_lc' %}';  
       var instrumentId = $(this).val();  
       refreshDatePickers(instrumentId);
       $.ajax({          
-        url: url1,                    
+        url: url1,                
         data: {
           'instrument': instrumentId     
         },
@@ -72,7 +74,16 @@
           $("#id_option").html(data); 
         }
       });
-      reloadlc(url2, instrumentId, $("#id_proposal").val());
+      $.ajax({          
+        url: url2,                
+        data: {
+          'instrument': instrumentId     
+        },
+        success: function (data) {  
+          $("#id_shared_options").html(data); 
+        }
+      });
+      reloadlc(url3, instrumentId, $("#id_proposal").val());
     });
 
     $("#id_proposal").change(function () {
@@ -81,4 +92,5 @@
 
     $("#id_instrument").change();
   </script>
+{% endif %}
 {% endblock %}

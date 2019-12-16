@@ -146,6 +146,8 @@
             <select class="form-control eventselect event1" id="instr1">
                 <option>-</option>
                 {% for res in instruments %}<option value='I{{res.id}}'>{{ res }}</option>{% endfor %}
+                <option>-</option>
+                {% for res in sharedoptions %}<option value='R{{res.id}}'>{{ res }}</option>{% endfor %}
             </select> 
             <select class="form-control eventselect event2" id="instr2">
                 <option>-</option>

@@ -12,6 +12,7 @@ from django.db import models as models
 from django_extensions.db import fields as extension_fields
 from django.contrib.auth.models import User
 from datetime import datetime, timedelta
+from django.utils import formats
 from django.dispatch import receiver
 from django.core.validators import FileExtensionValidator
 from django.core.exceptions import ValidationError
@@ -426,7 +427,6 @@ class Experiments(models.Model):
     # Relationship Fields
     proposal = models.ForeignKey('app.Proposals', on_delete=models.PROTECT, default=None)
     option = models.ManyToManyField('app.Options', blank=True)
-    shared_options = models.ManyToManyField('app.SharedOptions', blank=True)
 
     responsible = models.ForeignKey('app.Contacts', on_delete=models.PROTECT, related_name = "experiment_responsible", null=True)
     local_contact = models.ForeignKey('app.Contacts', on_delete=models.PROTECT, related_name = "experiment_lc")
@@ -454,6 +454,10 @@ class Experiments(models.Model):
 
     def __unicode__(self):
         return u'%s' % self.pk
+
+    def __str__(self):
+        return "%s (%s - %s)" % (self.instrument.name, formats.date_format(self.real_start, "SHORT_DATETIME_FORMAT"), formats.date_format(self.real_end, "SHORT_DATETIME_FORMAT"))
+
 
     def get_absolute_url(self):
         return reverse('app_experiments_detail', args=(self.pk,))
@@ -518,6 +522,9 @@ class SharedOptions(models.Model):
     def __unicode__(self):
         return u'%s' % self.slug
 
+    def __str__(self):
+        return self.name
+
     def get_absolute_url(self):
         return reverse('app_sharedoptions_detail', args=(self.slug,))
 
@@ -525,6 +532,74 @@ class SharedOptions(models.Model):
     def get_update_url(self):
         return reverse('app_sharedoptions_update', args=(self.slug,))
 
+
+
+class SharedOptionSlot(models.Model):
+
+    # Fields
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
+    start = models.DateTimeField()
+    end = models.DateTimeField()
+    duration = models.DurationField(editable=False)
+
+    # Relationship Fields
+    experiment = models.ForeignKey('app.Experiments', on_delete=models.PROTECT, default=None)
+    shared_option = models.ForeignKey('app.SharedOptions', on_delete=models.PROTECT, default=None)
+
+    @property
+    def instrument(self):
+        return self.experiment.instrument
+
+    @property
+    def proposal(self):
+        return self.experiment.proposal
+    
+    @property
+    def local_contact(self):
+        return self.experiment.local_contact
+
+    @property
+    def responsible(self):
+        return self.experiment.responsible
+
+    @property
+    def real_start(self):
+        if self.instrument and not self.instrument.book_by_hour:
+            return self.start + timedelta(hours = self.instrument.start_hour)
+        else:
+            return self.start
+
+    @property
+    def real_end(self):
+        if self.instrument and not self.instrument.book_by_hour:
+            return self.end + timedelta(days = 1, hours = self.instrument.start_hour)
+        else:
+            return self.end
+
+
+
+    class Meta:
+        ordering = ('-created',)
+
+    def __unicode__(self):
+        return u'%s' % self.pk
+
+    def __str__(self):
+        return "%s (%s - %s)" % (self.shared_option.name, formats.date_format(self.real_start, "SHORT_DATETIME_FORMAT"), formats.date_format(self.real_end, "SHORT_DATETIME_FORMAT"))
+
+    def get_absolute_url(self):
+        return reverse('app_sharedoptionslot_detail', args=(self.pk,))
+
+    def get_update_url(self):
+        return reverse('app_sharedoptionslot_update', args=(self.pk,))
+
+    def save(self, *args, **kwargs):
+        # calculate duration
+        self.duration = self.end - self.start
+        if not self.instrument.book_by_hour:
+            self.duration += timedelta(days=1)
+        super().save(*args, **kwargs)
 
 
 
