@@ -422,6 +422,7 @@ class Experiments(models.Model):
     last_updated = models.DateTimeField(auto_now=True, editable=False)
     start = models.DateTimeField()
     end = models.DateTimeField()
+    description = models.TextField(max_length=5000, default="")
     duration = models.DurationField(editable=False)
 
     # Relationship Fields

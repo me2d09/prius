@@ -390,7 +390,7 @@ class ExperimentsForm(forms.ModelForm):
     
     class Meta:
         model = Experiments
-        fields = ['start', 'end', 'proposal', 'instrument', 'option', 'local_contact']
+        fields = ['start', 'end', 'proposal', 'instrument', 'option', 'description', 'local_contact']
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
@@ -404,14 +404,42 @@ class ExperimentsForm(forms.ModelForm):
         self.helper.field_class = 'col-sm-10'
         self.helper.label_class = 'col-sm-2'
 
-        self.fields['instrument'].queryset = Instruments.objects.filter(group__in = self.user.contact.trained_instrumentgroups.all())
+        
+        # help texts:
+        self.fields['proposal'].help_text = "You can only book measurement time for accepted proposals, where you are part of the experimental team."
+        self.fields['instrument'].help_text = "You can only book slot on instruments, where you are trained (see <a href='/profile'>your profile</a> for details)."
+        self.fields['option'].help_text = "Select one or more options which you want to use during measurement."
+        self.fields['shared_options'].help_text = "Select shared resources which you want to use. They will be booked for same time as you select below. You can optionally change it later."
+        self.fields['description'].help_text = "Enter sample(s) you want to measure and all important information about the measurement."
+        self.fields['local_contact'].help_text = "Select local contact who will be your contact person during measurement. Local contact must be claimed in your proposal and must be responsible for selected instrument."
+        
+        self.fields['description'].required = False
+        
+        self.fields['description'].widget.attrs['rows'] = 2
+        
+        
+        if self.instance and self.instance.pk:
+            self.fields['proposal'].disabled = True
+            self.fields['instrument'].disabled = True
+            self.fields['shared_options'].disabled = True
+            #self.fields['start'].disabled = True
+            #self.fields['end'].disabled = True
 
-        self.fields['proposal'].queryset = Proposals.objects.filter(Q(last_status='A') & ( 
+
+        
+
+        if self.instance and self.instance.pk:
+            self.fields.pop('instrument')
+            self.fields.pop('proposal')
+
+        else:
+            self.fields['instrument'].queryset = Instruments.objects.filter(group__in = self.user.contact.trained_instrumentgroups.all())
+            self.fields['proposal'].queryset = Proposals.objects.filter(Q(last_status='A') & ( 
                                        Q(proposer=self.user) | 
                                        Q(coproposers__uid__exact=self.user) | 
                                        Q(local_contacts__uid__exact=self.user))).distinct()
         
-       
+        
         self.fields['local_contact'].queryset = Contacts.objects.none()
         if 'instrument' in self.data and 'proposal' in self.data:
             try:
@@ -439,20 +467,7 @@ class ExperimentsForm(forms.ModelForm):
             self.fields['option'].queryset = self.instance.instrument.options_set.order_by('name')
             self.fields['shared_options'].queryset = self.instance.instrument.sharedoptions_set.order_by('name')
 
-        # help texts:
-        self.fields['proposal'].help_text = "You can only book measurement time for accepted proposals, where you are part of the experimental team."
-        self.fields['instrument'].help_text = "You can only book slot on instruments, where you are trained (see <a href='/profile'>your profile</a> for details)."
-        self.fields['option'].help_text = "Select one or more options which you want to use during measurement."
-        self.fields['shared_options'].help_text = "Select shared resources which you want to use. They will be booked for same time as you select below. You can optionally change it later."
-        self.fields['local_contact'].help_text = "Select local contact who will be your contact person during measurement. Local contact must be claimed in your proposal and must be responsible for selected instrument."
         
-        #disable fields for editing
-        if self.instance and self.instance.pk:
-            self.fields['proposal'].disabled = True
-            self.fields['instrument'].disabled = True
-            self.fields['shared_options'].disabled = True
-            #self.fields['start'].disabled = True
-            #self.fields['end'].disabled = True
 
         self.helper.layout = Layout(
             Fieldset(
@@ -463,9 +478,10 @@ class ExperimentsForm(forms.ModelForm):
                 Field('shared_options', wrapper_class='col-md-6'),  
             css_class='form-row'),
             Fieldset(
-                None, 'local_contact',
+                None, 'description', 'local_contact',
             ),
             DateRangeField('Date', 'start', 'end'),
+
             ButtonHolder(
                 Submit('submit', 'Save', css_class='button white'),
                 HTML("""<a role="button" class="btn btn-default"
