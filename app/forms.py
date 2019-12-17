@@ -15,6 +15,7 @@ from crispy_forms.layout import Layout, Submit, HTML, Fieldset, Div, ButtonHolde
 from dal import autocomplete
 from django.http import Http404
 from django.db.models import Q
+from datetime import timedelta
  
 
 class BootstrapAuthenticationForm(AuthenticationForm):
@@ -450,8 +451,8 @@ class ExperimentsForm(forms.ModelForm):
             self.fields['proposal'].disabled = True
             self.fields['instrument'].disabled = True
             self.fields['shared_options'].disabled = True
-            self.fields['start'].disabled = True
-            self.fields['end'].disabled = True
+            #self.fields['start'].disabled = True
+            #self.fields['end'].disabled = True
 
         self.helper.layout = Layout(
             Fieldset(
@@ -479,17 +480,25 @@ class ExperimentsForm(forms.ModelForm):
         instrument = cleaned_data.get("instrument")
         shared_options = cleaned_data.get("shared_options")
 
+        if not instrument and self.instance:
+            instrument = self.instance.instrument
+        if not instrument.book_by_hour:
+            end += timedelta(days=1)
+
         for so in shared_options:
             colision = SharedOptionSlot.objects.filter(end__gt = start, start__lt = end, shared_option = so).count()
             if colision > 0:
                 raise forms.ValidationError(
-                    "Selected dates are in colision for the shared option: %s" % so.name +
+                    "Selected dates are in colision for the shared option: %s! " % so.name +
                     "Maybe someone was faster then you in booking the slot. " +
                     "Select different dates."
                 )
 
         if "start" in self.changed_data or "start" in self.changed_data:
-            colision = Experiments.objects.filter(end__gt = start, start__lt = end, instrument = instrument).count()
+            selfid = 0
+            if self.instance:
+                selfid = self.instance.pk
+            colision = Experiments.objects.filter(end__gt = start, start__lt = end, instrument = instrument).exclude(pk = selfid).count()
             if colision > 0:
                 raise forms.ValidationError(
                     "Your data colide with another experiment on the same instrument. "
@@ -531,11 +540,13 @@ class SharedOptionSlotForm(forms.ModelForm):
         self.helper.field_class = 'col-sm-10'
         self.helper.label_class = 'col-sm-2'
     
+        self.fields['shared_option'].help_text = "You can change only days booked. Changing these dates will not change dates of the associated experimental slot!"
+        
         if self.instance and self.instance.pk:
             self.fields['shared_option'].disabled = True
             self.fields['experiment'].disabled = True
-            self.fields['start'].disabled = True
-            self.fields['end'].disabled = True
+            #self.fields['start'].disabled = True
+            #self.fields['end'].disabled = True
 
         self.helper.layout = Layout(
             Fieldset(
@@ -548,3 +559,22 @@ class SharedOptionSlotForm(forms.ModelForm):
                         href="{% url "app_experiments_calendar" %}">Cancel</a>"""),
             )
         )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        start = cleaned_data.get("start")
+        end = cleaned_data.get("end")
+        so = cleaned_data.get("shared_option")
+        if self.instance and not self.instance.instrument.book_by_hour:
+            end += timedelta(days=1)
+        if "start" in self.changed_data or "start" in self.changed_data:
+            selfid = 0
+            if self.instance:
+                selfid = self.instance.pk
+            colision = SharedOptionSlot.objects.filter(end__gt = start, start__lt = end, shared_option = so).exclude(pk = selfid).count()
+            if colision > 0:
+                raise forms.ValidationError(
+                    "Selected dates colide with another experiment on the same shared resource. "
+                    "Maybe someone was faster then you in booking the slot. "
+                    "Select different dates."
+                )

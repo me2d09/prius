@@ -66,7 +66,7 @@ def get_fulldays(request):
     if resource[0] == 'I' and resource[1:]:
         events = Experiments.objects.filter(instrument=resource[1:], end__gt=start).exclude(pk = except_res)
     elif resource[0] == 'R' and resource[1:]:  # TODO
-        events = SharedOptions.objects.filter(instrument=resource[1:], end__gt=start).exclude(pk = except_res)
+        events = SharedOptionSlot.objects.filter(shared_option=resource[1:], end__gt=start).exclude(pk = except_res)
     else:
         events = Experiments.objects.none()
     fdays = set([])

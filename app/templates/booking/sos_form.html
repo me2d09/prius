@@ -12,7 +12,7 @@
 <header> 
 <h1 class="h3 display">
     {% if object %}
-        Edit booking on {{ object.instrument }}
+        Edit booking of shared resouce {{ object.shared_option }} booked on {{ object.experiment }}
     {% else %}
         Book new experiment
     {% endif %}
@@ -31,7 +31,7 @@
 <script>
     function refreshDatePickers(res) {
       $.getJSON( "{% url 'ajax_full_days' %}", {
-        resource: "I" + res,
+        resource: "R" + res,
         except: {{ object.pk|default:"0" }},
       }, function( data ) {
         var fullDays = data.fdays;
@@ -47,57 +47,11 @@
           });
       });
     }
-{% if not object %}
-    function reloadlc(url, instrumentId, proposalId) {
-      $.ajax({          
-        url: url,                    
-        data: {
-          'instrument': instrumentId,
-          'proposal': proposalId,
-        },
-        success: function (data) {  
-          $("#id_local_contact").html(data); 
-        }
-      });
-    }
 
-    $("#id_instrument").change(function () {
-      var url1 = '{% url 'ajax_load_options' %}';  
-      var url2 = '{% url 'ajax_shared_load_options' %}';
-      var url3 = '{% url 'ajax_load_lc' %}';  
-      var instrumentId = $(this).val();  
-      refreshDatePickers(instrumentId);
-      $.ajax({          
-        url: url1,                
-        data: {
-          'instrument': instrumentId     
-        },
-        success: function (data) {  
-          $("#id_option").html(data); 
-        }
-      });
-      $.ajax({          
-        url: url2,                
-        data: {
-          'instrument': instrumentId     
-        },
-        success: function (data) {  
-          $("#id_shared_options").html(data); 
-        }
-      });
-      reloadlc(url3, instrumentId, $("#id_proposal").val());
-    });
-
-    $("#id_proposal").change(function () {
-      reloadlc('{% url 'ajax_load_lc' %}', $("#id_instrument").val(), $(this).val());
-    });
-{% else %}
-    $("#id_instrument").change(function () {
+    $("#id_shared_option").change(function () {
       refreshDatePickers($(this).val());
     });
-{% endif %}
     
-    $("#id_instrument").change();
+    $("#id_shared_option").change();
   </script>
-
 {% endblock %}

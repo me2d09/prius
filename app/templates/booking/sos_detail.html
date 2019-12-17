@@ -20,9 +20,9 @@
 <tr><td>Instrument:</td><td>{{ object.instrument }}</td></tr>
 </table>
 {% endwith %}
-<p><a class="btn btn-default" href="{% url 'app_experiments_calendar' %}">Back to calendar</a> 
+<p><a class="btn btn-default" href="{% url 'app_experiments_calendar' %}">Back to calendar</a>
   {% if request.user.contact == object.responsible or request.user.contact == object.local_contact or request.user|has_group:"admins" %}
-   <a class="btn btn-danger" href="#">Cancel Experiment Slot</a>
+   <a class="btn btn-info" href="{{object.get_update_url}}">Edit shared option slot</a>
   {% endif %}
 </p>
 
