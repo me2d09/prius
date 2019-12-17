@@ -216,7 +216,7 @@ class ProposalsForm(forms.ModelForm):
             )
         )
         self.fields['name'].help_text = "Enter the name of the proposal, maximum length is 500 characters, however we recommend shorter."
-        self.fields['abstract'].help_text = "Mandatory abstract, maximumn length 5000 characters."
+        self.fields['abstract'].help_text = "Mandatory abstract, maximum length 5000 characters."
         self.fields['proposaltype'].help_text = "Select type of proposal. See <a href=""/how-to/proposal"" target=""_blank"">help</a> for description and how to choose the correct one."
         
         self.fields['local_contacts'].widget.attrs = {
