@@ -1225,6 +1225,7 @@ footer.main-footer p {
   font-size: 0.7em;
   color: #777;
   margin: 0;
+  white-space: nowrap;
 }
 
 /* MAIN FOOTER MEDIAQUERIES ------------------------- */
