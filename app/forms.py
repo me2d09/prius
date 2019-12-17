@@ -443,7 +443,7 @@ class ExperimentsForm(forms.ModelForm):
         self.fields['proposal'].help_text = "You can only book measurement time for accepted proposals, where you are part of the experimental team."
         self.fields['instrument'].help_text = "You can only book slot on instruments, where you are trained (see <a href='/profile'>your profile</a> for details)."
         self.fields['option'].help_text = "Select one or more options which you want to use during measurement."
-        self.fields['shared_options'].help_text = "Select shared options which you want to use. They will be booked for same time as you select below. You can optionally change it later."
+        self.fields['shared_options'].help_text = "Select shared resources which you want to use. They will be booked for same time as you select below. You can optionally change it later."
         self.fields['local_contact'].help_text = "Select local contact who will be your contact person during measurement. Local contact must be claimed in your proposal and must be responsible for selected instrument."
         
         #disable fields for editing
@@ -489,7 +489,7 @@ class ExperimentsForm(forms.ModelForm):
             colision = SharedOptionSlot.objects.filter(end__gt = start, start__lt = end, shared_option = so).count()
             if colision > 0:
                 raise forms.ValidationError(
-                    "Selected dates are in colision for the shared option: %s! " % so.name +
+                    "Selected dates are in colision for the shared resources: %s! " % so.name +
                     "Maybe someone was faster then you in booking the slot. " +
                     "Select different dates."
                 )

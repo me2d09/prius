@@ -18,7 +18,7 @@
 <tr><td>Instrument:</td><td>{{ object.instrument }}</td></tr>
 {% if showDetails or request.user.contact == object.local_contact %}
     <tr><td>Options:</td><td>{% for o in object.option.all %}{% include "comma.html" %}{{ o }}{% endfor %}</td></tr>
-    <tr><td>Shared options:</td><td>{% for so in object.sharedoptionslot_set.all %}{% include "comma.html" %}<a href="{% url 'app_sharedoptionslot_detail' pk=so.pk  %}">{{ so }}</a>{% endfor %}</td></tr>
+    <tr><td>Shared resources:</td><td>{% for so in object.sharedoptionslot_set.all %}{% include "comma.html" %}<a href="{% url 'app_sharedoptionslot_detail' pk=so.pk  %}">{{ so }}</a>{% endfor %}</td></tr>
 {% endif %}
 </table>
 {% endwith %}
