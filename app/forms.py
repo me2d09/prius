@@ -441,19 +441,17 @@ class ExperimentsForm(forms.ModelForm):
         
         
         self.fields['local_contact'].queryset = Contacts.objects.none()
-        if 'local_contact' in self.data and self.user.contact.pk == int(self.data.get('local_contact')):
+        if 'instrument' in self.data and 'proposal' in self.data and 'local_contact' in self.data:
             try:
-                self.fields['local_contact'].queryset = Contacts.objects.filter(uid__groups__name = 'localcontacts',  
-                                             trained_instrumentgroups__instruments__pk = instrument_id) 
-            except (ValueError, TypeError):
-                pass  # invalid input from the client; ignore and fallback to empty
-        elif 'instrument' in self.data and 'proposal' in self.data:
-            try:
-                instrument_id = int(self.data.get('instrument'))
-                proposal_id = int(self.data.get('proposal'))
-                involved = Proposals.objects.get(pk=proposal_id).people
-                self.fields['local_contact'].queryset = Contacts.objects.filter(uid__groups__name = 'localcontacts', pk__in = [x.pk for x in involved], 
-                                             trained_instrumentgroups__instruments__pk = instrument_id) 
+                if self.user.contact.pk == int(self.data.get('local_contact')):
+                    self.fields['local_contact'].queryset = Contacts.objects.filter(uid__groups__name = 'localcontacts',  
+                                                 trained_instrumentgroups__instruments__pk = instrument_id) 
+                else:
+                    instrument_id = int(self.data.get('instrument'))
+                    proposal_id = int(self.data.get('proposal'))
+                    involved = Proposals.objects.get(pk=proposal_id).people
+                    self.fields['local_contact'].queryset = Contacts.objects.filter(uid__groups__name = 'localcontacts', pk__in = [x.pk for x in involved], 
+                                                 trained_instrumentgroups__instruments__pk = instrument_id) 
             except (ValueError, TypeError):
                 pass  # invalid input from the client; ignore and fallback to empty
         elif self.instance.pk:
