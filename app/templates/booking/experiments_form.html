@@ -91,13 +91,13 @@
     $("#id_proposal").change(function () {
       reloadlc('{% url 'ajax_load_lc' %}', $("#id_instrument").val(), $(this).val());
     });
+
+    $("#id_instrument").change();
 {% else %}
-    $("#id_instrument").change(function () {
-      refreshDatePickers($(this).val());
-    });
+    refreshDatePickers({{ object.instrument.pk }});
 {% endif %}
     
-    $("#id_instrument").change();
+    
   </script>
 
 {% endblock %}
