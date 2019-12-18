@@ -152,7 +152,7 @@ class Proposals(models.Model):
     
     @property
     def users(self):
-        return [x.uid for x in self.people() if x.uid is not None]
+        return [x.uid for x in self.people if x.uid is not None]
 
     def save(self, *args, **kwargs):
         adding = self._state.adding
