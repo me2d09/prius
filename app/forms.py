@@ -441,7 +441,13 @@ class ExperimentsForm(forms.ModelForm):
         
         
         self.fields['local_contact'].queryset = Contacts.objects.none()
-        if 'instrument' in self.data and 'proposal' in self.data:
+        if 'local_contact' in self.data and self.user.contact.pk == int(self.data.get('local_contact')):
+            try:
+                self.fields['local_contact'].queryset = Contacts.objects.filter(uid__groups__name = 'localcontacts',  
+                                             trained_instrumentgroups__instruments__pk = instrument_id) 
+            except (ValueError, TypeError):
+                pass  # invalid input from the client; ignore and fallback to empty
+        elif 'instrument' in self.data and 'proposal' in self.data:
             try:
                 instrument_id = int(self.data.get('instrument'))
                 proposal_id = int(self.data.get('proposal'))
@@ -451,10 +457,19 @@ class ExperimentsForm(forms.ModelForm):
             except (ValueError, TypeError):
                 pass  # invalid input from the client; ignore and fallback to empty
         elif self.instance.pk:
-            involved = self.instance.proposal.people
-            self.fields['local_contact'].queryset = Contacts.objects.filter(uid__groups__name = 'localcontacts', pk__in = [x.pk for x in involved], 
+            if self.user.contact.pk == self.instance.local_contact.pk:
+                self.fields['local_contact'].queryset = Contacts.objects.filter(uid__groups__name = 'localcontacts', 
+                                             trained_instrumentgroups__instruments = self.instance.instrument)  
+            else:
+                involved = self.instance.proposal.people
+                self.fields['local_contact'].queryset = Contacts.objects.filter(uid__groups__name = 'localcontacts', pk__in = [x.pk for x in involved], 
                                              trained_instrumentgroups__instruments = self.instance.instrument)       
-        
+        if 'local_contact' in self.initial and not self.fields['local_contact'].queryset.filter(pk=self.initial['local_contact']).exists():
+            # get rid of local contact field - no choice available
+            self.fields['local_contact_fixed'] = forms.CharField(initial = Contacts.objects.get(pk=self.initial['local_contact']), disabled = True, required = False, label="Local contact")
+            self.fields.pop('local_contact')
+
+
         self.fields['option'].queryset = Options.objects.none()
         if 'instrument' in self.data:
             try:
@@ -468,7 +483,6 @@ class ExperimentsForm(forms.ModelForm):
             self.fields['shared_options'].queryset = self.instance.instrument.sharedoptions_set.order_by('name')
 
         
-
         self.helper.layout = Layout(
             Fieldset(
                 None, 'proposal',  'instrument', 
@@ -480,8 +494,10 @@ class ExperimentsForm(forms.ModelForm):
             Fieldset(
                 None, 'description', 'local_contact',
             ),
+            Fieldset(
+                None, 'local_contact_fixed',
+            ),
             DateRangeField('Date', 'start', 'end'),
-
             ButtonHolder(
                 Submit('submit', 'Save', css_class='button white'),
                 HTML("""<a role="button" class="btn btn-default"
