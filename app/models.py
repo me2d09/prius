@@ -486,7 +486,7 @@ class Experiments(models.Model):
         #send notifications
         if not old_slot:  # new booking
             notify_send(self.proposal.users, 'x_booking_new', extra_context = { 'exp': self })
-            notify_send(self.local_contact.uid, 'l_booking_lc', extra_context = { 'exp': self })
+            notify_send([self.local_contact.uid], 'l_booking_lc', extra_context = { 'exp': self })
         else:
             reason = ""
             if old_slot.local_contact.pk != self.local_contact.pk:
