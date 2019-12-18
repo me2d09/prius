@@ -29,6 +29,12 @@ def create_notice_types(sender, **kwargs):
         NoticeType.create("U_submited", "New proposal submitted (UO)", "New proposal was submitted and user office need to check it.")
         NoticeType.create("a_submited", "New proposal submitted (A)", "Inform about any new submitted proposal.")
         NoticeType.create("a_accepted", "Proposal accepted (A)", "Inform about all proposals accepted by the director.")
+        # booking notifications
+        NoticeType.create("X_booking_changed", "Booking modified", "Your booked slot was canceled/modified.")
+        NoticeType.create("x_booking_new", "New Team booking", "There is a new booking for a proposal you are part of a team.", 1)
+        NoticeType.create("l_booking_lc", "New local contact job", "You were selected as a local contact for some booking")
+        NoticeType.create("l_booking_lc_changed", "LC booking modified", "Your LC booked slot was canceled/modified.")
+        
 
 
 class PriusConfig(AppConfig):
