@@ -1,0 +1,8 @@
+{% autoescape off %}New experiment slot booked for you!
+
+Instrument: {{exp.instrument}}
+Date: {{ exp.realstart }} ({{ exp.duration }})
+User: {{ exp.responsible }} ({{ exp.responsible.email }})
+Options: {{ exp.all_options }}
+Description: {{ exp.description }}
+{% endautoescape %}

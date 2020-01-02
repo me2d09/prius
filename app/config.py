@@ -34,6 +34,7 @@ def create_notice_types(sender, **kwargs):
         NoticeType.create("x_booking_new", "New Team booking", "There is a new booking for a proposal you are part of a team.", 1)
         NoticeType.create("l_booking_lc", "New local contact job", "You were selected as a local contact for some booking")
         NoticeType.create("l_booking_lc_changed", "LC booking modified", "Your LC booked slot was canceled/modified.")
+        NoticeType.create("x_reminder", "Your experiment is coming", "Get reminder one day before about upcoming measurements.")
         
 
 

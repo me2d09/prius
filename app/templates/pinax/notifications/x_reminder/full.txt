@@ -1,0 +1,8 @@
+{% autoescape off %}Your experiment si coming tomorrow!
+
+Prepare your sample, shine your tweezers, get ready for new exciting data!
+When? {{ exp.realstart }} ({{ exp.duration }})
+Instrument: {{exp.instrument}}
+Options: {{ exp.all_options }}
+Description: {{ exp.description }}
+{% endautoescape %}

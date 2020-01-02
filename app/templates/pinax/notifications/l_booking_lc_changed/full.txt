@@ -1,0 +1,9 @@
+{% autoescape off %}Your local contact slot modified:
+{{ reason }}
+
+Instrument: {{exp.instrument}}
+Date: {{ exp.realstart }} ({{ exp.duration }})
+User: {{ exp.responsible }} ({{ exp.responsible.email }})
+Options: {{ exp.all_options }}
+Description: {{ exp.description }}
+{% endautoescape %}

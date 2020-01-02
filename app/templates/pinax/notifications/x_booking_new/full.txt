@@ -1,0 +1,8 @@
+{% autoescape off %}There is a new experiment booking for proposal {{exp.proposal.pid}} where you are part of the team.
+
+Instrument: {{exp.instrument}}
+Date: {{ exp.realstart }} ({{ exp.duration }})
+User: {{ exp.responsible }} ({{ exp.responsible.email }})
+Options: {{ exp.all_options }}
+Description: {{ exp.description }}
+{% endautoescape %}
