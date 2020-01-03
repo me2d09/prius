@@ -207,8 +207,8 @@ class ExperimentsAdminForm(forms.ModelForm):
 
 class ExperimentsAdmin(admin.ModelAdmin):
     form = ExperimentsAdminForm
-    list_display = ['created', 'last_updated', 'start', 'end', 'duration']
-    readonly_fields = ['created', 'last_updated', 'start', 'end', 'duration']
+    list_display = ['instrument', 'proposal', 'created', 'start', 'end', 'duration', 'responsible', 'local_contact', 'all_options']
+    readonly_fields = ['created', 'last_updated', 'duration']
 
 admin.site.register(Experiments, ExperimentsAdmin)
 
