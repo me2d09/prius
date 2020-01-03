@@ -2,7 +2,7 @@
 {% for object in events %}
     {
         "title": "{% if object.shared_option %}{{object.shared_option}} at {{object.instrument}} ({{object.proposal.pid}}){% else %}{{object.proposal.pid}}: {{object.responsible}}{% endif %}", 
-        "description": "{% if request.user|in_team:object.proposal %}{{object.proposal.name}} ({{object.proposal.proposer.contact}})<br /><i>{{object.description}}</i><br />{% endif %}LC: {{object.local_contact}}<br />{{object.local_contact.nice_phone|safe}}",
+        "description": "User: {{object.responsible}} {{object.responsible.nice_phone|safe}}<br />{% if request.user|in_team:object.proposal %}{{object.proposal.name}} ({{object.proposal.proposer.contact}})<br /><i>{{object.description}}</i><br />{% endif %}LC: {{object.local_contact}} {{object.local_contact.nice_phone|safe}}",
         "url": "{{object.get_absolute_url}}",
         "allDay": true,
         "start": "{{ object.start|date:"c" }}",
