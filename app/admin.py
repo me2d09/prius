@@ -36,11 +36,15 @@ class InstrumentsAdminForm(forms.ModelForm):
         model = Instruments
         fields = '__all__'
 
+class OptionsInline(admin.TabularInline):
+        model = Options
+        extra = 15
 
 class InstrumentsAdmin(admin.ModelAdmin):
     form = InstrumentsAdminForm
     list_display = ['name', 'slug', 'created', 'last_updated', 'public', 'active', 'description']
     readonly_fields = ['slug', 'created', 'last_updated']
+    inlines = [OptionsInline]
 
 admin.site.register(Instruments, InstrumentsAdmin)
 
