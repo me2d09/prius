@@ -265,10 +265,10 @@ class Contacts(models.Model):
     def nice_phone(self):
         if self.phone:
             if len(self.phone) == 3:
-                return "<span title='(+420) 220 318 " + self.phone + "'>☎ " + self.phone + "</span>"
+                return "<span title='(+420) 220 318 " + self.phone + "'>☎&nbsp;" + self.phone + "</span>"
             elif len(self.phone) == 4:
-                return "<span title='(+420) 951 55 " + self.phone + "'>☎ " + self.phone + "</span>"
-            return "☎ " + self.phone
+                return "<span title='(+420) 951 55 " + self.phone + "'>☎&nbsp;" + self.phone + "</span>"
+            return "☎&nbsp;" + self.phone
         return ""
 
     class Meta:
