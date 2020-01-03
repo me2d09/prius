@@ -1,4 +1,4 @@
-{% autoescape off %}New experiment slot booked for you!
+{% autoescape off %}New experiment slot booked and YOU are the local contact!
 
 Instrument: {{exp.instrument}}
 Date: {{ exp.realstart }} ({{ exp.duration }})

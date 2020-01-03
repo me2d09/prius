@@ -485,14 +485,14 @@ class Experiments(models.Model):
 
         #send notifications
         if not old_slot:  # new booking
-            notify_send(self.proposal.users, 'x_booking_new', extra_context = { 'exp': self })
-            notify_send([self.local_contact.uid], 'l_booking_lc', extra_context = { 'exp': self })
+            notify_send(self.proposal.users, 'x_booking_new', extra_context = { 'exp': self, 'proposal': self.proposal })
+            notify_send([self.local_contact.uid], 'l_booking_lc', extra_context = { 'exp': self, 'proposal': self.proposal })
         else:
             reason = ""
             if old_slot.local_contact.pk != self.local_contact.pk:
-                notify_send([self.local_contact.uid], 'l_booking_lc', extra_context = { 'exp': self })
+                notify_send([self.local_contact.uid], 'l_booking_lc', extra_context = { 'exp': self, 'proposal': self.proposal })
                 reason += f"Local contact changed: {old_slot.local_contact} --> {self.local_contact}"
-                notify_send([old_slot.local_contact.uid], 'l_booking_lc_changed', extra_context = { 'exp': self, 'reason': reason })
+                notify_send([old_slot.local_contact.uid], 'l_booking_lc_changed', extra_context = { 'exp': self, 'reason': reason, 'proposal': self.proposal })
             if self.start != old_slot.start or self.end != old_slot.end:
                 reason += (f"Dates changed: {formats.date_format(old_slot.real_start, 'SHORT_DATETIME_FORMAT')}-{formats.date_format(old_slot.real_end, 'SHORT_DATETIME_FORMAT')}"  
                            f" --> {formats.date_format(self.real_start, 'SHORT_DATETIME_FORMAT')}-{formats.date_format(self.real_end, 'SHORT_DATETIME_FORMAT')}")
@@ -501,9 +501,9 @@ class Experiments(models.Model):
             if self.all_options != old_slot.all_options:
                 reason += f"Options changed, new: {self.all_options}"
             if reason:
-                notify_send([self.responsible.uid], 'X_booking_changed', extra_context = { 'exp': self, 'reason': reason })
+                notify_send([self.responsible.uid], 'X_booking_changed', extra_context = { 'exp': self, 'reason': reason, 'proposal': self.proposal })
                 if old_slot.local_contact == self.local_contact:
-                    notify_send([self.local_contact.uid], 'l_booking_lc_changed', extra_context = { 'exp': self, 'reason': reason })
+                    notify_send([self.local_contact.uid], 'l_booking_lc_changed', extra_context = { 'exp': self, 'reason': reason, 'proposal': self.proposal })
 
 
 
