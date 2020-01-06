@@ -452,6 +452,10 @@ class Experiments(models.Model):
             return self.end
     
     @property
+    def running(self):
+        return self.real_start < datetime.now() and self.real_end > datetime.now()
+        
+    @property
     def all_options(self):
         return ', '.join([x.name for x in self.option.all()] + [x.shared_option.name for x in self.sharedoptionslot_set.all()])
 

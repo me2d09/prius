@@ -52,3 +52,7 @@
 .form-inline .form-group label {
     margin-right: 4px;
 }
+
+tr[running='True'] a {
+    color: red; font-weight: bold;
+}

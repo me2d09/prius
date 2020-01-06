@@ -27,6 +27,7 @@ class ExperimentsListView(LoginRequiredMixin, SingleTableMixin, FilterView):
     table_class = ExperimentTable
     filterset_class = ExperimentFilter
     paginate_by = 25
+    ordering = ['start']
 
     def get_queryset(self):
         queryset = Experiments.objects.distinct()

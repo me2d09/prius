@@ -108,6 +108,9 @@ class ExperimentTable(tables.Table):
         fields = ('proposal', 'duration', 'instrument', 'responsible', 'local_contact', 'all_options')
         sequence = ('proposal', 'instrument', 'all_options', 'real_start', 'real_end', 'duration',  'responsible', 'local_contact')
         attrs  = { 'class': 'table table-striped table-sm table-hover'}
+        row_attrs = {
+            'running': lambda record: record.running
+        }
  
 class ExperimentFilter(django_filters.FilterSet):
 
