@@ -91,9 +91,9 @@ class ProposalFilter(django_filters.FilterSet):
 
 
 class ExperimentTable(tables.Table):
-    real_start = tables.DateTimeColumn(verbose_name= 'Start' )
-    real_end = tables.DateTimeColumn(verbose_name= 'End')
-    all_options = tables.Column(verbose_name= 'Options')
+    real_start = tables.DateTimeColumn(verbose_name= 'Start',order_by=("start"))
+    real_end = tables.DateTimeColumn(verbose_name= 'End',order_by=("end"))
+    all_options = tables.Column(verbose_name= 'Options', orderable=False)
     proposal  = tables.LinkColumn('app_experiments_detail', args=[A('pk')], verbose_name='Slot')
 
     def __init__(self, *args, **kwargs):
