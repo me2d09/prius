@@ -370,12 +370,13 @@ class DateRangeField(Fieldset):
     template = 'custom_daterange.html'
 
     def render(self, form, form_style, context, template_pack, **kwargs):
-        if len(self.fields) != 2:
-            raise ValueError("There needs to be legend and two fields for daterange.")
+        if len(self.fields) != 4:
+            raise ValueError("There needs to be legend and four fields for daterange.")
         return render_to_string(
             self.template,
             {'fieldset': self, 'legend': self.legend, 
              'field1': form[self.fields[0]], 'field2': form[self.fields[1]], 
+             'time1': form[self.fields[2]], 'time2': form[self.fields[3]], 
              'form_style': form_style}
 )
 
@@ -386,6 +387,10 @@ class ExperimentsForm(forms.ModelForm):
                                 input_formats=('%d.%m.%Y',))
     end = forms.DateField(widget=forms.DateInput(format = '%d.%m.%Y'), 
                                 input_formats=('%d.%m.%Y',))
+    starttime = forms.DateField(widget=forms.TimeInput(format = '%H:%M'), 
+                                input_formats=('%H:%M',), required=False)
+    endtime = forms.DateField(widget=forms.TimeInput(format = '%H:%M'), 
+                                input_formats=('%H:%M',), required=False)
     shared_options = forms.ModelMultipleChoiceField(required=False, queryset=SharedOptions.objects.none())
     
     class Meta:
@@ -495,7 +500,7 @@ class ExperimentsForm(forms.ModelForm):
             Fieldset(
                 None, 'local_contact_fixed',
             ),
-            DateRangeField('Date', 'start', 'end'),
+            DateRangeField('Date', 'start', 'end', 'starttime', 'endtime'),
             ButtonHolder(
                 Submit('submit', 'Save', css_class='button white'),
                 HTML("""<a role="button" class="btn btn-default"

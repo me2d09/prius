@@ -73,6 +73,11 @@ class ExperimentsCreateView(LoginRequiredMixin, CreateView):
         kwargs.update({ 'user': self.request.user})
         return kwargs
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['timebooking'] = [x.id for x in Instruments.objects.filter(book_by_hour=True)]
+        return context
+
     def form_valid(self, form):
         form.instance.creator = self.request.user.contact
         if not form.instance.responsible:

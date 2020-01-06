@@ -8,12 +8,23 @@
         <div class="input-daterange input-group" id="datepicker">
             {% crispy_field field1 'autocomplete' 'off' %}
             <div class="input-group-prepend input-group-append">
-                <span class="input-group-text">tol</span>
+                <span class="input-group-text">to</span>
             </div>
-            {% crispy_field field2 'autocomplete' 'off' %}
+            {% crispy_field field2 'autocomplete' 'off' %}         
+        </div>
+        <div class="input-group" id="timepicker">
+            {% crispy_field time1 'autocomplete' 'off' %}
+            <div class="input-group-prepend input-group-append">
+                <span class="input-group-text">to</span>
+            </div>
+            {% crispy_field time2 'autocomplete' 'off' %}
             {% for error in field1.errors %}
                     <p id="error_{{ forloop.counter }}_{{ field2.auto_id }}" class="invalid-feedback"><strong>{{ error }}</strong></p>
             {% endfor %}{% for error in field2.errors %}
+                    <p id="error_{{ forloop.counter }}_{{ field2.auto_id }}" class="invalid-feedback"><strong>{{ error }}</strong></p>
+            {% endfor %}{% for error in time1.errors %}
+                    <p id="error_{{ forloop.counter }}_{{ field2.auto_id }}" class="invalid-feedback"><strong>{{ error }}</strong></p>
+            {% endfor %}{% for error in time2.errors %}
                     <p id="error_{{ forloop.counter }}_{{ field2.auto_id }}" class="invalid-feedback"><strong>{{ error }}</strong></p>
             {% endfor %}            
         </div>

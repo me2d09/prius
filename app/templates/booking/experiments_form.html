@@ -25,10 +25,13 @@
         {{ form_errors }}
     </div>
 </div>
+
 {% endblock %}
 {% block scripts %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha256-bqVeqGdJ7h/lYPq6xrPv/YGzMEb6dNxlfiTUHSgRCp8=" crossorigin="anonymous"></script>
 <script>
+    var timebooking = {{ timebooking }};
+
     function refreshDatePickers(res) {
       $.getJSON( "{% url 'ajax_full_days' %}", {
         resource: "I" + res,
@@ -67,6 +70,11 @@
       var url3 = '{% url 'ajax_load_lc' %}';  
       var instrumentId = $(this).val();  
       refreshDatePickers(instrumentId);
+      if ($.inArray( parseInt(instrumentId), timebooking ) > -1) {
+        $('#timepicker').show();
+      } else {
+        $('#timepicker').hide();
+      }
       $.ajax({          
         url: url1,                
         data: {
@@ -96,6 +104,8 @@
 {% else %}
     refreshDatePickers({{ object.instrument.pk }});
 {% endif %}
+    
+    //$("<div class='input-group'><input id='id_start_time' maxlength='5' class='form-control' /><div class='input-group-prepend input-group-append'><span class='input-group-text'> </span></div><input id='id_end_time' maxlength='5' class='form-control' /></div>").insertAfter("#datepicker");
     
     
   </script>
