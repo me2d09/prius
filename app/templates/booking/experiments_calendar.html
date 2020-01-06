@@ -10,6 +10,7 @@
     <link href='{% static 'vendor/fullcalendar/bootstrap/main.css' %}' rel='stylesheet' />
 
     <script src='{% static 'vendor/fullcalendar/core/main.js' %}'></script>
+    <script src='{% static 'vendor/fullcalendar/interaction/main.js' %}'></script>
     <script src='{% static 'vendor/fullcalendar/daygrid/main.js' %}'></script>
     <script src='{% static 'vendor/fullcalendar/timegrid/main.js' %}'></script>
     <script src='{% static 'vendor/fullcalendar/list/main.js' %}'></script>
@@ -17,16 +18,20 @@
 {% endblock %}
 {% block scripts %}
     <script>
-
+      var qsSelected = '';
       document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
-            plugins: ['dayGrid', 'timeGrid', 'list', 'bootstrap', ],
+            plugins: ['interaction', 'dayGrid', 'timeGrid', 'list', 'bootstrap', ],
             defaultView: 'dayGridMonth',
             themeSystem: 'bootstrap',
             firstDay: 1,
             height: 600,
+            selectable: true,
+            select: function(info) {
+              qsSelected = 'start=' + info.startStr + '&end=' + info.endStr;
+            },
             header: {
               left:   'today prev,next btnNewExperiment',
               center: 'title',
@@ -34,9 +39,12 @@
             },
             customButtons: {
                 btnNewExperiment: {
-                  text: 'book a slot',
+                  text: 'book selected slot',
                   click: function() {
-                    window.location.href = '{% url 'app_experiments_create' %}';
+                    if ($('#instr1').val().startsWith('I')) {
+                      inst = 'instr=' + $('#instr1').val().substring(1) + '&';
+                    }
+                    window.location.href = '{% url 'app_experiments_create' %}?' + inst + qsSelected;
                   }
                 }
               },
