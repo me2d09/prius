@@ -27,7 +27,7 @@ class ExperimentsListView(LoginRequiredMixin, SingleTableMixin, FilterView):
     table_class = ExperimentTable
     filterset_class = ExperimentFilter
     paginate_by = 25
-    ordering = ['start']
+    
 
     def get_queryset(self):
         queryset = Experiments.objects.distinct()
@@ -43,7 +43,7 @@ class ExperimentsListView(LoginRequiredMixin, SingleTableMixin, FilterView):
             #check permissions
             if not self.request.user.has_perm('app.view_slots'):
                 queryset = Experiments.objects.none()
-        return queryset
+        return queryset.order_by('start')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
