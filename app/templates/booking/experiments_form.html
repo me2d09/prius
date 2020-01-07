@@ -100,14 +100,27 @@
       reloadlc('{% url 'ajax_load_lc' %}', $("#id_instrument").val(), $(this).val());
     });
 
+
+    // initial loading
+    var urlParams;
+    if (window.location.search) {
+        urlParams = new URLSearchParams(window.location.search);
+    } else {
+        urlParams = new URLSearchParams();
+    }
+    if (urlParams.get('instr')) {
+        $("#id_instrument").val(urlParams.get('instr'));
+        $("#id_instrument").change();
+        $('#id_start').val(urlParams.get('start'));
+        $('#id_end').val(urlParams.get('end'));
+        $('#id_starttime').val(urlParams.get('starttime'));
+        $('#id_endtime').val(urlParams.get('endtime'));
+    }
+
     $("#id_instrument").change();
 {% else %}
     refreshDatePickers({{ object.instrument.pk }});
 {% endif %}
-    
-    //$("<div class='input-group'><input id='id_start_time' maxlength='5' class='form-control' /><div class='input-group-prepend input-group-append'><span class='input-group-text'> </span></div><input id='id_end_time' maxlength='5' class='form-control' /></div>").insertAfter("#datepicker");
-    
-    
   </script>
 
 {% endblock %}

@@ -15,6 +15,8 @@
     <script src='{% static 'vendor/fullcalendar/timegrid/main.js' %}'></script>
     <script src='{% static 'vendor/fullcalendar/list/main.js' %}'></script>
     <script src='{% static 'vendor/fullcalendar/bootstrap/main.js' %}'></script>
+    <script src='{% static 'vendor/fullcalendar/moment/moment.min.js' %}'></script>
+    <script src='{% static 'vendor/fullcalendar/moment/main.js' %}'></script>
 {% endblock %}
 {% block scripts %}
     <script>
@@ -30,7 +32,13 @@
             height: 600,
             selectable: true,
             select: function(info) {
-              qsSelected = 'start=' + info.startStr + '&end=' + info.endStr;
+              subtract = ((info.startStr.length > 10) ? 0 : 1);
+              qsSelected = 'start=' + FullCalendarMoment.toMoment(info.start, calendar).format('D.M.YYYY');
+              qsSelected += '&end=' + FullCalendarMoment.toMoment(info.end, calendar).subtract(subtract, 'day').format('D.M.YYYY');
+              if (subtract < 1) {
+                  qsSelected += '&starttime=' + FullCalendarMoment.toMoment(info.start, calendar).format('HH:mm');
+                  qsSelected += '&endtime=' + FullCalendarMoment.toMoment(info.end, calendar).format('HH:mm');
+              }
             },
             header: {
               left:   'today prev,next btnNewExperiment',
@@ -125,11 +133,9 @@
             urlParams = new URLSearchParams();
         }
         $(".eventselect").each(function (index, o) {
-              o.value = urlParams.get(o.id);
-              calendar.getEventSourceById(o.id).refetch();
+            o.value = urlParams.get(o.id);
+            calendar.getEventSourceById(o.id).refetch();
         });
-
-      
 
         $(".eventselect").change(function(){
           qs = ''
@@ -140,10 +146,7 @@
           calendar.getEventSourceById(this.id).refetch();
           localStorage.priusCalendarQs = qs
         }); 
-
-        });
-    
-
+      });
     </script>
 {% endblock %}
 {% block breadcrumbs %}

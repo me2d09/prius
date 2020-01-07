@@ -15,7 +15,7 @@ from crispy_forms.layout import Layout, Submit, HTML, Fieldset, Div, ButtonHolde
 from dal import autocomplete
 from django.http import Http404
 from django.db.models import Q
-from datetime import timedelta
+from datetime import timedelta, datetime
  
 
 class BootstrapAuthenticationForm(AuthenticationForm):
@@ -387,9 +387,9 @@ class ExperimentsForm(forms.ModelForm):
                                 input_formats=('%d.%m.%Y',))
     end = forms.DateField(widget=forms.DateInput(format = '%d.%m.%Y'), 
                                 input_formats=('%d.%m.%Y',))
-    starttime = forms.DateField(widget=forms.TimeInput(format = '%H:%M'), 
+    starttime = forms.TimeField(widget=forms.TimeInput(format = '%H:%M'), 
                                 input_formats=('%H:%M',), required=False)
-    endtime = forms.DateField(widget=forms.TimeInput(format = '%H:%M'), 
+    endtime = forms.TimeField(widget=forms.TimeInput(format = '%H:%M'), 
                                 input_formats=('%H:%M',), required=False)
     shared_options = forms.ModelMultipleChoiceField(required=False, queryset=SharedOptions.objects.none())
     
@@ -519,7 +519,13 @@ class ExperimentsForm(forms.ModelForm):
             instrument = self.instance.instrument
         if not instrument.book_by_hour:
             end += timedelta(days=1)
+        else:   #add time
+            start = datetime.combine(start, cleaned_data.get("starttime"))
+            end = datetime.combine(end, cleaned_data.get("endtime"))
+            cleaned_data['start'] = start
+            cleaned_data['end'] = end
 
+        
         for so in shared_options:
             colision = SharedOptionSlot.objects.filter(end__gt = start, start__lt = end, shared_option = so).count()
             if colision > 0:

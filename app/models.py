@@ -480,9 +480,13 @@ class Experiments(models.Model):
 
     def save(self, *args, **kwargs):
         # calculate duration
-        self.duration = self.end - self.start
         if not self.instrument.book_by_hour:
-            self.duration += timedelta(days=1)
+            self.start = datetime.date(self.start.year, self.start.month, self.start.day)
+            self.end = datetime.date(self.end.year, self.end.month, self.end.day)
+            self.duration = self.end - self.start + timedelta(days=1)
+        else:
+            self.duration = self.end - self.start
+            
 
         old_slot = Experiments.objects.filter(pk=self.pk).first()
         super(Experiments, self).save(*args, **kwargs)
