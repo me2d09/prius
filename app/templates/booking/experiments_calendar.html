@@ -143,7 +143,9 @@
               qs += o.id + '=' + o.value + '&';
           });
           window.history.pushState( {} , document.getElementsByTagName('title')[0].innerHTML, '{{ request.path }}?' + qs);
-          calendar.getEventSourceById(this.id).refetch();
+          if (this.value != "-") {
+            calendar.getEventSourceById(this.id).refetch();
+          }
           localStorage.priusCalendarQs = qs
         }); 
       });
