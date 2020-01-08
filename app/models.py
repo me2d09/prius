@@ -11,7 +11,7 @@ from django.contrib.auth.models import User
 from django.db import models as models
 from django_extensions.db import fields as extension_fields
 from django.contrib.auth.models import User
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from django.utils import formats
 from django.dispatch import receiver
 from django.core.validators import FileExtensionValidator
@@ -481,8 +481,8 @@ class Experiments(models.Model):
     def save(self, *args, **kwargs):
         # calculate duration
         if not self.instrument.book_by_hour:
-            self.start = datetime.date(self.start.year, self.start.month, self.start.day)
-            self.end = datetime.date(self.end.year, self.end.month, self.end.day)
+            self.start = date(self.start.year, self.start.month, self.start.day)
+            self.end = date(self.end.year, self.end.month, self.end.day)
             self.duration = self.end - self.start + timedelta(days=1)
         else:
             self.duration = self.end - self.start
