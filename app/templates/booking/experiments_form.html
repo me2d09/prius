@@ -68,32 +68,39 @@
       var url1 = '{% url 'ajax_load_options' %}';  
       var url2 = '{% url 'ajax_shared_load_options' %}';
       var url3 = '{% url 'ajax_load_lc' %}';  
-      var instrumentId = $(this).val();  
-      refreshDatePickers(instrumentId);
-      if ($.inArray( parseInt(instrumentId), timebooking ) > -1) {
-        $('#timepicker').show();
+      var instrumentId = $(this).val();
+      if (instrumentId) {
+        refreshDatePickers(instrumentId);
+        if ($.inArray(parseInt(instrumentId), timebooking ) > -1) {
+          $('#timepicker').show();
+        } else {
+          $('#timepicker').hide();
+        }
+        $.ajax({          
+          url: url1,                
+          data: {
+            'instrument': instrumentId     
+          },
+          success: function (data) {  
+            $("#id_option").html(data); 
+          }
+        });
+        $.ajax({          
+          url: url2,                
+          data: {
+            'instrument': instrumentId     
+          },
+          success: function (data) {  
+            $("#id_shared_options").html(data); 
+          }
+        });
+        reloadlc(url3, instrumentId, $("#id_proposal").val());
       } else {
+        $("#id_shared_options").html('');
+        $("#id_option").html('');
         $('#timepicker').hide();
+        $("#id_local_contact").html('');
       }
-      $.ajax({          
-        url: url1,                
-        data: {
-          'instrument': instrumentId     
-        },
-        success: function (data) {  
-          $("#id_option").html(data); 
-        }
-      });
-      $.ajax({          
-        url: url2,                
-        data: {
-          'instrument': instrumentId     
-        },
-        success: function (data) {  
-          $("#id_shared_options").html(data); 
-        }
-      });
-      reloadlc(url3, instrumentId, $("#id_proposal").val());
     });
 
     $("#id_proposal").change(function () {
