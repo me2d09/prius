@@ -60,7 +60,7 @@ class InstrumentGroupAdmin(admin.ModelAdmin):
     form = InstrumentGroupAdminForm
     list_display = ['name', 'created', 'last_updated']
     readonly_fields = ['created', 'last_updated']
-    filter_horizontal = ('trained_users',) 
+    filter_horizontal = ('trained_users','allowed_LC',) 
 
 admin.site.register(InstrumentGroup, InstrumentGroupAdmin)
 
