@@ -410,6 +410,7 @@ class InstrumentGroup(models.Model):
     last_updated = DateTimeField(auto_now=True, editable=False)
     
     trained_users = models.ManyToManyField('app.Contacts',  related_name='trained_instrumentgroups', blank=True)
+    allowed_LC = models.ManyToManyField('app.Contacts',  related_name='responsible_for_instrumentgroups', blank=True)
 
     class Meta:
         ordering = ('name',)

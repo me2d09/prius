@@ -409,7 +409,6 @@ class ExperimentsForm(forms.ModelForm):
         self.helper.field_class = 'col-sm-10'
         self.helper.label_class = 'col-sm-2'
 
-        
         # help texts:
         self.fields['proposal'].help_text = "You can only book measurement time for accepted proposals, where you are part of the experimental team."
         self.fields['instrument'].help_text = "You can only book slot on instruments, where you are trained (see <a href='/profile'>your profile</a> for details)."
@@ -419,9 +418,7 @@ class ExperimentsForm(forms.ModelForm):
         self.fields['local_contact'].help_text = "Select local contact who will be your contact person during measurement. Local contact must be claimed in your proposal and must be responsible for selected instrument."
         
         self.fields['description'].required = False
-        
         self.fields['description'].widget.attrs['rows'] = 2
-        
         
         if self.instance and self.instance.pk:
             self.fields['proposal'].disabled = True
@@ -430,13 +427,9 @@ class ExperimentsForm(forms.ModelForm):
             #self.fields['start'].disabled = True
             #self.fields['end'].disabled = True
 
-
-        
-
         if self.instance and self.instance.pk:
             self.fields.pop('instrument')
             self.fields.pop('proposal')
-
         else:
             self.fields['instrument'].queryset = Instruments.objects.filter(group__in = self.user.contact.trained_instrumentgroups.all())
             self.fields['proposal'].queryset = Proposals.objects.filter(Q(last_status='A') & ( 
@@ -444,34 +437,32 @@ class ExperimentsForm(forms.ModelForm):
                                        Q(coproposers__uid__exact=self.user) | 
                                        Q(local_contacts__uid__exact=self.user))).distinct()
         
-        
         self.fields['local_contact'].queryset = Contacts.objects.none()
         if 'instrument' in self.data and 'proposal' in self.data and 'local_contact' in self.data:
             try:
                 instrument_id = int(self.data.get('instrument'))
                 if self.user.contact.pk == int(self.data.get('local_contact')):
                     self.fields['local_contact'].queryset = Contacts.objects.filter(uid__groups__name = 'localcontacts',  
-                                                 trained_instrumentgroups__instruments__pk = instrument_id) 
+                                                 responsible_for_instrumentgroups__instruments__pk = instrument_id) 
                 else:
                     proposal_id = int(self.data.get('proposal'))
                     involved = Proposals.objects.get(pk=proposal_id).people
                     self.fields['local_contact'].queryset = Contacts.objects.filter(uid__groups__name = 'localcontacts', pk__in = [x.pk for x in involved], 
-                                                 trained_instrumentgroups__instruments__pk = instrument_id) 
+                                                 responsible_for_instrumentgroups__instruments__pk = instrument_id) 
             except (ValueError, TypeError):
                 pass  # invalid input from the client; ignore and fallback to empty
         elif self.instance.pk:
             if self.user.contact.pk == self.instance.local_contact.pk:
                 self.fields['local_contact'].queryset = Contacts.objects.filter(uid__groups__name = 'localcontacts', 
-                                             trained_instrumentgroups__instruments = self.instance.instrument)  
+                                             responsible_for_instrumentgroups__instruments = self.instance.instrument)  
             else:
                 involved = self.instance.proposal.people
                 self.fields['local_contact'].queryset = Contacts.objects.filter(uid__groups__name = 'localcontacts', pk__in = [x.pk for x in involved], 
-                                             trained_instrumentgroups__instruments = self.instance.instrument)       
+                                             responsible_for_instrumentgroups__instruments = self.instance.instrument)       
         if 'local_contact' in self.initial and not self.fields['local_contact'].queryset.filter(pk=self.initial['local_contact']).exists():
             # get rid of local contact field - no choice available
             self.fields['local_contact_fixed'] = forms.CharField(initial = Contacts.objects.get(pk=self.initial['local_contact']), disabled = True, required = False, label="Local contact")
             self.fields.pop('local_contact')
-
 
         self.fields['option'].queryset = Options.objects.none()
         if 'instrument' in self.data:
@@ -525,7 +516,6 @@ class ExperimentsForm(forms.ModelForm):
             cleaned_data['start'] = start
             cleaned_data['end'] = end
 
-        
         for so in shared_options:
             colision = SharedOptionSlot.objects.filter(end__gt = start, start__lt = end, shared_option = so).count()
             if colision > 0:
