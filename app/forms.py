@@ -482,9 +482,9 @@ class ExperimentsForm(forms.ModelForm):
                 None, 'proposal',  'instrument', 
             ),
             Div(
-                Field('option', wrapper_class='col-md-6'),
-                Field('shared_options', wrapper_class='col-md-6'),  
-            css_class='form-row'),
+                Field('option', wrapper_class='col-md-6', size='7'),
+                Field('shared_options', wrapper_class='col-md-6', size='7'),  
+                css_class='form-row'),
             Fieldset(
                 None, 'description', 'local_contact',
             ),
