@@ -361,7 +361,10 @@ class ProposalsListView(LoginRequiredMixin, SingleTableMixin, FilterView):
         else:
             #check permissions
             if not self.request.user.has_perm('app.view_proposals'):
-                queryset = queryset.filter(Q(proposer=self.request.user) | 
+                if self.request.user.has_perm('app.view_panel_proposals'):
+                    queryset = queryset.exclude(last_status__in='P').exclude(proposaltype='T')
+                else:
+                    queryset = queryset.filter(Q(proposer=self.request.user) | 
                                        Q(coproposers__uid__exact=self.request.user) | 
                                        Q(local_contacts__uid__exact=self.request.user))
         return queryset

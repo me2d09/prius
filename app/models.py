@@ -227,6 +227,7 @@ class Proposals(models.Model):
             ("approve_technical", "Can submit technical comments"),
             ("takeover_panel", "Can assign a reviewer and submit any review"),
             ("approve_panel", "Can submit panel decision"),
+            ("view_panel_proposals", "Can view panel related proposals"),
             ("approve_director", "Can submit director approval"),
             ("finish_proposal", "Can finish approved proposal"),
         )
