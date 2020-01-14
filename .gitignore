@@ -10,3 +10,4 @@ db.sqlite3
 /static/
 prius/settings.py
 /files/
+env1/
