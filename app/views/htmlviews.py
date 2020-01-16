@@ -433,6 +433,8 @@ class ProposalsDetailView(LoginRequiredMixin, DetailView):
         # check permission
         if self.request.user.has_perm('app.view_proposals'):
             qs = super(ProposalsDetailView, self).get_queryset().distinct()
+        elif self.request.user.has_perm('app.view_panel_proposals'):
+            qs = super(ProposalsDetailView, self).get_queryset().exclude(last_status__in='P').exclude(proposaltype='T').distinct()
         else: # can view only if it is part of the team
             qs = super(ProposalsDetailView, self).get_queryset().filter(Q(proposer=self.request.user) | 
                                        Q(coproposers__uid__exact=self.request.user) | 
