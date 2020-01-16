@@ -42,7 +42,7 @@ def load_lc(request):
     proposal = request.GET.get('proposal')
     if instrument and proposal:
         involved = Proposals.objects.get(pk=proposal).people
-        lc = Contacts.objects.filter(uid__groups__name = 'localcontacts', pk__in = [x.pk for x in involved], responsible_for_instrumentgroups__instruments__pk = instrument) 
+        lc = Contacts.objects.filter(pk__in = [x.pk for x in involved], responsible_for_instrumentgroups__instruments__pk = instrument) 
     else:
         lc = Contacts.objects.none()
     return render(request, 'dropdown_list_options.html', {'obj': lc})

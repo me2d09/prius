@@ -442,22 +442,20 @@ class ExperimentsForm(forms.ModelForm):
             try:
                 instrument_id = int(self.data.get('instrument'))
                 if self.user.contact.pk == int(self.data.get('local_contact')):
-                    self.fields['local_contact'].queryset = Contacts.objects.filter(uid__groups__name = 'localcontacts',  
-                                                 responsible_for_instrumentgroups__instruments__pk = instrument_id) 
+                    self.fields['local_contact'].queryset = Contacts.objects.filter(responsible_for_instrumentgroups__instruments__pk = instrument_id) 
                 else:
                     proposal_id = int(self.data.get('proposal'))
                     involved = Proposals.objects.get(pk=proposal_id).people
-                    self.fields['local_contact'].queryset = Contacts.objects.filter(uid__groups__name = 'localcontacts', pk__in = [x.pk for x in involved], 
+                    self.fields['local_contact'].queryset = Contacts.objects.filter(pk__in = [x.pk for x in involved], 
                                                  responsible_for_instrumentgroups__instruments__pk = instrument_id) 
             except (ValueError, TypeError):
                 pass  # invalid input from the client; ignore and fallback to empty
         elif self.instance.pk:
             if self.user.contact.pk == self.instance.local_contact.pk:
-                self.fields['local_contact'].queryset = Contacts.objects.filter(uid__groups__name = 'localcontacts', 
-                                             responsible_for_instrumentgroups__instruments = self.instance.instrument)  
+                self.fields['local_contact'].queryset = Contacts.objects.filter(responsible_for_instrumentgroups__instruments = self.instance.instrument)  
             else:
                 involved = self.instance.proposal.people
-                self.fields['local_contact'].queryset = Contacts.objects.filter(uid__groups__name = 'localcontacts', pk__in = [x.pk for x in involved], 
+                self.fields['local_contact'].queryset = Contacts.objects.filter(pk__in = [x.pk for x in involved], 
                                              responsible_for_instrumentgroups__instruments = self.instance.instrument)       
         if 'local_contact' in self.initial and not self.fields['local_contact'].queryset.filter(pk=self.initial['local_contact']).exists():
             # get rid of local contact field - no choice available

@@ -261,6 +261,9 @@ class Contacts(models.Model):
     uid = models.OneToOneField(User, on_delete=models.CASCADE, blank=True,null=True, related_name='contact')
     affiliation = models.ForeignKey('app.Affiliations', on_delete=models.PROTECT)
 
+    @property
+    def isAllowedLC(self):
+        return self.responsible_for_instrumentgroups.count() > 0
 
     @property
     def nice_phone(self):

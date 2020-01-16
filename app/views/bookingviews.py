@@ -42,7 +42,12 @@ class ExperimentsListView(LoginRequiredMixin, SingleTableMixin, FilterView):
         else:
             #check permissions
             if not self.request.user.has_perm('app.view_slots'):
-                queryset = Experiments.objects.none()
+                queryset = queryset.filter( 
+                                       Q(responsible=self.request.user.contact) | 
+                                       Q(proposal__coproposers=self.request.user.contact) | 
+                                       Q(proposal__proposer=self.request.user) | 
+                                       Q(proposal__local_contacts=self.request.user.contact) | 
+                                       Q(proposal__supervisor=self.request.user.contact)).distinct()
         return queryset.order_by('start')
 
     def get_context_data(self, **kwargs):
