@@ -86,6 +86,9 @@
     {% if object.proposer == user and object.last_status == "A" %}
        <a class="btn btn-secondary" href="{{object.get_update_url}}">Edit experimental team</a> 
     {% endif %}
+    {% if user.contact in object.local_contacts.all and object.last_status == "A" %}
+       <a class="btn btn-secondary" href="{{object.get_update_url}}">Edit local contacts</a> 
+    {% endif %}
     
         <header> 
             <h2 class="h3 display">Status history</h2>

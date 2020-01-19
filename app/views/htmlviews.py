@@ -457,6 +457,7 @@ class ProposalsUpdateView(LoginRequiredMixin, UpdateView):
         kwargs.update({ 'user': self.request.user})
         kwargs.update({ 'status': super().get_object().last_status})
         kwargs.update({ 'local_contacts': super().get_object().local_contacts})
+        kwargs.update({ 'proposer': super().get_object().proposer})
         return kwargs
 
 class ProposalsDelete(LoginRequiredMixin, DeleteView):

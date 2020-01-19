@@ -192,6 +192,7 @@ class ProposalsForm(forms.ModelForm):
         self.user = kwargs.pop('user', None)
         self.status = kwargs.pop('status', None)
         self.local_contacts = kwargs.pop('local_contacts', None)
+        self.proposer = kwargs.pop('proposer', None)
 
         super(ProposalsForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
@@ -245,7 +246,10 @@ class ProposalsForm(forms.ModelForm):
             if self.user.has_perm('app.approve_technical') and self.status == "T" and self.user.contact in self.local_contacts.all():
                 self.fields['local_contacts'].disabled = False
             if self.status == "A":
-                self.fields['coproposers'].disabled = False
+                if self.user.contact in self.local_contacts.all():
+                    self.fields['local_contacts'].disabled = False
+                elif self.user.pk == self.proposer.pk:
+                    self.fields['coproposers'].disabled = False
 
       
     def save(self, *args, **kwargs):
