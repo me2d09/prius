@@ -430,6 +430,9 @@ class ExperimentsForm(forms.ModelForm):
             self.fields['shared_options'].disabled = True
             #self.fields['start'].disabled = True
             #self.fields['end'].disabled = True
+            self.fields['starttime'].initial = self.instance.start.time()
+            self.fields['endtime'].initial = self.instance.end.time()
+
 
         if self.instance and self.instance.pk:
             self.fields.pop('instrument')
