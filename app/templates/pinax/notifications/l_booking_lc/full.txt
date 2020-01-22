@@ -1,8 +1,7 @@
 {% autoescape off %}New experiment slot booked and YOU are the local contact!
 
 Instrument: {{exp.instrument}}
-Date: {{ exp.realstart }} ({{ exp.duration }})
+Start: {{ exp.real_start }} (duration: {{ exp.duration }})
 User: {{ exp.responsible }} ({{ exp.responsible.email }})
-Options: {{ exp.all_options }}
 Description: {{ exp.description }}
 {% endautoescape %}

@@ -11,7 +11,7 @@ from django.contrib.auth.models import User
 from django.db import models as models
 from django_extensions.db import fields as extension_fields
 from django.contrib.auth.models import User
-from datetime import datetime, timedelta, date
+from datetime import datetime, timedelta, date, time
 from django.utils import formats
 from django.dispatch import receiver
 from django.core.validators import FileExtensionValidator
@@ -445,14 +445,14 @@ class Experiments(models.Model):
     @property
     def real_start(self):
         if self.instrument and not self.instrument.book_by_hour:
-            return self.start + timedelta(hours = self.instrument.start_hour)
+            return datetime.combine(self.start + timedelta(days = 1), (datetime.min + timedelta(hours=self.instrument.start_hour)).time())
         else:
             return self.start
 
     @property
     def real_end(self):
         if self.instrument and not self.instrument.book_by_hour:
-            return self.end + timedelta(days = 1, hours = self.instrument.start_hour)
+            return datetime.combine(self.end + timedelta(days = 1), (datetime.min + timedelta(hours=self.instrument.start_hour)).time())
         else:
             return self.end
     
