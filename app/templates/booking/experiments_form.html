@@ -49,6 +49,11 @@
               $('#total_days_id_start').html((x/24/3600/1000 + 1) + ' days');
           });
       });
+      if ($.inArray(parseInt(res), timebooking ) > -1) {
+          $('#timepicker').show();
+        } else {
+          $('#timepicker').hide();
+        }
     }
 {% if not object %}
     function reloadlc(url, instrumentId, proposalId) {
@@ -71,11 +76,6 @@
       var instrumentId = $(this).val();
       if (instrumentId) {
         refreshDatePickers(instrumentId);
-        if ($.inArray(parseInt(instrumentId), timebooking ) > -1) {
-          $('#timepicker').show();
-        } else {
-          $('#timepicker').hide();
-        }
         $.ajax({          
           url: url1,                
           data: {

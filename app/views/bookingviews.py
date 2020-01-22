@@ -106,6 +106,11 @@ class ExperimentsUpdateView(LoginRequiredMixin, UpdateView):
         kwargs.update({ 'user': self.request.user})
         return kwargs
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['timebooking'] = [x.id for x in Instruments.objects.filter(book_by_hour=True)]
+        return context
+
 class ExperimentsDeleteView(LoginRequiredMixin, DeleteView):
     model = Experiments
     success_url = reverse_lazy('app_experiments_calendar')
