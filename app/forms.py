@@ -248,7 +248,7 @@ class ProposalsForm(forms.ModelForm):
             if self.status == "A":
                 if self.user.contact in self.local_contacts.all():
                     self.fields['local_contacts'].disabled = False
-                elif self.user.pk == self.proposer.pk:
+                if self.user.pk == self.proposer.pk:
                     self.fields['coproposers'].disabled = False
 
       
