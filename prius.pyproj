@@ -124,6 +124,8 @@
     <Content Include="app\templates\ajax\events.html" />
     <Content Include="app\templates\booking\experiments_delete.html" />
     <Content Include="app\templates\booking\experiments_calendar.html" />
+    <Content Include="app\templates\proposal\report_detail.html" />
+    <Content Include="app\templates\proposal\report_form.html" />
     <Content Include="app\templates\booking\sos_form.html" />
     <Content Include="app\templates\booking\sos_detail.html" />
     <Content Include="app\templates\comma.html" />

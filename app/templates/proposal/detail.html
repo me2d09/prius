@@ -29,6 +29,9 @@
 <tr><td>Local Contacts</td><td>{% for p in object.local_contacts.all %}{{ p.name }}{%if not forloop.last%}, {%endif%}{% endfor %}</td></tr>
 {% if object.reporter and perms.app.approve_panel %}<tr><td>Reporter</td><td>{{ object.reporter }}</td></tr>{% endif %}
 <tr><td>Experimental team</td><td>{% for p in object.coproposers.all %}{{ p.name }}{%if not forloop.last%}, {%endif%}{% endfor %}</td></tr>
+<tr><td>Experimental reports</td><td>{% for p in object.report_set.all %}
+    {% if p.pdf %}<a href="{% url 'app_report_detail' pk=p.pk %}">{{ p }}</a> <a class="btn btn-info" href="{{ p.pdf.url }}">Download</a>{% else %}<b class="text-danger"><a href="{% url 'app_report_detail' pk=p.pk %}">{{ p }}</a> missing, deadline {{ p.deadline |date:"SHORT_DATETIME_FORMAT" }}!</b> <a class="btn btn-primary" href="{% url 'app_report_update' pk=p.pk %}">Upload</a> {% endif %}
+    {%if not forloop.last%}<br />{%endif%}{% endfor %}</td></tr>
 </table>
 <p>
     {% if object.last_status == "P" %}
@@ -88,6 +91,11 @@
     {% endif %}
     {% if user.contact in object.local_contacts.all and object.last_status == "A" %}
        <a class="btn btn-secondary" href="{{object.get_update_url}}">Edit local contacts</a> 
+    {% endif %}
+    {% if object.proposer == user and object.last_status in "AFX" %}
+       <a class="btn btn-primary" href="{% url 'app_report_create' proposal_slug=object.slug %}">Create a new report</a> 
+    {% elif perms.app.change_status and object.last_status in "AFX" %}
+       <a class="btn btn-primary" href="{% url 'app_report_create' proposal_slug=object.slug %}">Create a report request</a> 
     {% endif %}
     
         <header> 

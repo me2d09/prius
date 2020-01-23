@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from .models import Proposals, Instruments, Contacts, Affiliations, Countries, Options, SharedOptions
 from .models import Samples, SamplePhotos, SampleRemarks, SharedOptionSlot
-from .models import Publications, Experiments, Status
+from .models import Publications, Experiments, Status, Report
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, HTML, Fieldset, Div, ButtonHolder, Field
 from dal import autocomplete
@@ -294,6 +294,44 @@ class ProposalsForm(forms.ModelForm):
                                                                 'width': 'resolve',
                                                              }
                                                              )
+        }
+
+class ReportForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_class = 'form-horizontal'
+        self.helper.form_method = 'post'
+        self.helper.field_class = 'col-sm-10'
+        self.helper.label_class = 'col-sm-2'
+        
+        self.helper.add_input(Submit('submit', 'Save'))
+
+        if self.instance and self.instance.pk: # and not self.user.has_perm('app.change_status'):
+            self.fields['deadline'].disabled = True
+            self.fields['year'].disabled = True
+
+        
+
+
+
+
+    def save(self, *args, **kwargs):
+       kwargs['commit']=False
+       obj = super().save(*args, **kwargs)
+       if not obj.proposal:
+           obj.proposal = self.initial['proposal']
+       obj.save()
+       return obj
+
+    class Meta:
+        model = Report
+        fields = ['pdf', 'year', 'deadline']
+        labels = {
+            "pdf": "Report PDF",
+            "deadline": "Deadline for report submission"
         }
 
 

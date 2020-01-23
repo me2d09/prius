@@ -1,0 +1,23 @@
+{% extends "form.html" %}
+{% load extratags %}
+{% load static %}
+{% block breadcrumbs %}
+    <li class="breadcrumb-item">Proposal</li>
+    <li class="breadcrumb-item"><a href="{% url 'app_proposals_detail' slug=object.proposal.slug %}">{{ object.proposal.pid }}</a></li>
+    <li class="breadcrumb-item">Reports</li>
+    <li class="breadcrumb-item active">{{ object }}</li>
+{% endblock %}
+{% block formcontent %}
+<table class="table">
+    <tr><td>Created</td><td>{{ object.created }}</td></tr>
+    <tr><td>Last Updated</td><td>{{ object.last_updated }}</td></tr>
+    <tr><td>Proposal</td><td><b>{{ object.proposal }}</b></td></tr>
+    <tr><td>Year</td><td><b>{{ object.year }}</b></td></tr>
+    <tr><td>Report PDF</td><td>{% if object.pdf %}<a href="{{ object.pdf.url }}" target="_blank">{{ object.pdf.name }}</a>{% else %}<b class="text-danger">missing</b>{% endif %}</td></tr>
+    <tr><td>Deadline for submission</td><td><b>{{ object.deadline }}</b></td></tr>
+
+</table>
+{% if not object.pdf %}
+<a class="btn btn-primary" href="{{object.get_update_url}}">Upload report</a>
+{% endif %}
+{% endblock %}

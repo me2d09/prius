@@ -17,15 +17,15 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
 from datetime import datetime
 from django.views.generic import DetailView, ListView, UpdateView, CreateView, DeleteView
-from app.models import Proposals, Instruments, Contacts, Affiliations, Countries, Options, SharedOptions, Samples, SamplePhotos, SampleRemarks, Publications, Experiments, Status
-from app.forms import ProposalsForm, InstrumentsForm, ContactsForm, StatusForm, SamplesForm 
+from app.models import Proposals, Instruments, Contacts, Affiliations, Countries, Options, SharedOptions
+from app.models import Samples, SamplePhotos, SampleRemarks, Publications, Experiments, Status, Report
+from app.forms import ProposalsForm, InstrumentsForm, ContactsForm, StatusForm, SamplesForm, ReportForm
 from app.forms import SamplePhotosForm, SampleRemarksForm, PublicationsForm, ExperimentsForm, SignupForm, ProfileForm, UserForm
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.mail import EmailMessage
 from django.db.models import Q
 from app.token import account_activation_token
 from app.tables import ProposalTable, ProposalFilter, ContactsTable
-
 from django_tables2.views import SingleTableView, SingleTableMixin
 from django_filters.views import FilterView
 
@@ -471,6 +471,59 @@ class ProposalsDelete(LoginRequiredMixin, DeleteView):
         if not obj.proposer == self.request.user and obj.last_status == "P":
             raise Http404
         return obj
+
+
+
+
+class ReportCreateView(PermissionRequiredMixin, CreateView):
+    model = Report
+    form_class = ReportForm
+    template_name = "proposal/report_form.html"
+    permission_required = 'app.change_status'
+    permission_denied_message = 'You are not allowed to create report requests.'
+    
+    def get_initial(self):
+        initial = super().get_initial()
+        self.current_proposal = Proposals.objects.get(slug=self.kwargs["proposal_slug"])
+        if "proposal_slug" in self.kwargs:
+            initial.update({"proposal": self.current_proposal})
+        else:
+            raise Http404
+        return initial
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['proposal'] = self.current_proposal
+        return context
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({ 'user': self.request.user})
+        return kwargs
+
+    def get_success_url(self):
+        return reverse('app_proposals_detail', args={ self.kwargs["proposal_slug"]})
+
+
+class ReportDetailView(DetailView):
+    model = Report
+    template_name = "proposal/report_detail.html" 
+
+
+class ReportUpdateView(UpdateView):
+    model = Report
+    form_class = ReportForm
+    template_name = "proposal/report_form.html"
+
+    def get_success_url(self):
+        return reverse('app_proposals_detail', args={ self.object.proposal.slug})
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({ 'user': self.request.user})
+        return kwargs
+
+
 
 class InstrumentsListView(ListView):
     model = Instruments

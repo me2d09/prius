@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django import forms
-from .models import Proposals, Instruments, Contacts, Affiliations, Countries,  Options, SharedOptions, Samples, SamplePhotos, SampleRemarks, Publications, Experiments, Status, InstrumentGroup, SharedOptionSlot
+from .models import Proposals, Instruments, Contacts, Affiliations, Countries,  Options, SharedOptions, Samples, SamplePhotos, SampleRemarks, Publications, Experiments, Status, InstrumentGroup, SharedOptionSlot, Report
 
 class StatusAdminForm(forms.ModelForm):
     class Meta:
@@ -28,6 +28,17 @@ class ProposalsAdmin(admin.ModelAdmin):
     readonly_fields = ['slug', 'created', 'last_updated']
 
 admin.site.register(Proposals, ProposalsAdmin)
+
+class ReportAdminForm(forms.ModelForm):
+    class Meta:
+        model = Report
+        fields = '__all__'
+
+class ReportAdmin(admin.ModelAdmin):
+    form = ReportAdminForm
+    list_display = ['proposal', 'created', 'last_updated', 'deadline', 'pdf']
+
+admin.site.register(Report, ReportAdmin)
 
 
 class InstrumentsAdminForm(forms.ModelForm):

@@ -245,6 +245,32 @@ class Proposals(models.Model):
     def __str__(self):
         return '%s %s' % (self.pid, self.name)
 
+class Report(models.Model):
+
+    # Fields
+    created = DateTimeField(auto_now_add=True, editable=False)
+    last_updated = DateTimeField(auto_now=True, editable=False)
+    pdf = FileField(upload_to="userpdf", blank=True, null=True, validators=[FileExtensionValidator(allowed_extensions=['pdf']),validate_pdf_lenth])
+    year = PositiveIntegerField(default = datetime.now().year)
+    deadline = DateTimeField(default = datetime.now() + timedelta(days=60))
+
+    # Relationship Fields
+    proposal = models.ForeignKey('app.Proposals', on_delete=models.PROTECT, blank=True,null=True )
+
+    class Meta:
+        ordering = ('-created',)
+
+    def __unicode__(self):
+        return u'%s' % self.pk
+
+    def __str__(self):
+        return f"{self.proposal.pid} ({self.year})"
+
+    def get_absolute_url(self):
+        return reverse('app_report_detail', args=(self.pk,))
+
+    def get_update_url(self):
+        return reverse('app_report_update', args=(self.pk,))
 
 
 class Contacts(models.Model):

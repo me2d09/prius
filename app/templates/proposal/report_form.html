@@ -1,0 +1,30 @@
+{% extends "form.html" %}
+{% load extratags %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block breadcrumbs %}
+    <li class="breadcrumb-item">Proposals</li>
+{% if object %}<li class="breadcrumb-item"><a href="{% url 'app_proposals_detail' slug=object.proposal.slug %}">{{ object.proposal.pid }}</a></li>
+{% else %}<li class="breadcrumb-item"><a href="{% url 'app_proposals_detail' slug=proposal.slug %}">{{ proposal.pid }}</a></li>
+{% endif %}
+    <li class="breadcrumb-item">Reports</li>
+{% if object %}<li class="breadcrumb-item active">Edit {{ object }}</li>
+{% else %}<li class="breadcrumb-item active">Create</li>
+{% endif %}
+{% endblock %}
+{% block formcontent %}
+<header> 
+<h1 class="h3 display">
+    {% if object %}
+        Add report for proposal {{ object.proposal.pid }}: {{ object.proposal }}
+    {% else %}
+        Create a report {% if user != proposal.proposer %}request{% endif %} for proposal {{ proposal.pid }}: {{ proposal }}
+    {% endif %}</h1>
+</header>
+<div class="card">
+    <div class="card-body">  
+        {% crispy form %}
+        {{ form_errors }}
+    </div>
+</div>
+{% endblock %}
