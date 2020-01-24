@@ -257,6 +257,12 @@ class Report(models.Model):
     # Relationship Fields
     proposal = models.ForeignKey('app.Proposals', on_delete=models.PROTECT, blank=True,null=True )
 
+    def save(self, *args, **kwargs):
+        adding = self._state.adding
+        super().save(*args, **kwargs)
+        if adding and not self.pdf:
+                notify_send([self.proposal.proposer], 'X_report', extra_context = { 'report': self, 'proposal': self.proposal })
+
     class Meta:
         ordering = ('-created',)
 

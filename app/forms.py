@@ -309,7 +309,7 @@ class ReportForm(forms.ModelForm):
         
         self.helper.add_input(Submit('submit', 'Save'))
 
-        if self.instance and self.instance.pk: # and not self.user.has_perm('app.change_status'):
+        if self.instance and self.instance.pk and not self.user.has_perm('app.change_status'):
             self.fields['deadline'].disabled = True
             self.fields['year'].disabled = True
 

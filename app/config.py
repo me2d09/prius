@@ -29,6 +29,8 @@ def create_notice_types(sender, **kwargs):
         NoticeType.create("U_submited", "New proposal submitted (UO)", "New proposal was submitted and user office need to check it.")
         NoticeType.create("a_submited", "New proposal submitted (A)", "Inform about any new submitted proposal.")
         NoticeType.create("a_accepted", "Proposal accepted (A)", "Inform about all proposals accepted by the director.")
+        #Report
+        NoticeType.create("X_report", "Experimental report requested", "You need to submit an experimental report. You will always be informed about it.")
         # booking notifications
         NoticeType.create("X_booking_changed", "Booking modified", "Your booked slot was canceled/modified.")
         NoticeType.create("x_booking_new", "New Team booking", "There is a new booking for a proposal you are part of a team.", 1)

@@ -1,0 +1,11 @@
+{% autoescape off %}{% if report.proposal.proposaltype == 'L' %}We hope you enjoyed another year of your measurement connected with proposal {{ report.proposal.pid }}. Now it is time to write a short experimental report about it and also possibly request time for the next year.{% else %}We hope you enjoyed your measurement connected with proposal {{ report.proposal.pid }}. Now it is time to write a short experimental report about it!{% endif %}
+
+Requested report: {{ report }}
+Connected proposal: {{ proposal }}
+Deadline: {{ report.deadline }})
+
+Report must be in PDF format and contain exactly two pages. First page is dedicated to the list of used instrument time and second should contain own text of the report and in case of long term proposals also request for the next year. 
+Please use following template: https://user.mgml.eu/static/files/mgml_report_template.doc
+
+If the report will not be submitted before the deadline, your booking and measuring at MGML can be suspended.
+{% endautoescape %}
