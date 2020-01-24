@@ -331,6 +331,7 @@ class ReportForm(forms.ModelForm):
         fields = ['pdf', 'year', 'deadline']
         labels = {
             "pdf": "Report PDF",
+            "year": "Report covering studies in year",
             "deadline": "Deadline for report submission"
         }
 
