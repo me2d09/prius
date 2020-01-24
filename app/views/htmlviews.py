@@ -101,6 +101,7 @@ def home(request):
             'proposals_localcontact': Proposals.objects.filter(local_contacts__uid__exact=request.user, last_status='T').count(),
             'proposals_panel': Proposals.objects.filter(last_status='W').count(),
             'proposals_my_panel': Proposals.objects.filter(reporter__uid=request.user, last_status='R').count(),
+            'report_missing': Report.objects.filter((Q(pdf__isnull=True) | Q(pdf__exact='')) & Q(proposal__proposer=request.user)).distinct().count(),
         }
     )
 
