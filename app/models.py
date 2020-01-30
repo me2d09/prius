@@ -477,7 +477,7 @@ class Experiments(models.Model):
     @property
     def real_start(self):
         if self.instrument and not self.instrument.book_by_hour:
-            return datetime.combine(self.start + timedelta(days = 1), (datetime.min + timedelta(hours=self.instrument.start_hour)).time())
+            return datetime.combine(self.start, (datetime.min + timedelta(hours=self.instrument.start_hour)).time())
         else:
             return self.start
 
