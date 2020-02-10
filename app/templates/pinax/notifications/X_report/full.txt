@@ -4,7 +4,7 @@ Requested report: {{ report }}
 Connected proposal: {{ proposal }}
 Deadline: {{ report.deadline }}
 
-Report must be in PDF format and contain exactly two pages. First page is dedicated to the list of used instrument time and second should contain own text of the report and in case of long term proposals also request for the next year. 
+Report must be in PDF format and should contain maximum three pages. First page is dedicated to the list of used instrument time and rest should contain own text of the report and in case of long term proposals also request for the next year. 
 Please use following template: https://user.mgml.eu/static/files/mgml_report_template.doc
 
 If the report will not be submitted before the deadline, your booking and measuring at MGML can be suspended.
