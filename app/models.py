@@ -98,8 +98,8 @@ def validate_pdf_lenth(value):
     except:
         raise ValidationError(u'Error parsing PDF file - please check if the uploaded file is really PDF file format.')
         
-    if pdf.getNumPages() > 2:
-        raise ValidationError(u'Uploaded file has too many pages. Maximum allowed is 2.')
+    if pdf.getNumPages() > 5:
+        raise ValidationError(u'Uploaded file has too many pages. Maximum allowed is 5.')
 
 class Proposals(models.Model):
 
