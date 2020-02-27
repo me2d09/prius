@@ -906,16 +906,12 @@ Lots taken from Flatly (MIT): https://bootswatch.com/4/flatly/bootstrap.css
 }
 
 .fc td, .fc th{
-    border: 3px solid #ccc;
+    border: 2px solid black;
 }
 
 .fc-row:nth-child(even) .fc-bg {
     background: #ccc;
 }
 
-.fc-row:nth-child(even) .fc-bg td {
-    border-left: 3px solid white;
-    border-right: 3px solid white;
-}
 
 
