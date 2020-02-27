@@ -898,3 +898,24 @@ Lots taken from Flatly (MIT): https://bootswatch.com/4/flatly/bootstrap.css
   .fc button {
     display: none;
     /* don't display any button-related controls */ } }
+
+.fc-today {
+    font-weight: bold;
+    color: white;
+    background-color: #8b17bf;
+}
+
+.fc td, .fc th{
+    border: 3px solid #ccc;
+}
+
+.fc-row:nth-child(even) .fc-bg {
+    background: #ccc;
+}
+
+.fc-row:nth-child(even) .fc-bg td {
+    border-left: 3px solid white;
+    border-right: 3px solid white;
+}
+
+
