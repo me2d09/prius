@@ -5,6 +5,7 @@ from django_tables2.utils import A  # alias for Accessor
 import django_filters
 from django.db.models import Q
 from django.utils.timezone import now
+from datetime import timedelta, date
 
 
 class TruncatedTextColumn(tables.Column):
@@ -114,17 +115,12 @@ class ExperimentTable(tables.Table):
  
 class ExperimentFilter(django_filters.FilterSet):
 
-    #owner = django_filters.filters.ChoiceFilter(choices=('mine', 'all'))
     end = django_filters.DateRangeFilter(label='Ends in: ', empty_label = "All",  choices = [
         ('future', 'Future'),
         ('past', 'Past'),
     ], filters = {
-        'future': lambda qs, name: qs.filter(**{
-            '%s__gt' % name: now()
-        }),
-        'past': lambda qs, name: qs.filter(**{
-            '%s__lt' % name: now()
-        }),
+        'future': lambda qs, name: qs.filter(Q(end__gte = now(), instrument__book_by_hour = True) | Q(Q(end = date.today() + timedelta(days=-1), instrument__start_hour__gt = now().hour) | Q(end__gte = date.today()), instrument__book_by_hour = False)),
+        'past': lambda qs, name: qs.filter(Q(end__lte = now(), instrument__book_by_hour = True) | Q(Q(end = date.today() + timedelta(days=-1), instrument__start_hour__lte = now().hour) | Q(end__lt = date.today() + timedelta(days=-1)), instrument__book_by_hour = False)),
     })
     instrument = django_filters.ModelChoiceFilter(label = 'Instrument: ', empty_label = "All", queryset=Instruments.objects.all())
     local_contact = django_filters.ModelChoiceFilter(label = 'Local Contact: ', empty_label = "All", queryset=localcontacts)
