@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'bootstrap4',
     'pinax.notifications',
+    'oauth2_provider',
     # 'rest_framework',
 ]
 SITE_ID = 1

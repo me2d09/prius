@@ -16,6 +16,9 @@ import app.views as views
 # Uncomment the next lines to enable the admin:
 from django.contrib import admin
 
+from django.contrib.auth.decorators import user_passes_test
+import oauth2_provider.views as oauth2_views
+
 admin.autodiscover()
 
 
@@ -102,10 +105,10 @@ urlpatterns += (
     url(r'^proposal_pdf/(?P<pid>\S+)/', views.ProposalPdfDetailView.as_view(), name='proposal_pdf_detail_view',),
 )
 
-urlpatterns += [
+urlpatterns += (
     # other urls
     url(r"^notifications/", include("pinax.notifications.urls", namespace="pinax_notifications")),
-]
+)
 
 
 urlpatterns += (
@@ -125,4 +128,38 @@ urlpatterns += (
     path('ajax/load-lc/', views.load_lc, name='ajax_load_lc'), 
     path('ajax/get-fulldays/', views.get_fulldays, name='ajax_full_days'), 
     path('ajax/get-events/', views.get_events, name='ajax_get_events'), 
+)
+
+
+
+## oauth2 implementation
+def is_super(user):
+    return user.is_superuser and user.is_active
+
+# OAuth2 provider endpoints
+oauth2_endpoint_views = [
+    path('authorize/', oauth2_views.AuthorizationView.as_view(), name="authorize"),
+    path('token/', oauth2_views.TokenView.as_view(), name="token"),
+    path('revoke-token/', oauth2_views.RevokeTokenView.as_view(), name="revoke-token"),
+]
+# the above are public but we restrict the following:
+# OAuth2 Application Management endpoints
+oauth2_endpoint_views += [
+    path('applications/', user_passes_test(is_super)(oauth2_views.ApplicationList.as_view()), name="list"),
+    path('applications/register/', user_passes_test(is_super)(oauth2_views.ApplicationRegistration.as_view()), name="register"),
+    path('applications/<pk>/', user_passes_test(is_super)(oauth2_views.ApplicationDetail.as_view()), name="detail"),
+    path('applications/<pk>/delete/', user_passes_test(is_super)(oauth2_views.ApplicationDelete.as_view()), name="delete"),
+    path('applications/<pk>/update/', user_passes_test(is_super)(oauth2_views.ApplicationUpdate.as_view()), name="update"),
+]
+oauth2_endpoint_views += [
+    path('authorized-tokens/', user_passes_test(is_super)(oauth2_views.AuthorizedTokensListView.as_view()), name="authorized-token-list"),
+    path('authorized-tokens/<pk>/delete/', user_passes_test(is_super)(oauth2_views.AuthorizedTokenDeleteView.as_view()),
+        name="authorized-token-delete"),
+]
+
+oauth2_patterns = (oauth2_endpoint_views, "oauth2_provider")
+
+urlpatterns += (
+    # OAuth 2 endpoints:
+    path("o/", include(oauth2_patterns)),
 )
