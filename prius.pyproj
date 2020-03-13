@@ -39,6 +39,9 @@
     <Compile Include="app\config.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="app\rest.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="app\signals.py">
       <SubType>Code</SubType>
     </Compile>

@@ -12,6 +12,7 @@ from django.contrib.auth import views as auth_views
 
 import app.forms
 import app.views as views
+from app.rest import MyProposalList
 
 # Uncomment the next lines to enable the admin:
 from django.contrib import admin
@@ -163,3 +164,8 @@ urlpatterns += (
     # OAuth 2 endpoints:
     path("o/", include(oauth2_patterns)),
 )
+
+# REST API
+urlpatterns += [
+    path('rest/activeproposals/', MyProposalList.as_view()),
+]

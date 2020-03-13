@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'bootstrap4',
     'pinax.notifications',
     'oauth2_provider',
-    # 'rest_framework',
+    'rest_framework',
 ]
 SITE_ID = 1
 
@@ -148,4 +148,21 @@ BOOTSTRAP4 = {
     "css_url": STATIC_URL + "app/content/bootstrap.min.css",
     "javascript_url": STATIC_URL + "app/scripts/bootstrap.min.js",
     "success_css_class": "",
+}
+
+OAUTH2_PROVIDER = {
+    # parses OAuth2 data from application/json requests
+#    'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore',
+    # this is the list of available scopes
+    'SCOPES': {'read': 'Read scope', 'write': 'Write scope'}
+}
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    )
 }
