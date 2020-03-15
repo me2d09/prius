@@ -2,6 +2,7 @@
 {{ reason }}
 
 Instrument: {{exp.instrument}}
+Options: {{ exp.all_options }}
 Start: {{ exp.real_start }} (duration: {{ exp.duration }})
 User: {{ exp.responsible }} ({{ exp.responsible.email }})
 Description: {{ exp.description }}
