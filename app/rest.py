@@ -7,35 +7,45 @@ from rest_framework import generics, permissions, serializers
 from rest_framework.response import Response
 
 
-class WithEmailField(serializers.RelatedField):
-    def to_representation(self, value):
-        if len(value.all()) > 0:
-            first = value.all()[0]
-            return '%s <%s>' % (first.name, first.email)
-        return ''
-
-class ManyToString(serializers.RelatedField):
-    def to_representation(self, value):
-        if len(value.all()) > 0:
-            return ', '.join([v.name for v in value.all()])
-        return ''
-
-class NameForUser(serializers.RelatedField):
-    def to_representation(self, value):
-        if value.contact:
-            return value.contact.name
-        return value.name
-
-
 # first we define the serializers
 class ProposalSerializer(serializers.ModelSerializer):
-    local_contacts = WithEmailField(read_only=True)
-    coproposers = ManyToString(read_only=True)
-    proposer = NameForUser(read_only=True)
+    proposal = serializers.CharField(source='pid')
+    title = serializers.CharField(source='name')
+    users = serializers.SerializerMethodField()
+    localcontacts = serializers.SerializerMethodField()
 
     class Meta:
         model = Proposals
-        fields = ('pid', 'name', 'proposaltype', 'proposer', 'local_contacts', 'coproposers')
+        fields = ('proposal', 'title', 'users', 'localcontacts')
+
+    def get_users(self, obj):
+        userlist = [{ 'name': obj.proposer.contact.name,
+                      'email': obj.proposer.contact.email,
+                      'affiliation': str(obj.proposer.contact.affiliation),
+                   }]
+        for u in obj.coproposers.all():
+            userlist.append({
+                    'name': u.name,
+                    'email': u.email,
+                    'affiliation': str(u.affiliation),
+                })
+        if obj.supervisor:
+            userlist.append({
+                    'name': obj.supervisor.name,
+                    'email': obj.supervisor.email,
+                    'affiliation': str(obj.supervisor.affiliation),
+                })
+        return userlist
+
+    def get_localcontacts(self, obj):
+        lclist = []
+        for u in obj.local_contacts.all():
+            lclist.append({
+                    'name': u.name,
+                    'email': u.email,
+                    'affiliation': str(u.affiliation),
+                })
+        return lclist
 
 
 # API views:
