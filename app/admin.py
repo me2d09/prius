@@ -16,7 +16,6 @@ admin.site.register(Status, StatusAdmin)
 
 
 class ProposalsAdminForm(forms.ModelForm):
-
     class Meta:
         model = Proposals
         fields = '__all__'
@@ -24,7 +23,7 @@ class ProposalsAdminForm(forms.ModelForm):
 
 class ProposalsAdmin(admin.ModelAdmin):
     form = ProposalsAdminForm
-    list_display = ['pid', 'slug', 'created', 'proposer', 'last_updated', 'name', 'abstract', 'scientific_bg', 'student', 'supervisor']
+    list_display = ['pid', 'slug', 'created', 'proposer', 'last_updated', 'name', 'scientific_bg', 'student', 'supervisor', 'review_process']
     readonly_fields = ['slug', 'created', 'last_updated']
 
 admin.site.register(Proposals, ProposalsAdmin)

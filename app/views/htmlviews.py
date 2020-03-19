@@ -101,6 +101,8 @@ def home(request):
             'proposals_localcontact': Proposals.objects.filter(local_contacts__uid__exact=request.user, last_status='T').count(),
             'proposals_panel': Proposals.objects.filter(last_status='W').count(),
             'proposals_my_panel': Proposals.objects.filter(reporter__uid=request.user, last_status='R').count(),
+            'proposals_my_board': Proposals.objects.filter(reporter__uid=request.user, last_status='B').count(),
+            'proposals_board': Proposals.objects.filter(last_status='B').count(),
             'report_missing': Report.objects.filter((Q(pdf__isnull=True) | Q(pdf__exact='')) & Q(proposal__proposer=request.user)).distinct().count(),
         }
     )
@@ -363,7 +365,9 @@ class ProposalsListView(LoginRequiredMixin, SingleTableMixin, FilterView):
             #check permissions
             if not self.request.user.has_perm('app.view_proposals'):
                 if self.request.user.has_perm('app.view_panel_proposals'):
-                    queryset = queryset.exclude(last_status__in='P').exclude(proposaltype='T')
+                    queryset = queryset.exclude(last_status__in='PSU').exclude(proposaltype='T').exclude(review_process='B')
+                elif self.request.user.has_perm('app.view_board_proposals'):
+                    queryset = queryset.exclude(last_status__in='PSU').exclude(proposaltype='T').exclude(review_process='P')
                 else:
                     queryset = queryset.filter(Q(proposer=self.request.user) | 
                                        Q(coproposers__uid__exact=self.request.user) | 

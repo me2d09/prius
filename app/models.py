@@ -29,11 +29,14 @@ class Status(models.Model):
         ('P', 'in preparation'),  # user can edit proposal
         ('S', 'submitted'),       # action by user - locked and waiting for action by UO
         ('U', 'user office checking'),  # accepted by UO, checking all documents, lenght, fast process  
-        ('T', 'in technical review'),  # 
+        ('T', 'technical check'),  # for normal proposals
+        ('E', 'technical check'),  # for grant proposals
+        ('B', 'board review'),  # review for already reviewed proposals
         ('W', 'waiting for panel'),
         ('R', 'in panel review'),
         ('D', 'by director'),
         ('A', 'accepted'), # 
+        ('H', 'on hold'), # cannot measure - temporary stopped
         ('F', 'finished'), # done by user, lc, or uo - cannot plan new measurement anymore
         ('X', 'rejected'), # cannot plan measurement
         )
@@ -50,20 +53,31 @@ class Status(models.Model):
     def getActionFromStatus(status):
         if status == 'TT': return 'technical review'
         if status == 'P': return 'created'
-        if status == 'PR': return 'returned by panel'
-        if status == 'XR': return 'rejected by panel'
-        if status == 'XD': return 'rejected by director'
         if status == 'PU': return 'returned by user office'
+        if status in ['PT', 'PE']: return 'returned by local contact'
+        if status == 'PB': return 'returned by board'
+        if status == 'PR': return 'returned by panel'
+        if status == 'PD': return 'returned by director'
+        
+        if status in ['DT', 'DE']: return 'technical check'
+        if status in ['TT', 'EE']: return 'partial technical check'
+        if status == 'DB': return 'board decision'
+        if status == 'DR': return 'panel decision'
+
+        if status == 'FH': return 'finished by director'
     
         return {
             'P': 'preparation',
             'S': 'submitted',
             'U': 'useroffice takeover',
             'T': 'checked by useroffice',
-            'W': 'technical review',
+            'E': 'checked by useroffice',
+            'B': 'technical check',
+            'W': 'technical check',
             'R': 'start review',
-            'D': 'panel acceptance',
+            'D': 'to director',
             'A': 'director approval',
+            'H': 'on hold',
             'F': 'finished',
             'X': 'rejected',
         }[status[0]]
@@ -109,6 +123,11 @@ class Proposals(models.Model):
         ('P', 'proof of concept'),
         ('T', 'test'),
         )
+    REVIEW_TYPE = (
+        ('P', 'panel'),  # external panel 
+        ('B', 'board'),  # internal board
+        ('N', 'none'),   # no review
+        )
     # Fields
     slug = extension_fields.AutoSlugField(populate_from='name', blank=True, null=True)
     pid = CharField(max_length = 8, editable = False, default = None, null=True)
@@ -122,6 +141,7 @@ class Proposals(models.Model):
     student = BooleanField(default = False)
     thesis_topic = CharField(max_length=1000, blank=True, null=True)
     grants = CharField(max_length=1000, blank=True, null=True)
+    review_process = CharField(max_length=1, choices = REVIEW_TYPE, default='N', editable=False)
 
     # Relationship Fields
     proposer =  models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT)
@@ -132,6 +152,7 @@ class Proposals(models.Model):
     coproposers = models.ManyToManyField('app.Contacts',  related_name='proposal_coporposals', blank=True)
     publications = models.ManyToManyField('app.Publications', blank=True)
     
+
     @property
     def local_contacts_short(self):
         if self.local_contacts.count() > 1:
@@ -166,13 +187,28 @@ class Proposals(models.Model):
             self.pid = "%s%03d" % (start, maxpid + 1)
         old_prop = Proposals.objects.filter(pk=self.pk).first()
         super(Proposals, self).save(*args, **kwargs)
+
         #create a line in statuses table, if added
         if adding: 
             Status.objects.create(status="P", proposal=self, user=self.proposer)
+
+        # check review type
+        self.review_process = 'N'
+        if self.proposaltype in 'SL': #only long/short term proposals are reviewed
+            statusset = self.status_set.filter(status__in = 'TE').order_by('-date')
+            if len(statusset) > 0:
+                last_check = statusset[0]
+                if last_check.status == 'T':
+                    self.review_process = 'P'
+                elif last_check.status == 'E':
+                    self.review_process = 'B'
+                else:
+                    raise Exception('Invalid value of last check.')
+
         # send emails
         if old_prop and old_prop.last_status != self.last_status:
             s = old_prop.last_status + self.last_status
-            if s in ["DA", "RP", "UP", "DX", "RX"]: #important change
+            if s in ["DA", "DX", "DP", "RP", "BP", "TP", "EP", "UP"]: #important change - accepted, returned or rejected
                 # send email to all coproposers
                 coprop = [x.uid for x in self.coproposers.select_related("uid").all() if x.uid is not None]
                 if self.supervisor and self.supervisor.uid:
@@ -188,12 +224,15 @@ class Proposals(models.Model):
                             'l_accepted', extra_context = { 'proposal': self})
                 notify_send(User.objects.filter(groups__name='admins'), 
                             'a_accepted', extra_context = { 'proposal': self})
-            elif s == "UT":
+            elif s == "UT" or s == "UE":
                 notify_send([x.uid for x in self.local_contacts.select_related("uid").all() if x.uid is not None], 
                             'L_request_technical', extra_context = { 'proposal': self})
             elif s == "TW":
                 notify_send(User.objects.filter(groups__name='panelhead'), 
                             'H_new_proposal', extra_context = { 'proposal': self})
+            elif s == "EB":
+                notify_send(User.objects.filter(groups__name='board'), 
+                            'B_new_proposal', extra_context = { 'proposal': self})
             elif s == "WR":
                 notify_send([self.reporter.uid], 
                             'P_request_review', extra_context = { 'proposal': self})
@@ -227,7 +266,9 @@ class Proposals(models.Model):
             ("approve_technical", "Can submit technical comments"),
             ("takeover_panel", "Can assign a reviewer and submit any review"),
             ("approve_panel", "Can submit panel decision"),
+            ("approve_board", "Can submit board decision"),
             ("view_panel_proposals", "Can view panel related proposals"),
+            ("view_board_proposals", "Can view board related proposals"),
             ("approve_director", "Can submit director approval"),
             ("finish_proposal", "Can finish approved proposal"),
         )
@@ -245,14 +286,20 @@ class Proposals(models.Model):
     def __str__(self):
         return '%s %s' % (self.pid, self.name)
 
+def default_report_time():
+    return datetime.now() + timedelta(days=60)
+
+def current_year():
+    return datetime.now().year
+
 class Report(models.Model):
 
     # Fields
     created = DateTimeField(auto_now_add=True, editable=False)
     last_updated = DateTimeField(auto_now=True, editable=False)
     pdf = FileField(upload_to="userpdf", blank=True, null=True, validators=[FileExtensionValidator(allowed_extensions=['pdf']),validate_pdf_lenth])
-    year = PositiveIntegerField(default = datetime.now().year)
-    deadline = DateTimeField(default = datetime.now() + timedelta(days=60))
+    year = PositiveIntegerField(default = current_year)
+    deadline = DateTimeField(default = default_report_time)
 
     # Relationship Fields
     proposal = models.ForeignKey('app.Proposals', on_delete=models.PROTECT, blank=True,null=True )

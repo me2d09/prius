@@ -30,7 +30,7 @@ class ProposalTable(tables.Table):
         super().__init__(*args, **kwargs)
 
     def before_render(self, request):
-        if request.user.has_perm('app.approve_panel'):
+        if request.user.has_perm('app.approve_panel') or request.user.has_perm('app.approve_board'):
             self.columns.show('reporter')
         else:
             self.columns.hide('reporter')
@@ -55,10 +55,15 @@ def localcontacts(request):
     return qs
 
 def reporters(request):
+    qs = Contacts.objects.none()
     if request is None or not request.user.is_authenticated:
-        return Contacts.objects.none()
-
-    qs = Contacts.objects.filter(uid__in = User.objects.filter(groups__name__in=['panel']))
+        return qs
+    if request.user.has_perm('app.approve_panel') or request.user.has_perm('app.approve_board'):
+        qs = Contacts.objects.filter(uid__in = User.objects.filter(groups__name__in=['panel', 'board']))
+    elif request.user.has_perm('app.approve_panel'): 
+        qs = Contacts.objects.filter(uid__in = User.objects.filter(groups__name__in=['panel']))
+    elif request.user.has_perm('app.approve_board'):
+        qs = Contacts.objects.filter(uid__in = User.objects.filter(groups__name__in=['board']))
     return qs
 
 class ProposalFilter(django_filters.FilterSet):

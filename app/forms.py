@@ -94,24 +94,63 @@ class StatusForm(forms.ModelForm):
             if prop.last_status == 'A': allowed.append('F')  # will be finished
         if self.user.has_perm('app.change_status'):
             showRemark = showHidden = True
-            if prop.last_status == 'S': allowed.append('U')  # will be waiting for panel
-            if prop.last_status == 'U': allowed.append('P')  # will be returned
-            if prop.last_status == 'U': allowed.append('T')  # will be waiting for local contact
+            if prop.last_status == 'S': allowed.append('U')  # takeover
+            if prop.last_status == 'A': allowed.append('F')  # finish accepted
+            if prop.last_status in 'UTEBWRD': allowed.append('P')  # will be returned
+            if prop.last_status == 'U':
+                allowed.append('T')  # will be waiting for local contact
+                allowed.append('E')  # will be waiting for local contact - board
+                self.fields['reporter'] = forms.ModelChoiceField(queryset=Contacts.objects.filter(uid__groups__name="board"), required=False)
             #if prop.last_status == 'T': allowed.append('P')  # go back to preparation
             if prop.last_status == 'T': 
                 if prop.proposaltype == 'P':
                     allowed.append('D')  # will be waiting for director
                 else:
                     allowed.append('W')  # will be waiting for panel
-            if prop.last_status == 'W': allowed.append('R')  # will be in panel
-            if prop.last_status == 'A': allowed.append('F')  # will be finished
-        if self.user.has_perm('app.approve_technical') and self.user.contact in prop.local_contacts.all(): 
-            if prop.last_status == 'T': 
-                allowed.append('T')  # stay in technical review
+            if prop.last_status == 'E': 
                 if prop.proposaltype == 'P':
                     allowed.append('D')  # will be waiting for director
                 else:
-                    allowed.append('W')  # will be waiting for panel
+                    allowed.append('B')  # will be waiting for panel
+            if prop.last_status == 'W': allowed.append('R')  # will be in panel
+            if prop.last_status == 'A': allowed.append('F')  # will be finished
+        if self.user.has_perm('app.approve_technical') and self.user.contact in prop.local_contacts.all(): 
+            if prop.last_status == 'A': allowed.append('F')  # finish accepted
+            if prop.last_status in 'TE': 
+                allowed.append('P')  # will be returned
+                if prop.proposaltype == 'P':
+                    allowed.append('D')  # will be waiting for director
+                    self.info = """This is PROOF-OF-CONCEPT proposal. It will go directly to the director after your review.
+                    Please, fill-in comments if it is elligible for proof-of-concept proposal (short test measurement, clarify potential technical issues) to the 'Technical Check' field, user will not see this - only director. So state clearly if you recommend to accept it, best is to write "ACCEPT/REJECT" at the end.
+Also, you can optionally write some comments to the "Remarks to user" 
+section and user will see it (e.g. to improve next proposals). Proposal will go immediately to director after pressing Submit.
+If there is something important missing, you can return it to the user. Then select new status "in preparation" and write remarks to the user.
+"""
+                else:
+                    if prop.last_status == 'E': 
+                        allowed.append('E')  # stay in technical review
+                        allowed.append('B')  # will be waiting for board
+                    else:
+                        allowed.append('T')  # stay in technical review
+                        allowed.append('W')  # will be waiting for panel
+                    self.info = """Please, fill-in comments (about the feasibility of given proposal from the point of view of instrumentation, technology and expertise of the
+team) for the panel/board to the 'Technical Check' field, user will not see this.
+Also, you can optionally write some comments to the "Remarks to user" 
+section and user (and panel) will see it (e.g. to improve next proposals). Proposal will go immediately for the review after pressing Submit.
+If there is something important missing, you can return it to the user. Then select new status "in preparation" and write remarks to the user.
+If you are not able to review whole proposal, you can keep proposal in technical check (new status "technical check") and just submit your comments. Proposal will stay in review and another local contact needs to finish it. Clarify that with another local contact!
+"""
+                showRemark = showHidden = True
+                self.fields["hiddenremark"].label = "Technical Check (user won't see)"
+        if self.user.has_perm('app.approve_board') and prop.last_status == 'B': 
+                allowed.append('D')     # will be in panel
+                allowed.append('P')      # will be in preparation
+                showRemark = showHidden = False
+                self.info = """Please, fill-in board report and write your decision at the end! You can recommend acceptance/rejection of proposal (new status "by director"), 
+                or you can return it to user (status "in preparation").
+The board report has two parts - visible and hidden to the user."""
+                self.fields["remark"].label = "Board report (user will see)"
+                self.fields["hiddenremark"].label = "Hidden board report (user won't see)"
                 showRemark = showHidden = True
         if self.user.has_perm('app.takeover_panel') and prop.last_status == 'W': 
                 allowed.append('R')     # will be in panel
@@ -119,10 +158,9 @@ class StatusForm(forms.ModelForm):
         if  self.user.has_perm('app.takeover_panel') or (self.user.has_perm('app.approve_panel') and prop.reporter.uid == self.user): 
             if prop.last_status == 'R':
                 allowed.append('D')      # will be by director
-                allowed.append('X')      # will be rejected permanently
                 allowed.append('P')      # will be in preparation
-                self.info = """Please, fill-in panel report and select your decision. You can accept proposal (new status "by director"), 
-                return it to user (status "in preparation") or you can completelly reject it (status "rejected").
+                self.info = """Please, fill-in panel report and write your decision at the end! You can recommend acceptance/rejection of proposal (new status "by director"), 
+                or you can return it to user (status "in preparation").
 The panel report has two parts - visible and hidden to the user."""
                 self.fields["remark"].label = "Panel report (user will see)"
                 self.fields["hiddenremark"].label = "Hidden panel report (user won't see)"
@@ -131,14 +169,27 @@ The panel report has two parts - visible and hidden to the user."""
             if prop.last_status == 'D': 
                 allowed.append('A')   # will be accepted
                 allowed.append('X')   # will be rejected permanently
+                allowed.append('P')      # will be in preparation
                 self.info = "This is the last step in proposal evaluation. It is possible (but not needed) to fill-in remark (visible to user) and optionaly hidden remark (for internal purposes)."
-                showRemark = showHidden = True
+            if prop.last_status == 'A': 
+                allowed.append('H')   # will be accepted
+                allowed.append('F')   # will be finished
+            if prop.last_status == 'H': 
+                allowed.append('A')   # will be accepted
+                allowed.append('F')   # will be finished
+            showRemark = showHidden = True
         if self.user.has_perm('app.finish_proposal'): 
             if prop.last_status == 'A': 
                 allowed.append('F')  # will be finished
                 showRemark = True
 
-        self.fields["status"].choices = [c for c in self.fields["status"].choices if c[0] in allowed]
+        def fixStatus(c):
+            if 'T' in allowed and 'E' in allowed:
+                if c[0] == 'T': return (c[0], c[1] + " (to panel)")
+                if c[0] == 'E': return (c[0], c[1] + " (to board)")
+            return c
+        self.fields["status"].choices = [fixStatus(c) for c in self.fields["status"].choices if c[0] in allowed]
+
         c = self.fields["status"].choices
         self.ConfirmText = "Confirm"
         if len(c) == 0: raise Http404
@@ -150,14 +201,6 @@ The panel report has two parts - visible and hidden to the user."""
                 self.ConfirmText = "Finish proposal"
                 self.info = "Do you really want to finish this proposal? It will be archived and you will not be able to book measurements for it anymore."
             if c[0][0] == "U": self.ConfirmText = "Takeover proposal"
-            if c[0][0] == "W": 
-                self.ConfirmText = "Submit technical remarks"
-                self.fields["hiddenremark"].label = "Technical Review (user won't see)"
-                self.info = """Please, fill-in comments (about the feasibility of given proposal from the point of view of instrumentation, technology and expertise of the
-team) for the panel to the 'Technical Review' field, user will not see this.
-Also, you can optionally write some comments to the "Remarks to user" 
-section and user (and panel) will see it (e.g. to improve next proposals). Proposal will go immediately for the review to the Panel after pressing Submit.
-"""
             if c[0][0] == "R": 
                 self.ConfirmText = "Takeover proposal"
                 self.fields['reporter'] = forms.ModelChoiceField(queryset=Contacts.objects.filter(uid__groups__name="panel"))

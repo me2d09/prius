@@ -11,6 +11,7 @@ def get_full_group(short):
     elif short == "D": return "director"
     elif short == "U": return "useroffice"
     elif short == "A": return "admins"
+    elif short == "B": return "board"
     else: return short
 
 

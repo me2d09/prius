@@ -52,23 +52,37 @@
         Proposal is finished, time to publish your research!
     {% elif object.last_status == "X" %}
         Proposal is rejected, sorry.
+    {% elif object.last_status == "H" %}
+        Proposal is on hold - you cannot currently measure. See status history for reasons and contact user office in case of questions.
     {% endif %}
 </p>
             <a class="btn btn-info" target="_blank" href="/proposal_pdf/{{object.pid}}/">PDF</a> 
     {% if perms.app.approve_director and object.last_status == "D" %}
-            <a class="btn btn-primary" href="/proposals/changestatus/{{object.slug}}/A/">Approve Proposal</a>
+            <a class="btn btn-primary" href="/proposals/changestatus/{{object.slug}}/A/">Accept Proposal</a>
             <a class="btn btn-danger" href="/proposals/changestatus/{{object.slug}}/X/">Reject Proposal</a>
+    {% endif %}
+    {% if perms.app.approve_director and object.last_status == "A" %}
+            <a class="btn btn-danger" href="/proposals/changestatus/{{object.slug}}/H/">Suspend Proposal</a>
+    {% endif %}
+    {% if perms.app.approve_director and object.last_status == "H" %}
+            <a class="btn btn-primary" href="/proposals/changestatus/{{object.slug}}/A/">Resume Proposal</a>
+            <a class="btn btn-danger" href="/proposals/changestatus/{{object.slug}}/F/">Finish Proposal</a>
     {% endif %}
     {% if perms.app.change_status and object.last_status == "S" %}
             <a class="btn btn-primary" href="/proposals/changestatus/{{object.slug}}/U/">Takeover Proposal</a>
     {% endif %}
     {% if perms.app.change_status and object.last_status == "U" %}
-            <a class="btn btn-primary" href="/proposals/changestatus/{{object.slug}}/T/">Pass to local contact</a>
+            <a class="btn btn-primary" href="/proposals/changestatus/{{object.slug}}/T/">Pass to local contact (panel review)</a>
+            <a class="btn btn-primary" href="/proposals/changestatus/{{object.slug}}/E/">Pass to local contact (board review)</a>
             <a class="btn btn-danger" href="/proposals/changestatus/{{object.slug}}/P/">Return to user</a>
     {% endif %}
-    {% if perms.app.approve_technical and object.last_status == "T" and user.contact in object.local_contacts.all %}
-            <a class="btn btn-primary" href="/proposals/changestatus/{{object.slug}}/W/">Submit technical comments</a>
+    {% if perms.app.approve_technical and object.last_status in "TE" and user.contact in object.local_contacts.all %}
+            <a class="btn btn-primary" href="/proposals/changestatus/{{object.slug}}/{% if object.last_status == 'T' %}W{% else %}B{% endif %}/">Submit technical comments</a>
             <a class="btn btn-secondary" href="{{object.get_update_url}}">Change local contact</a> 
+    {% endif %}
+    {% if perms.app.approve_board and object.last_status == "B" %}
+            <a class="btn btn-primary" href="/proposals/changestatus/{{object.slug}}/D/">Submit board report</a>
+            <a class="btn btn-secondary" href="/proposals/changestatus/{{object.slug}}/P/">Return proposal to user</a>
     {% endif %}
     {% if perms.app.takeover_panel and object.last_status == "W" %}
             <a class="btn btn-primary" href="/proposals/changestatus/{{object.slug}}/R/">Assign reporter</a>
@@ -76,7 +90,6 @@
     {% if perms.app.takeover_panel and object.last_status == "R" or perms.app.approve_panel and object.reporter.uid == user and object.last_status == "R" %}
             <a class="btn btn-primary" href="/proposals/changestatus/{{object.slug}}/D/">Submit panel report</a>
             <a class="btn btn-secondary" href="/proposals/changestatus/{{object.slug}}/P/">Return proposal to user</a>
-            <a class="btn btn-danger" href="/proposals/changestatus/{{object.slug}}/X/">Reject proposal</a>
     {% endif %}
     {% if object.proposer == user and object.last_status == "P" %}
        <a class="btn btn-secondary" href="{{object.get_update_url}}">Edit Proposal</a> 
@@ -87,14 +100,16 @@
        <a class="btn btn-secondary" href="{{object.get_update_url}}">Edit proposal type and/or local contact</a> 
     {% endif %}
     {% if object.proposer == user and object.last_status == "A" %}
-       <a class="btn btn-secondary" href="{{object.get_update_url}}">Edit experimental team</a> 
+       <a class="btn btn-secondary" href="{{object.get_update_url}}">Edit experimental team</a>
+       <a class="btn btn-danger" href="/proposals/changestatus/{{object.slug}}/F/">Finish proposal</a>
     {% endif %}
     {% if user.contact in object.local_contacts.all and object.last_status == "A" %}
        <a class="btn btn-secondary" href="{{object.get_update_url}}">Edit local contacts</a> 
+       <a class="btn btn-danger" href="/proposals/changestatus/{{object.slug}}/F/">Finish proposal</a>
     {% endif %}
-    {% if object.proposer == user and object.last_status in "AFX" %}
+    {% if object.proposer == user and object.last_status in "AFXH" %}
        <a class="btn btn-primary" href="{% url 'app_report_create' proposal_slug=object.slug %}">Create a new report</a> 
-    {% elif perms.app.change_status and object.last_status in "AFX" %}
+    {% elif perms.app.change_status and object.last_status in "AFXH" %}
        <a class="btn btn-primary" href="{% url 'app_report_create' proposal_slug=object.slug %}">Create a report request</a> 
     {% endif %}
     
