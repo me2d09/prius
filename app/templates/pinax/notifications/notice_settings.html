@@ -71,3 +71,12 @@
         {% endbuttons %}
     </form>
 {% endblock %}
+{% block scripts %}
+<script>
+    $('form').submit(function(e) {
+        $(':disabled').each(function(e) {
+            $(this).removeAttr('disabled');
+        })
+    });
+</script>
+{% endblock %}
