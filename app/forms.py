@@ -389,6 +389,16 @@ class UserForm(forms.ModelForm):
         model = User
         fields = ['username', 'email']
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_class = 'form-horizontal'
+        self.helper.form_method = 'post'
+        self.helper.field_class = 'col-sm-10'
+        self.helper.label_class = 'col-sm-2'        
+        self.helper.add_input(Submit('submit', 'Save'))
+
+
     def clean_email(self):
         email = self.cleaned_data.get('email')
         username = self.cleaned_data.get('username')

@@ -132,6 +132,7 @@
     <Content Include="app\templates\500.html" />
     <Content Include="app\templates\ajax\fulldays.html" />
     <Content Include="app\templates\ajax\events.html" />
+    <Content Include="app\templates\app\contacts_detail.html" />
     <Content Include="app\templates\booking\experiments_delete.html" />
     <Content Include="app\templates\booking\experiments_calendar.html" />
     <Content Include="app\templates\pinax\notifications\B_new_proposal\full.txt" />
