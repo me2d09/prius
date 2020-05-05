@@ -20,6 +20,7 @@ class ProposalTable(tables.Table):
     local_contacts_short = TruncatedTextColumn(verbose_name= 'Local contact', orderable = False)
     name = TruncatedTextColumn(linkify=True)
     proposaltype = tables.Column(verbose_name='Type')
+    supervisor = tables.Column(empty_values=[])
     proposer  = tables.LinkColumn('app_contacts_detail', args=[A('proposer.contact.pk')], text=lambda record: record.proposer.contact.name, order_by = A('proposer.contact.name'))
     pid = tables.Column(attrs={'td': {'class': 'font-weight-bold'}})
     pdf = tables.LinkColumn('proposal_pdf_detail_view', args=[A('pid')], text="PDF",  attrs={'a': {'target': '_blank'}}, orderable = False)
@@ -34,16 +35,20 @@ class ProposalTable(tables.Table):
             self.columns.show('reporter')
         else:
             self.columns.hide('reporter')
+        if request.user.has_perm('app.view_proposals'):  # typically user office
+            self.columns.show('grants')
+        else:
+            self.columns.hide('grants')
 
     def render_supervisor(self, record):
         if record.student:
-            return "? (%s)" % record.supervisor
-        return "?"
+            return "✓ (%s)" % record.supervisor
+        return "✗"
 
     class Meta:
         model = Proposals
         template_name = 'django_tables2/bootstrap4.html'
-        exclude = ('id', 'abstract', 'slug', 'student', 'scientific_bg', 'thesis_topic', 'grants') #, 'reporter') 
+        exclude = ('id', 'abstract', 'slug', 'student', 'scientific_bg', 'thesis_topic') #, 'reporter') 
         sequence = ('pid', 'name', 'pdf', '...')
         attrs  = { 'class': 'table table-striped table-sm table-hover'}
 
