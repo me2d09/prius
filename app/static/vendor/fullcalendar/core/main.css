@@ -18,8 +18,9 @@ body .fc {
 --------------------------------------------------------------------------------------------------*/
 .fc-highlight {
   /* when user is selecting cells */
-  background: #bce8f1;
-  opacity: .3; }
+  background: #c0f;
+  opacity: .3;
+}
 
 .fc-bgevent {
   /* default look for background events */

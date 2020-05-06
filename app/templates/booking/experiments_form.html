@@ -115,7 +115,7 @@
     } else {
         urlParams = new URLSearchParams();
     }
-    if (urlParams.get('instr')) {
+    if (urlParams.get('instr') && !$("#id_instrument").val()) {
         $("#id_instrument").val(urlParams.get('instr'));
         $("#id_instrument").change();
         $('#id_start').val(urlParams.get('start'));
