@@ -487,6 +487,8 @@ class ExperimentsForm(forms.ModelForm):
                                 input_formats=('%H:%M',), required=False)
     endtime = forms.TimeField(widget=forms.TimeInput(format = '%H:%M'), 
                                 input_formats=('%H:%M',), required=False)
+    testtime = forms.TimeField(widget=forms.TimeInput(format = '%H:%M'), 
+                                input_formats=('%H:%M',), required=True)
     shared_options = forms.ModelMultipleChoiceField(required=False, queryset=SharedOptions.objects.none())
     
     class Meta:
@@ -586,7 +588,7 @@ class ExperimentsForm(forms.ModelForm):
                 None, 'description', 'local_contact',
             ),
             Fieldset(
-                None, 'local_contact_fixed',
+                None, 'local_contact_fixed', 'testtime'
             ),
             DateRangeField('Date', 'start', 'end', 'starttime', 'endtime'),
             ButtonHolder(
@@ -608,10 +610,20 @@ class ExperimentsForm(forms.ModelForm):
         if not instrument.book_by_hour:
             end += timedelta(days=1)
         else:   #add time
-            start = datetime.combine(start, cleaned_data.get("starttime"))
-            end = datetime.combine(end, cleaned_data.get("endtime"))
-            cleaned_data['start'] = start
-            cleaned_data['end'] = end
+            
+            if (cleaned_data.get("starttime") and cleaned_data.get("endtime")):
+                start = datetime.combine(start, cleaned_data.get("starttime"))
+                end = datetime.combine(end, cleaned_data.get("endtime"))
+                cleaned_data['start'] = start
+                cleaned_data['end'] = end
+            else:
+                if not cleaned_data.get("starttime"):
+                    msg = forms.ValidationError("You selected instrument which is booked by time. Please specify the start time in the format hh:mm.")
+                    self.add_error('starttime', msg)
+                if not cleaned_data.get("endtime"):
+                    msg = forms.ValidationError("You selected instrument which is booked by time. Please specify the end time in the format hh:mm.")
+                    self.add_error('endtime', msg)
+
 
         for so in shared_options:
             colision = SharedOptionSlot.objects.filter(end__gt = start, start__lt = end, shared_option = so).count()
