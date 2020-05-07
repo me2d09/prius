@@ -1,10 +1,11 @@
 from django.contrib.auth.models import User
 from django.db.models import Q
 
-from app.models import Proposals
+from app.models import Proposals, Publication
 
 from rest_framework import generics, permissions, serializers
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
 
 
 # first we define the serializers
@@ -62,3 +63,20 @@ class MyProposalList(generics.ListCreateAPIView):
     
     #queryset = User.objects.all()
     #serializer_class = UserSerializer
+
+
+class PublicationSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Publication
+        fields = (
+            'created', 'last_updated', 'link', 
+            'name', 'journal', 'citations', 'issued',
+            'full_citation', 
+        )
+
+class PublicationsList(generics.ListAPIView):
+    authentication_classes = []
+    permission_classes = []
+    serializer_class = PublicationSerializer
+    queryset = Publication.objects.all()
