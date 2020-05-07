@@ -1,24 +1,20 @@
-{% extends "base.html" %}
+{% extends "form.html" %}
 {% load static %}
-{% block content %}
-<p><a class="btn btn-default" href="{% url 'app_publication_list' %}">Publications Listing</a></p>
-<table class="table">
-<tr>
-<td>ID</td><td>Link</td>
-    <td>created</td>
-    <td>last_updated</td>
-    <td>link</td>
-    <td>year</td>
-</tr>
-{% for object in object_list %}
-<tr>
-    <td>{{object.pk}}</td>
-    <td><a href="{{object.get_absolute_url}}">{{object}}</a></td>
-    <td>{{ object.created }}</td>
-    <td>{{ object.last_updated }}</td>
-    <td>{{ object.link }}</td>
-    <td>{{ object.year }}</td>
-</tr>
-{% endfor %}
-</table><a class="btn btn-primary" href="{% url 'app_publication_create' %}">Create new Publication</a>
+{% load django_tables2 %}
+{% load bootstrap4 %}
+{% block breadcrumbs %}
+    <li class="breadcrumb-item active">Publications</li>
+{% endblock %}
+{% block formcontent %}
+    <header> 
+    <h1 class="h3 display">All MGML publications</h1>
+    </header>
+    <div class="mb-3">
+        <form action="" method="get" class="form form-inline">
+            {% bootstrap_form filter.form layout='inline' %}
+            {% bootstrap_button 'filter' %}
+        </form>
+    </div>
+    {% render_table table %}
+    <a class="btn btn-primary" href="{% url 'app_publication_create' %}">Add Publication</a>
 {% endblock %}

@@ -91,6 +91,7 @@
     <Folder Include="app\templates\errors\" />
     <Folder Include="app\templates\booking\" />
     <Folder Include="app\templates\ajax\" />
+    <Folder Include="app\templates\admin\" />
     <Folder Include="app\templates\useroffice\" />
     <Folder Include="app\templates\pinax\" />
     <Folder Include="app\templates\pdf\" />
@@ -134,6 +135,7 @@
     <Content Include="app\static\pdfstyle.css" />
     <Content Include="app\templates\404.html" />
     <Content Include="app\templates\500.html" />
+    <Content Include="app\templates\admin\publication_list.html" />
     <Content Include="app\templates\ajax\fulldays.html" />
     <Content Include="app\templates\ajax\events.html" />
     <Content Include="app\templates\app\contacts_detail.html" />
