@@ -434,8 +434,6 @@ class ExperimentsForm(forms.ModelForm):
                                 input_formats=('%H:%M',), required=False)
     endtime = forms.TimeField(widget=forms.TimeInput(format = '%H:%M'), 
                                 input_formats=('%H:%M',), required=False)
-    testtime = forms.TimeField(widget=forms.TimeInput(format = '%H:%M'), 
-                                input_formats=('%H:%M',), required=True)
     shared_options = forms.ModelMultipleChoiceField(required=False, queryset=SharedOptions.objects.none())
     
     class Meta:
@@ -535,7 +533,7 @@ class ExperimentsForm(forms.ModelForm):
                 None, 'description', 'local_contact',
             ),
             Fieldset(
-                None, 'local_contact_fixed', 'testtime'
+                None, 'local_contact_fixed',
             ),
             DateRangeField('Date', 'start', 'end', 'starttime', 'endtime'),
             ButtonHolder(
