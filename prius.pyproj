@@ -67,6 +67,9 @@
     <Compile Include="app\views\bookingviews.py" />
     <Compile Include="app\views\pdfviews.py" />
     <Compile Include="app\views\htmlviews.py" />
+    <Compile Include="app\views\userofficeviews.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="app\views\__init__.py">
       <SubType>Code</SubType>
     </Compile>
@@ -88,6 +91,7 @@
     <Folder Include="app\templates\errors\" />
     <Folder Include="app\templates\booking\" />
     <Folder Include="app\templates\ajax\" />
+    <Folder Include="app\templates\useroffice\" />
     <Folder Include="app\templates\pinax\" />
     <Folder Include="app\templates\pdf\" />
     <Folder Include="app\templates\pinax\notifications\" />
@@ -188,9 +192,9 @@
     <Content Include="app\templates\proposal\detail.html" />
     <Content Include="app\templates\proposal\form.html" />
     <Content Include="app\templates\proposal\list.html" />
-    <Content Include="app\templates\app\publications_detail.html" />
-    <Content Include="app\templates\app\publications_form.html" />
-    <Content Include="app\templates\app\publications_list.html" />
+    <Content Include="app\templates\useroffice\publication_detail.html" />
+    <Content Include="app\templates\useroffice\publication_form.html" />
+    <Content Include="app\templates\useroffice\publication_list.html" />
     <Content Include="app\templates\app\samplephotos_detail.html" />
     <Content Include="app\templates\app\samplephotos_form.html" />
     <Content Include="app\templates\app\samplephotos_list.html" />

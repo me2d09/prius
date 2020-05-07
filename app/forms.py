@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from .models import Proposals, Instruments, Contacts, Affiliations, Countries, Options, SharedOptions
 from .models import Samples, SamplePhotos, SampleRemarks, SharedOptionSlot
-from .models import Publications, Experiments, Status, Report
+from .models import Publication, Experiments, Status, Report
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, HTML, Fieldset, Div, ButtonHolder, Field
 from dal import autocomplete
@@ -456,10 +456,10 @@ class SampleRemarksForm(forms.ModelForm):
         fields = ['remark', 'sample', 'creator']
 
 
-class PublicationsForm(forms.ModelForm):
+class PublicationForm(forms.ModelForm):
     class Meta:
-        model = Publications
-        fields = ['link', 'year', 'authors']
+        model = Publication
+        fields = ['link', 'issued', 'authors']
 
 
 class DateRangeField(Fieldset):

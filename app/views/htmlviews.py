@@ -18,9 +18,9 @@ from django.utils.encoding import force_bytes, force_text
 from datetime import datetime
 from django.views.generic import DetailView, ListView, UpdateView, CreateView, DeleteView
 from app.models import Proposals, Instruments, Contacts, Affiliations, Countries, Options, SharedOptions
-from app.models import Samples, SamplePhotos, SampleRemarks, Publications, Experiments, Status, Report
+from app.models import Samples, SamplePhotos, SampleRemarks, Publication, Experiments, Status, Report
 from app.forms import ProposalsForm, InstrumentsForm, ContactsForm, StatusForm, SamplesForm, ReportForm
-from app.forms import SamplePhotosForm, SampleRemarksForm, PublicationsForm, ExperimentsForm, SignupForm, ProfileForm, UserForm
+from app.forms import SamplePhotosForm, SampleRemarksForm, PublicationForm, ExperimentsForm, SignupForm, ProfileForm, UserForm
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.mail import EmailMessage
 from django.db.models import Q
@@ -642,22 +642,4 @@ class SampleRemarksDetailView(DetailView):
 class SampleRemarksUpdateView(UpdateView):
     model = SampleRemarks
     form_class = SampleRemarksForm
-
-
-class PublicationsListView(ListView):
-    model = Publications
-
-
-class PublicationsCreateView(CreateView):
-    model = Publications
-    form_class = PublicationsForm
-
-
-class PublicationsDetailView(DetailView):
-    model = Publications
-
-
-class PublicationsUpdateView(UpdateView):
-    model = Publications
-    form_class = PublicationsForm
 

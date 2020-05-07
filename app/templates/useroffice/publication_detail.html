@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-<p><a class="btn btn-default" href="{% url 'app_publications_list' %}">Publications Listing</a></p>
+<p><a class="btn btn-default" href="{% url 'app_publication_list' %}">Publications Listing</a></p>
 <table class="table">
 <tr><td>created</td><td>{{ object.created }}</td></tr>
 <tr><td>last_updated</td><td>{{ object.last_updated }}</td></tr>
 <tr><td>link</td><td>{{ object.link }}</td></tr>
 <tr><td>year</td><td>{{ object.year }}</td></tr>
 </table>
-<a class="btn btn-primary" href="{{object.get_update_url}}">Edit Publications</a>
+<a class="btn btn-primary" href="{{object.get_update_url}}">Edit Publication</a>
 
 {% endblock %}

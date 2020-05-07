@@ -142,10 +142,10 @@ class SampleRemarksSerializer(serializers.ModelSerializer):
         )
 
 
-class PublicationsSerializer(serializers.ModelSerializer):
+class PublicationSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = models.Publications
+        model = models.Publication
         fields = (
             'pk', 
             'created', 

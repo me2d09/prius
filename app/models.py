@@ -150,7 +150,7 @@ class Proposals(models.Model):
     reporter = models.ForeignKey('app.Contacts', related_name='proposal_reporter', on_delete=models.PROTECT, blank=True, null = True)
     supervisor = models.ForeignKey('app.Contacts', related_name='proposal_supervisor', on_delete=models.PROTECT, blank=True, null = True)
     coproposers = models.ManyToManyField('app.Contacts',  related_name='proposal_coporposals', blank=True)
-    publications = models.ManyToManyField('app.Publications', blank=True)
+    publications = models.ManyToManyField('app.Publication', blank=True)
     
 
     @property
@@ -810,16 +810,20 @@ class SampleRemarks(models.Model):
         return reverse('app_sampleremarks_update', args=(self.pk,))
 
 
-class Publications(models.Model):
+class Publication(models.Model):
 
     # Fields
     created = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
-    link = models.CharField(max_length=255)
-    year = models.PositiveSmallIntegerField(db_index=True)
+    link = models.URLField(max_length=300, blank=True, null=True)
+    name = models.CharField(max_length=1000, blank=True, null=True)
+    journal = models.CharField(db_index=True, max_length=255, blank=True, null=True)
+    citations = models.IntegerField(blank=True, null=True)
+    issued = models.DateField(db_index=True, blank=True, null=True)
+    full_citation = models.CharField(max_length=2000, blank=True, null=True)
 
     # Relationship Fields
-    authors = models.ManyToManyField('app.Contacts', )
+    authors = models.ManyToManyField('app.Contacts', blank=True)
 
     class Meta:
         ordering = ('-created',)
@@ -828,9 +832,9 @@ class Publications(models.Model):
         return u'%s' % self.pk
 
     def get_absolute_url(self):
-        return reverse('app_publications_detail', args=(self.pk,))
+        return reverse('app_publication_detail', args=(self.pk,))
 
 
     def get_update_url(self):
-        return reverse('app_publications_update', args=(self.pk,))
+        return reverse('app_publication_update', args=(self.pk,))
 

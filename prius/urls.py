@@ -111,6 +111,14 @@ urlpatterns += (
     url(r"^notifications/", include("pinax.notifications.urls", namespace="pinax_notifications")),
 )
 
+urlpatterns += (
+    # urls for Publications
+    path('publications/', views.PublicationListView.as_view(), name='app_publication_list'),
+    path('publications/create/', views.PublicationCreateView.as_view(), name='app_publication_create'),
+    path('publications/detail/(<pk>/', views.PublicationDetailView.as_view(), name='app_publication_detail'),
+    path('publications/update/(<pk>/', views.PublicationUpdateView.as_view(), name='app_publication_update'),
+)
+
 
 urlpatterns += (
     # urls for Experiments

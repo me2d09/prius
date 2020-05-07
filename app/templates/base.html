@@ -84,6 +84,8 @@
             <li><a href="/contacts/create/"> <i class="icon-form"></i>Invite User</a></li>{% endif %}
             {% if perms.app.view_contacts %}
             <li><a href="/contacts/"> <i class="icon-form"></i>User list</a></li>{% endif %}
+            {% if perms.app.view_publication %}
+            <li><a href="/publications/"> <i class="icon-list"></i>Publications</a></li>{% endif %}
           </ul>
         </div>
         {% if request.user.is_staff %}

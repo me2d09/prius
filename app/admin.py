@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django import forms
-from .models import Proposals, Instruments, Contacts, Affiliations, Countries,  Options, SharedOptions, Samples, SamplePhotos, SampleRemarks, Publications, Experiments, Status, InstrumentGroup, SharedOptionSlot, Report
+from .models import Proposals, Instruments, Contacts, Affiliations, Countries,  Options, SharedOptions, Samples, SamplePhotos, SampleRemarks, Publication, Experiments, Status, InstrumentGroup, SharedOptionSlot, Report
 
 class StatusAdminForm(forms.ModelForm):
     class Meta:
@@ -196,19 +196,19 @@ class SampleRemarksAdmin(admin.ModelAdmin):
 admin.site.register(SampleRemarks, SampleRemarksAdmin)
 
 
-class PublicationsAdminForm(forms.ModelForm):
+class PublicationAdminForm(forms.ModelForm):
 
     class Meta:
-        model = Publications
+        model = Publication
         fields = '__all__'
 
 
-class PublicationsAdmin(admin.ModelAdmin):
-    form = PublicationsAdminForm
-    list_display = ['created', 'last_updated', 'link', 'year']
-    readonly_fields = ['created', 'last_updated', 'link', 'year']
+class PublicationAdmin(admin.ModelAdmin):
+    form = PublicationAdminForm
+    list_display = ['created', 'last_updated', 'link', 'issued', 'journal']
+    readonly_fields = ['created', 'last_updated']
 
-admin.site.register(Publications, PublicationsAdmin)
+admin.site.register(Publication, PublicationAdmin)
 
 
 class ExperimentsAdminForm(forms.ModelForm):
