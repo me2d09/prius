@@ -66,12 +66,18 @@ class MyProposalList(generics.ListCreateAPIView):
 
 
 class PublicationSerializer(serializers.ModelSerializer):
+    year = serializers.SerializerMethodField()
+
+    def get_year(self, obj):
+        if obj.issued:
+            return int(obj.issued.year)
+        return None
 
     class Meta:
         model = Publication
         fields = (
             'created', 'last_updated', 'link', 
-            'name', 'journal', 'citations', 'issued',
+            'name', 'journal', 'citations', 'year', 'issued',
             'full_citation', 
         )
 
