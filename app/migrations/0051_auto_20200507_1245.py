@@ -28,12 +28,12 @@ class Migration(migrations.Migration):
                 'ordering': ('-created',),
             },
         ),
-        migrations.DeleteModel(
-            name='Publications',
-        ),
         migrations.AlterField(
             model_name='proposals',
             name='publications',
             field=models.ManyToManyField(blank=True, to='app.Publication'),
+        ),
+        migrations.DeleteModel(
+            name='Publications',
         ),
     ]

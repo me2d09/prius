@@ -2,6 +2,7 @@ from django.contrib import admin
 from django import forms
 from django.forms import CharField
 from django.conf.urls import url
+from django.utils.html import strip_tags
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 from .models import Proposals, Instruments, Contacts, Affiliations, Countries,  Options, SharedOptions, Samples, SamplePhotos, SampleRemarks, Publication, Experiments, Status, InstrumentGroup, SharedOptionSlot, Report
@@ -213,19 +214,19 @@ def reload_from_doi(modeladmin, request, queryset):
             if 'is-referenced-by-count' in data:
                 p.citations = data['is-referenced-by-count']
             if 'container-title' in data:
-                p.journal = data['container-title']
+                p.journal = strip_tags(data['container-title'])
             if 'issued' in data:
                 dateparts = data['issued']['date-parts'][0]
                 if len(dateparts) < 3:
                     dateparts = dateparts + (3-len(dateparts)) * [1]
                 p.issued = datetime.datetime(*dateparts[:3])
             if 'title' in data:
-                p.name = data['title']
+                p.name = strip_tags(data['title'])
 
         data = requests.get(p.link, headers = headersaps)
         data.encoding = 'utf-8'
         if data.ok and len(data.content) > 4:
-            p.full_citation = data.text[4:].strip()
+            p.full_citation = strip_tags(data.text[4:].strip())
         p.save()
 reload_from_doi.short_description = "Reload selected publications from doi.org"
 
@@ -255,7 +256,7 @@ class PublicationAdmin(admin.ModelAdmin):
         links = request.POST.get("links", "")
         items = [x for x in links.split('\n') if x and not x.isspace()]
         for item in items:
-            Publication.objects.create(link=item)
+            Publication.objects.create(link=item.strip())
 
         url = reverse('admin:app_publication_changelist')
         return  HttpResponseRedirect(url)
