@@ -25,6 +25,7 @@
 </div>
 {% endblock %}
 {% block scripts %}
+    {{ form.media }}
     <script>
     function toggleDivs() {
         $("#div_id_supervisor").toggle(500);
