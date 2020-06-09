@@ -838,3 +838,49 @@ class Publication(models.Model):
     def get_update_url(self):
         return reverse('app_publication_update', args=(self.pk,))
 
+
+class Log(models.Model):
+
+    # Fields
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
+    start = models.DateTimeField()
+    end = models.DateTimeField()
+    duration = models.DurationField(editable=False)
+
+    # Relationship Fields
+    proposal = models.ForeignKey('app.Proposals', on_delete=models.PROTECT)
+    creator = models.ForeignKey('app.Contacts', on_delete=models.PROTECT)
+    localcontact = models.ForeignKey('app.Contacts', on_delete=models.PROTECT, related_name='log_as_lc')
+    instrument = models.ForeignKey('app.Instruments', on_delete=models.PROTECT)
+
+    resources = models.ManyToManyField('app.Resource', blank=True, through='Usage')
+
+    class Meta:
+        ordering = ('-created',)
+
+    def __str__(self):
+        return f'{self.instrument} ({self.proposal.pid}, {self.end})'
+
+    def save(self, *args, **kwargs):
+        # calculate duration
+        self.duration = self.end - self.start
+        super().save(*args, **kwargs)
+
+class Usage(models.Model):
+    amount = models.IntegerField()
+    resource = models.ForeignKey('app.Resource', on_delete=models.PROTECT)
+    log = models.ForeignKey('app.Log', on_delete=models.PROTECT)
+
+
+class Resource(models.Model):
+    name = models.CharField(max_length=300)
+    unit = models.CharField(max_length=300)
+
+    class Meta:
+        ordering = ('name',)
+
+    def __str__(self):
+        return self.name
+
+

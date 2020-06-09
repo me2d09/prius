@@ -5,7 +5,7 @@ from django.conf.urls import url
 from django.utils.html import strip_tags
 from django.urls import reverse
 from django.http import HttpResponseRedirect
-from .models import Proposals, Instruments, Contacts, Affiliations, Countries,  Options, SharedOptions, Samples, SamplePhotos, SampleRemarks, Publication, Experiments, Status, InstrumentGroup, SharedOptionSlot, Report
+from .models import *
 import requests
 import datetime
 
@@ -289,4 +289,32 @@ class SharedOptionSlotAdmin(admin.ModelAdmin):
     readonly_fields = ['created', 'last_updated', 'start', 'end', 'duration']
 
 admin.site.register(SharedOptionSlot, SharedOptionSlotAdmin)
+
+
+class UsageInline(admin.TabularInline):
+    model = Usage
+    extra = 1
+
+class LogAdminForm(forms.ModelForm):
+    class Meta:
+        model = Log
+        fields = '__all__'
+
+class LogAdmin(admin.ModelAdmin):
+    form = LogAdminForm
+    list_display = ['created', 'last_updated', 'proposal', 'instrument','start', 'end', 'duration']
+    inlines = (UsageInline,)
+
+admin.site.register(Log, LogAdmin)
+
+class ResourceAdminForm(forms.ModelForm):
+    class Meta:
+        model = Resource
+        fields = '__all__'
+
+class ResourceAdmin(admin.ModelAdmin):
+    form = ResourceAdminForm
+    list_display = ['name', 'unit']
+
+admin.site.register(Resource, ResourceAdmin)
 
