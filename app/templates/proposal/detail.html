@@ -112,7 +112,9 @@
     {% elif perms.app.change_status and object.last_status in "AFXH" %}
        <a class="btn btn-primary" href="{% url 'app_report_create' proposal_slug=object.slug %}">Create a report request</a> 
     {% endif %}
-    
+    {% if object.last_status in "AFXH" %}
+       <a class="btn btn-info" href="{% url 'app_log_list' proposal_slug=object.slug %}">View measurement logs</a> 
+    {% endif %}
         <header> 
             <h2 class="h3 display">Status history</h2>
         </header>

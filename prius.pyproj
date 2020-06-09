@@ -67,6 +67,9 @@
     <Compile Include="app\views\bookingviews.py" />
     <Compile Include="app\views\pdfviews.py" />
     <Compile Include="app\views\htmlviews.py" />
+    <Compile Include="app\views\proposalviews.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="app\views\userofficeviews.py">
       <SubType>Code</SubType>
     </Compile>
@@ -148,6 +151,7 @@
     <Content Include="app\templates\pinax\notifications\x_booking_new\full.txt" />
     <Content Include="app\templates\pinax\notifications\x_reminder\full.txt" />
     <Content Include="app\templates\pinax\notifications\X_report\full.txt" />
+    <Content Include="app\templates\proposal\log_list.html" />
     <Content Include="app\templates\proposal\report_detail.html" />
     <Content Include="app\templates\proposal\report_form.html" />
     <Content Include="app\templates\booking\sos_form.html" />

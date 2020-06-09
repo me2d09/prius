@@ -1,0 +1,26 @@
+{% extends "form.html" %}
+{% load static %}
+{% load django_tables2 %}
+{% load bootstrap4 %}
+{% block breadcrumbs %}
+    <li class="breadcrumb-item">Proposal</li>
+    <li class="breadcrumb-item"><a href="{% url 'app_proposals_detail' slug=object.slug %}">{{ object.pid }}</a></li>
+    <li class="breadcrumb-item">Logs</li>
+{% endblock %}
+{% block formcontent %}
+    <header> 
+    <h1 class="h3 display">Measurement logs for proposal {{ object.pid }}</h1>
+    </header>
+</div></section>
+<section  class="dashboard-header"><div class="container-fluid">
+    <h2>Summary per instrument:</h2>
+    {% render_table tables.0 %}
+</div></section>
+<section  class="dashboard-header"><div class="container-fluid">
+    <h2>Summary of used resources:</h2>
+    {% render_table tables.1 %}
+    </div></section>
+<section  class="dashboard-header"><div class="container-fluid">
+    <h2>All measurements</h2>
+    {% render_table tables.2 %}
+{% endblock %}

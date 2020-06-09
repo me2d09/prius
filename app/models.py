@@ -868,7 +868,7 @@ class Log(models.Model):
         super().save(*args, **kwargs)
 
 class Usage(models.Model):
-    amount = models.IntegerField()
+    amount = models.FloatField()
     resource = models.ForeignKey('app.Resource', on_delete=models.PROTECT)
     log = models.ForeignKey('app.Log', on_delete=models.PROTECT)
 

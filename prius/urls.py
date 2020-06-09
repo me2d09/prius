@@ -91,6 +91,7 @@ urlpatterns += (
     url(r'^proposals/(?P<proposal_slug>\S+)/report/create/$', views.ReportCreateView.as_view(), name='app_report_create'),
     url(r'^proposals/report/detail/(?P<pk>\S+)/$', views.ReportDetailView.as_view(), name='app_report_detail'),
     url(r'^proposals/report/update/(?P<pk>\S+)/$', views.ReportUpdateView.as_view(), name='app_report_update'),
+    url(r'^proposals/(?P<proposal_slug>\S+)/logs$', views.LogsListView.as_view(), name='app_log_list'),
 )
 
 urlpatterns += (

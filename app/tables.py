@@ -1,6 +1,6 @@
 # app/tables.py
 import django_tables2 as tables
-from .models import Proposals, Contacts, User, Status, Instruments, Experiments
+from .models import Proposals, Contacts, User, Status, Instruments, Experiments, Log, Resource
 from django_tables2.utils import A  # alias for Accessor
 import django_filters
 from django.db.models import Q
@@ -166,3 +166,32 @@ def instruments(request):
     return qs
 
 
+class LogTable(tables.Table):
+    usage_set = tables.ManyToManyColumn(transform=lambda r: f'{r.resource.name}={r.amount}{r.resource.unit}', verbose_name='Used Resources')
+
+    class Meta:
+        model = Log
+        template_name = 'django_tables2/bootstrap4.html'
+        exclude = ('created', 'last_updated', 'id', 'proposal') 
+        sequence = ('instrument', '...')
+        attrs  = { 'class': 'table table-striped table-sm table-hover'}
+
+class LogSumTable(tables.Table):
+    instrument__name = tables.Column('Instrument')
+    sumduration = tables.Column(verbose_name='Summed duration')
+    
+
+    class Meta:
+        template_name = 'django_tables2/bootstrap4.html'
+        attrs  = { 'class': 'table table-striped table-sm table-hover'}
+
+class UsedResourcesTable(tables.Table):
+    name = tables.Column()
+    sumamount = tables.Column(verbose_name='Summed amount')
+
+    def render_sumamount(self, value, record):
+        return f"{value} {record['unit']}"
+    
+    class Meta:
+        template_name = 'django_tables2/bootstrap4.html'
+        attrs  = { 'class': 'table table-striped table-sm table-hover'}
