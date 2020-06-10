@@ -85,6 +85,8 @@ class StatusCreateView(LoginRequiredMixin, CreateView):
         return kwargs
 
     def get_success_url(self):
+        if self.request.user.has_perm('app.view_panel_proposals') or self.request.user.has_perm('app.view_board_proposals'):
+            return reverse('app_proposals_list_all') # in case of board/panel
         return reverse('app_proposals_detail', args={ self.kwargs["proposal_slug"]})
 
 class ProposalsCreateView(PermissionRequiredMixin, CreateView):
@@ -112,7 +114,7 @@ class ProposalsDetailView(LoginRequiredMixin, DetailView):
         # check permission
         if self.request.user.has_perm('app.view_proposals'):
             qs = super(ProposalsDetailView, self).get_queryset().distinct()
-        elif self.request.user.has_perm('app.view_panel_proposals'):
+        elif self.request.user.has_perm('app.view_panel_proposals') or self.request.user.has_perm('app.view_board_proposals'):
             qs = super(ProposalsDetailView, self).get_queryset().exclude(last_status__in='P').exclude(proposaltype='T').distinct()
         else: # can view only if it is part of the team
             qs = super(ProposalsDetailView, self).get_queryset().filter(Q(proposer=self.request.user) | 
