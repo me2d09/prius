@@ -87,7 +87,7 @@ class ProposalFilter(django_filters.FilterSet):
             self.filters.pop("local_contacts")
             self.filters.pop("search_all")
             self.filters.pop("reporter")
-        elif not self.request.user.has_perm('app.approve_panel'):
+        elif not (self.request.user.has_perm('app.approve_panel') or self.request.user.has_perm('app.approve_board')):
             self.filters.pop("reporter")
 
     def filter_search_all(self, queryset, name, value):
