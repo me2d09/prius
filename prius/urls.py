@@ -12,7 +12,7 @@ from django.contrib.auth import views as auth_views
 
 import app.forms
 import app.views as views
-from app.rest import MyProposalList, PublicationsList
+from app.rest import MyProposalList, PublicationsList, LogCreate
 
 # Uncomment the next lines to enable the admin:
 from django.contrib import admin
@@ -178,4 +178,5 @@ urlpatterns += (
 urlpatterns += [
     path('rest/activeproposals/', MyProposalList.as_view()),
     path('rest/publications/', PublicationsList.as_view()),
+    path('rest/createlog/', LogCreate.as_view()),
 ]
