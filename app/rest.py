@@ -20,18 +20,21 @@ class ProposalSerializer(serializers.ModelSerializer):
         fields = ('proposal', 'title', 'users', 'localcontacts')
 
     def get_users(self, obj):
-        userlist = [{ 'name': obj.proposer.contact.name,
+        userlist = [{ 'id': obj.proposer.contact.pk,
+                      'name': obj.proposer.contact.name,
                       'email': obj.proposer.contact.email,
                       'affiliation': str(obj.proposer.contact.affiliation),
                    }]
         for u in obj.coproposers.all():
             userlist.append({
+                    'id': u.pk,
                     'name': u.name,
                     'email': u.email,
                     'affiliation': str(u.affiliation),
                 })
         if obj.supervisor:
             userlist.append({
+                    'id': obj.supervisor.pk,
                     'name': obj.supervisor.name,
                     'email': obj.supervisor.email,
                     'affiliation': str(obj.supervisor.affiliation),
@@ -42,6 +45,7 @@ class ProposalSerializer(serializers.ModelSerializer):
         lclist = []
         for u in obj.local_contacts.all():
             lclist.append({
+                    'id': u.pk,
                     'name': u.name,
                     'email': u.email,
                     'affiliation': str(u.affiliation),
@@ -50,7 +54,7 @@ class ProposalSerializer(serializers.ModelSerializer):
 
 
 # API views:
-class MyProposalList(generics.ListCreateAPIView):
+class MyProposalList(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
@@ -61,7 +65,7 @@ class MyProposalList(generics.ListCreateAPIView):
         serializer = ProposalSerializer(proposals, many=True)
         return Response(serializer.data)
     
-    #queryset = User.objects.all()
+    queryset = Proposals.objects.all()
     #serializer_class = UserSerializer
 
 
