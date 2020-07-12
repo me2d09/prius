@@ -67,6 +67,12 @@
     <Compile Include="app\views\bookingviews.py" />
     <Compile Include="app\views\pdfviews.py" />
     <Compile Include="app\views\htmlviews.py" />
+    <Compile Include="app\views\proposalviews.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="app\views\userofficeviews.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="app\views\__init__.py">
       <SubType>Code</SubType>
     </Compile>
@@ -88,13 +94,22 @@
     <Folder Include="app\templates\errors\" />
     <Folder Include="app\templates\booking\" />
     <Folder Include="app\templates\ajax\" />
+    <Folder Include="app\templates\admin\" />
+    <Folder Include="app\templates\useroffice\" />
     <Folder Include="app\templates\pinax\" />
     <Folder Include="app\templates\pdf\" />
     <Folder Include="app\templates\pinax\notifications\" />
+    <Folder Include="app\templates\pinax\notifications\B_new_proposal\" />
+    <Folder Include="app\templates\pinax\notifications\l_booking_lc\" />
+    <Folder Include="app\templates\pinax\notifications\l_booking_lc_changed\" />
     <Folder Include="app\templates\pinax\notifications\P_request_review\" />
     <Folder Include="app\templates\pinax\notifications\p_request_comments\" />
+    <Folder Include="app\templates\pinax\notifications\X_booking_changed\" />
+    <Folder Include="app\templates\pinax\notifications\x_booking_new\" />
     <Folder Include="app\templates\pinax\notifications\x_proposal_important_team\" />
     <Folder Include="app\templates\pinax\notifications\X_proposal_important\" />
+    <Folder Include="app\templates\pinax\notifications\x_reminder\" />
+    <Folder Include="app\templates\pinax\notifications\X_report\" />
     <Folder Include="app\views\" />
     <Folder Include="app\templatetags\" />
     <Folder Include="app\static\" />
@@ -123,10 +138,20 @@
     <Content Include="app\static\pdfstyle.css" />
     <Content Include="app\templates\404.html" />
     <Content Include="app\templates\500.html" />
+    <Content Include="app\templates\admin\publication_list.html" />
     <Content Include="app\templates\ajax\fulldays.html" />
     <Content Include="app\templates\ajax\events.html" />
+    <Content Include="app\templates\app\contacts_detail.html" />
     <Content Include="app\templates\booking\experiments_delete.html" />
     <Content Include="app\templates\booking\experiments_calendar.html" />
+    <Content Include="app\templates\pinax\notifications\B_new_proposal\full.txt" />
+    <Content Include="app\templates\pinax\notifications\l_booking_lc\full.txt" />
+    <Content Include="app\templates\pinax\notifications\l_booking_lc_changed\full.txt" />
+    <Content Include="app\templates\pinax\notifications\X_booking_changed\full.txt" />
+    <Content Include="app\templates\pinax\notifications\x_booking_new\full.txt" />
+    <Content Include="app\templates\pinax\notifications\x_reminder\full.txt" />
+    <Content Include="app\templates\pinax\notifications\X_report\full.txt" />
+    <Content Include="app\templates\proposal\log_list.html" />
     <Content Include="app\templates\proposal\report_detail.html" />
     <Content Include="app\templates\proposal\report_form.html" />
     <Content Include="app\templates\booking\sos_form.html" />
@@ -173,9 +198,9 @@
     <Content Include="app\templates\proposal\detail.html" />
     <Content Include="app\templates\proposal\form.html" />
     <Content Include="app\templates\proposal\list.html" />
-    <Content Include="app\templates\app\publications_detail.html" />
-    <Content Include="app\templates\app\publications_form.html" />
-    <Content Include="app\templates\app\publications_list.html" />
+    <Content Include="app\templates\useroffice\publication_detail.html" />
+    <Content Include="app\templates\useroffice\publication_form.html" />
+    <Content Include="app\templates\useroffice\publication_list.html" />
     <Content Include="app\templates\app\samplephotos_detail.html" />
     <Content Include="app\templates\app\samplephotos_form.html" />
     <Content Include="app\templates\app\samplephotos_list.html" />

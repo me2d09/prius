@@ -5,9 +5,15 @@
     <li class="breadcrumb-item atove">Edit my profile</li>
 {% endblock %}
 {% block formcontent %}
+<header> 
+<h1 class="h3 display">
+    Registration details
+</h1>
+</header>
 <div class="card">
     <div class="card-body">  
         {% crispy form %}
+        {{ form_errors }}
     </div>
 </div>
 {% endblock %}

@@ -31,7 +31,7 @@
                 {% endfor %}
             </tr>
             {% for row in notice_settings.rows %}
-              {% if row.notice_type.label|first in "LPHDUAlphdua" %}
+              {% if row.notice_type.label|first in "LBPHDUAlbphdua" %}
                   {% if  request.user|has_group:row.notice_type.label %}
                     <tr class="setting-row">
                         <td>
@@ -42,7 +42,7 @@
                         </td>
                         {% for cell in row.cells %}
                             <td class="setting">
-                                <input type="checkbox" {% if row.notice_type.label|first in "LPHDUA" %}disabled="disabled" {% endif %}name="{{ cell.0 }}" {% if cell.1 %}checked="yes"{% endif %} />
+                                <input type="checkbox" {% if row.notice_type.label|first in "LBPHDUA" %}disabled="disabled" {% endif %}name="{{ cell.0 }}" {% if cell.1 %}checked="yes"{% endif %} />
                             </td>
                         {% endfor %}
                     </tr>

@@ -8,7 +8,7 @@ from django.test import TestCase
 import unittest
 from django.urls import reverse
 from django.test import Client
-from .models import Proposals, Instruments, Contacts, Affiliations, Countries, InstrumentRequest, Options, SharedOptions, InstrumentParameterSets, InstrumentParameters, ParameterValues, Samples, SamplePhotos, SampleRemarks, Publications, Experiments, Slots
+from .models import Proposals, Instruments, Contacts, Affiliations, Countries, InstrumentRequest, Options, SharedOptions, InstrumentParameterSets, InstrumentParameters, ParameterValues, Samples, SamplePhotos, SampleRemarks, Publication, Experiments, Slots
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
 from django.contrib.contenttypes.models import ContentType
@@ -240,7 +240,7 @@ def create_publications(**kwargs):
     defaults.update(**kwargs)
     if "authors" not in defaults:
         defaults["authors"] = create_contacts()
-    return Publications.objects.create(**defaults)
+    return Publication.objects.create(**defaults)
 
 
 def create_experiments(**kwargs):
@@ -876,20 +876,20 @@ class SampleRemarksViewTest(unittest.TestCase):
         self.assertEqual(response.status_code, 302)
 
 
-class PublicationsViewTest(unittest.TestCase):
+class PublicationViewTest(unittest.TestCase):
     '''
-    Tests for Publications
+    Tests for Publication
     '''
     def setUp(self):
         self.client = Client()
 
-    def test_list_publications(self):
-        url = reverse('app_publications_list')
+    def test_list_publication(self):
+        url = reverse('app_publication_list')
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
-    def test_create_publications(self):
-        url = reverse('app_publications_create')
+    def test_create_publication(self):
+        url = reverse('app_publication_create')
         data = {
             "link": "link",
             "year": "year",
@@ -898,20 +898,20 @@ class PublicationsViewTest(unittest.TestCase):
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, 302)
 
-    def test_detail_publications(self):
-        publications = create_publications()
-        url = reverse('app_publications_detail', args=[publications.pk,])
+    def test_detail_publication(self):
+        publication = create_publication()
+        url = reverse('app_publication_detail', args=[publication.pk,])
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
-    def test_update_publications(self):
-        publications = create_publications()
+    def test_update_publication(self):
+        publication = create_publication()
         data = {
             "link": "link",
             "year": "year",
             "authors": create_contacts().pk,
         }
-        url = reverse('app_publications_update', args=[publications.pk,])
+        url = reverse('app_publication_update', args=[publication.pk,])
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 302)
 

@@ -1,0 +1,9 @@
+﻿{% extends "admin/change_list.html" %} {% load i18n %} 
+{% block object-tools %}
+    <form method="post" action="{% url 'admin:bulk_add_publication' %}">
+        {% csrf_token %}
+        <textarea name="links" cols="40" rows="2"></textarea>
+        <input type="submit" value="Bulk add publications" />
+    </form>
+{{ block.super }}
+{% endblock %}

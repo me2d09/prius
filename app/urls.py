@@ -1,29 +1,7 @@
 from django.conf.urls import url, include
-from rest_framework import routers
-from . import api
 from . import views
 
-router = routers.DefaultRouter()
-router.register(r'proposals', api.ProposalsViewSet)
-router.register(r'instruments', api.InstrumentsViewSet)
-router.register(r'contacts', api.ContactsViewSet)
-router.register(r'affiliations', api.AffiliationsViewSet)
-router.register(r'countries', api.CountriesViewSet)
-router.register(r'options', api.OptionsViewSet)
-router.register(r'sharedoptions', api.SharedOptionsViewSet)
-router.register(r'samples', api.SamplesViewSet)
-router.register(r'samplephotos', api.SamplePhotosViewSet)
-router.register(r'sampleremarks', api.SampleRemarksViewSet)
-router.register(r'publications', api.PublicationsViewSet)
-router.register(r'experiments', api.ExperimentsViewSet)
-
-
 urlpatterns = (
-    #urls for Django Rest Framework API
-    url(r'^api/v1/', include(router.urls)),
-)
-
-urlpatterns += (
     # urls for Instruments
     url(r'^instruments/$', views.InstrumentsListView.as_view(), name='app_instruments_list'),
 )
@@ -52,12 +30,5 @@ urlpatterns += (
     url(r'^sampleremarks/update/(?P<pk>\S+)/$', views.SampleRemarksUpdateView.as_view(), name='app_sampleremarks_update'),
 )
 
-urlpatterns += (
-    # urls for Publications
-    url(r'^publications/$', views.PublicationsListView.as_view(), name='app_publications_list'),
-    url(r'^publications/create/$', views.PublicationsCreateView.as_view(), name='app_publications_create'),
-    url(r'^publications/detail/(?P<pk>\S+)/$', views.PublicationsDetailView.as_view(), name='app_publications_detail'),
-    url(r'^publications/update/(?P<pk>\S+)/$', views.PublicationsUpdateView.as_view(), name='app_publications_update'),
-)
 
 

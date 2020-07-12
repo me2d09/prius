@@ -1,6 +1,13 @@
 from django.contrib import admin
 from django import forms
-from .models import Proposals, Instruments, Contacts, Affiliations, Countries,  Options, SharedOptions, Samples, SamplePhotos, SampleRemarks, Publications, Experiments, Status, InstrumentGroup, SharedOptionSlot, Report
+from django.forms import CharField
+from django.conf.urls import url
+from django.utils.html import strip_tags
+from django.urls import reverse
+from django.http import HttpResponseRedirect
+from .models import *
+import requests
+import datetime
 
 class StatusAdminForm(forms.ModelForm):
     class Meta:
@@ -16,7 +23,6 @@ admin.site.register(Status, StatusAdmin)
 
 
 class ProposalsAdminForm(forms.ModelForm):
-
     class Meta:
         model = Proposals
         fields = '__all__'
@@ -24,7 +30,7 @@ class ProposalsAdminForm(forms.ModelForm):
 
 class ProposalsAdmin(admin.ModelAdmin):
     form = ProposalsAdminForm
-    list_display = ['pid', 'name', 'proposer', 'created', 'last_updated', 'grants', 'scientific_bg', 'supervisor']
+    list_display = ['pid', 'name', 'proposer', 'created', 'last_updated', 'grants', 'scientific_bg', 'supervisor', 'review_process']
     readonly_fields = ['slug', 'created', 'last_updated']
 
 admin.site.register(Proposals, ProposalsAdmin)
@@ -197,19 +203,66 @@ class SampleRemarksAdmin(admin.ModelAdmin):
 admin.site.register(SampleRemarks, SampleRemarksAdmin)
 
 
-class PublicationsAdminForm(forms.ModelForm):
+
+def reload_from_doi(modeladmin, request, queryset):
+    headersjson = {'Accept': 'application/vnd.citationstyles.csl+json'}
+    headersaps = {'Accept': 'text/x-bibliography; style=american-physics-society'}
+    for p in queryset:
+        data = requests.get(p.link, headers = headersjson)
+        if data.ok:
+            data = data.json()
+            if 'is-referenced-by-count' in data:
+                p.citations = data['is-referenced-by-count']
+            if 'container-title' in data:
+                p.journal = strip_tags(data['container-title'])
+            if 'issued' in data:
+                dateparts = data['issued']['date-parts'][0]
+                if len(dateparts) < 3:
+                    dateparts = dateparts + (3-len(dateparts)) * [1]
+                p.issued = datetime.datetime(*dateparts[:3])
+            if 'title' in data:
+                p.name = strip_tags(data['title'])
+
+        data = requests.get(p.link, headers = headersaps)
+        data.encoding = 'utf-8'
+        if data.ok and len(data.content) > 4:
+            p.full_citation = strip_tags(data.text[4:].strip())
+        p.save()
+reload_from_doi.short_description = "Reload selected publications from doi.org"
+
+class PublicationAdminForm(forms.ModelForm):
+    link = CharField()
 
     class Meta:
-        model = Publications
-        fields = '__all__'
+        model = Publication
+        fields = ['name']
+
+class PublicationAdmin(admin.ModelAdmin):
+    form = PublicationAdminForm
+    list_display = ['created', 'last_updated', 'link', 'issued', 'journal']
+    readonly_fields = ['created', 'last_updated']
+    actions = [reload_from_doi]
+    change_list_template = "admin/publication_list.html"
+
+    def get_urls(self):
+        urls = super().get_urls()
+        my_urls = [
+            url(r'^bulk_add/$', self.bulk_add_view, name="bulk_add_publication")
+        ]
+        return my_urls + urls
+
+    def bulk_add_view(self, request):
+        #check if there are no more links:
+        links = request.POST.get("links", "")
+        items = [x for x in links.split('\n') if x and not x.isspace()]
+        for item in items:
+            Publication.objects.create(link=item.strip())
+
+        url = reverse('admin:app_publication_changelist')
+        return  HttpResponseRedirect(url)
 
 
-class PublicationsAdmin(admin.ModelAdmin):
-    form = PublicationsAdminForm
-    list_display = ['created', 'last_updated', 'link', 'year']
-    readonly_fields = ['created', 'last_updated', 'link', 'year']
-
-admin.site.register(Publications, PublicationsAdmin)
+admin.site.register(Publication, PublicationAdmin)
 
 
 class ExperimentsAdminForm(forms.ModelForm):
@@ -236,4 +289,32 @@ class SharedOptionSlotAdmin(admin.ModelAdmin):
     readonly_fields = ['created', 'last_updated', 'start', 'end', 'duration']
 
 admin.site.register(SharedOptionSlot, SharedOptionSlotAdmin)
+
+
+class UsageInline(admin.TabularInline):
+    model = Usage
+    extra = 1
+
+class LogAdminForm(forms.ModelForm):
+    class Meta:
+        model = Log
+        fields = '__all__'
+
+class LogAdmin(admin.ModelAdmin):
+    form = LogAdminForm
+    list_display = ['created', 'last_updated', 'proposal', 'instrument','start', 'end', 'duration']
+    inlines = (UsageInline,)
+
+admin.site.register(Log, LogAdmin)
+
+class ResourceAdminForm(forms.ModelForm):
+    class Meta:
+        model = Resource
+        fields = '__all__'
+
+class ResourceAdmin(admin.ModelAdmin):
+    form = ResourceAdminForm
+    list_display = ['name', 'unit']
+
+admin.site.register(Resource, ResourceAdmin)
 

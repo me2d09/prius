@@ -41,6 +41,7 @@
               {% if request.user|has_group:"director" %}<span>director</span>
               {% elif request.user|has_group:"panelhead" %}<span>panel head</span>
               {% elif request.user|has_group:"panel" %}<span>panel member</span>
+              {% elif request.user|has_group:"board" %}<span>board member</span>
               {% elif request.user|has_group:"useroffice" %}<span>user office</span>
               {% elif request.user|has_group:"admins" %}<span>admin</span>
               {% elif request.user|has_group:"localcontacts" %}<span>local contact</span>
@@ -61,7 +62,7 @@
               {% if perms.app.add_proposals %}
             <li><a href="/proposals/create/"> <i class="icon-form"></i>New Proposal</a></li>
             <li><a href="/proposals/"> <i class="icon-form"></i>My Proposals</a></li>{% endif %}
-              {% if perms.app.view_proposals or perms.app.view_panel_proposals or request.user|has_group:"localcontacts" %}
+              {% if perms.app.view_proposals or perms.app.view_panel_proposals or perms.app.view_board_proposals or request.user|has_group:"localcontacts" %}
             <li><a href="/proposals/all/"> <i class="icon-form"></i>All Proposals</a></li>{% endif %}
           </ul>
           {% if request.user|has_group:"users" %}
@@ -83,6 +84,8 @@
             <li><a href="/contacts/create/"> <i class="icon-form"></i>Invite User</a></li>{% endif %}
             {% if perms.app.view_contacts %}
             <li><a href="/contacts/"> <i class="icon-form"></i>User list</a></li>{% endif %}
+            {% if perms.app.view_publication %}
+            <li><a href="/publications/"> <i class="icon-list"></i>Publications</a></li>{% endif %}
           </ul>
         </div>
         {% if request.user.is_staff %}

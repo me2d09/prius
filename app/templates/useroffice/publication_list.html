@@ -1,0 +1,20 @@
+{% extends "form.html" %}
+{% load static %}
+{% load django_tables2 %}
+{% load bootstrap4 %}
+{% block breadcrumbs %}
+    <li class="breadcrumb-item active">Publications</li>
+{% endblock %}
+{% block formcontent %}
+    <header> 
+    <h1 class="h3 display">All MGML publications</h1>
+    </header>
+    <div class="mb-3">
+        <form action="" method="get" class="form form-inline">
+            {% bootstrap_form filter.form layout='inline' %}
+            {% bootstrap_button 'filter' %}
+        </form>
+    </div>
+    {% render_table table %}
+    <a class="btn btn-primary" href="{% url 'app_publication_create' %}">Add Publication</a>
+{% endblock %}

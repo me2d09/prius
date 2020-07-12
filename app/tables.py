@@ -1,6 +1,6 @@
 # app/tables.py
 import django_tables2 as tables
-from .models import Proposals, Contacts, User, Status, Instruments, Experiments
+from .models import Proposals, Contacts, User, Status, Instruments, Experiments, Log, Resource
 from django_tables2.utils import A  # alias for Accessor
 import django_filters
 from django.db.models import Q
@@ -31,7 +31,7 @@ class ProposalTable(tables.Table):
         super().__init__(*args, **kwargs)
 
     def before_render(self, request):
-        if request.user.has_perm('app.approve_panel'):
+        if request.user.has_perm('app.approve_panel') or request.user.has_perm('app.approve_board'):
             self.columns.show('reporter')
         else:
             self.columns.hide('reporter')
@@ -60,10 +60,15 @@ def localcontacts(request):
     return qs
 
 def reporters(request):
+    qs = Contacts.objects.none()
     if request is None or not request.user.is_authenticated:
-        return Contacts.objects.none()
-
-    qs = Contacts.objects.filter(uid__in = User.objects.filter(groups__name__in=['panel']))
+        return qs
+    if request.user.has_perm('app.approve_panel') or request.user.has_perm('app.approve_board'):
+        qs = Contacts.objects.filter(uid__in = User.objects.filter(groups__name__in=['panel', 'board']))
+    elif request.user.has_perm('app.approve_panel'): 
+        qs = Contacts.objects.filter(uid__in = User.objects.filter(groups__name__in=['panel']))
+    elif request.user.has_perm('app.approve_board'):
+        qs = Contacts.objects.filter(uid__in = User.objects.filter(groups__name__in=['board']))
     return qs
 
 class ProposalFilter(django_filters.FilterSet):
@@ -82,7 +87,7 @@ class ProposalFilter(django_filters.FilterSet):
             self.filters.pop("local_contacts")
             self.filters.pop("search_all")
             self.filters.pop("reporter")
-        elif not self.request.user.has_perm('app.approve_panel'):
+        elif not (self.request.user.has_perm('app.approve_panel') or self.request.user.has_perm('app.approve_board')):
             self.filters.pop("reporter")
 
     def filter_search_all(self, queryset, name, value):
@@ -161,3 +166,32 @@ def instruments(request):
     return qs
 
 
+class LogTable(tables.Table):
+    usage_set = tables.ManyToManyColumn(transform=lambda r: f'{r.resource.name}={r.amount}{r.resource.unit}', verbose_name='Used Resources')
+
+    class Meta:
+        model = Log
+        template_name = 'django_tables2/bootstrap4.html'
+        exclude = ('created', 'last_updated', 'id', 'proposal') 
+        sequence = ('instrument', '...')
+        attrs  = { 'class': 'table table-striped table-sm table-hover'}
+
+class LogSumTable(tables.Table):
+    instrument__name = tables.Column('Instrument')
+    sumduration = tables.Column(verbose_name='Summed duration')
+    
+
+    class Meta:
+        template_name = 'django_tables2/bootstrap4.html'
+        attrs  = { 'class': 'table table-striped table-sm table-hover'}
+
+class UsedResourcesTable(tables.Table):
+    name = tables.Column()
+    sumamount = tables.Column(verbose_name='Summed amount')
+
+    def render_sumamount(self, value, record):
+        return f"{value} {record['unit']}"
+    
+    class Meta:
+        template_name = 'django_tables2/bootstrap4.html'
+        attrs  = { 'class': 'table table-striped table-sm table-hover'}

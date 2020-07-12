@@ -1,0 +1,5 @@
+{% autoescape off %}Board review requested!
+
+You are a board member. Please review the proposal {{ proposal.pid }}, title: "{{ proposal.name }}"
+Assigned member for review is {{ proposal.reporter }} - but any board member can do it!
+Proposer: {{ proposal.proposer.contact }}{% endautoescape %}

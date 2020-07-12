@@ -12,7 +12,7 @@ from django.contrib.auth import views as auth_views
 
 import app.forms
 import app.views as views
-from app.rest import MyProposalList
+from app.rest import MyProposalList, PublicationsList, LogCreate
 
 # Uncomment the next lines to enable the admin:
 from django.contrib import admin
@@ -91,6 +91,7 @@ urlpatterns += (
     url(r'^proposals/(?P<proposal_slug>\S+)/report/create/$', views.ReportCreateView.as_view(), name='app_report_create'),
     url(r'^proposals/report/detail/(?P<pk>\S+)/$', views.ReportDetailView.as_view(), name='app_report_detail'),
     url(r'^proposals/report/update/(?P<pk>\S+)/$', views.ReportUpdateView.as_view(), name='app_report_update'),
+    url(r'^proposals/(?P<proposal_slug>\S+)/logs$', views.LogsListView.as_view(), name='app_log_list'),
 )
 
 urlpatterns += (
@@ -109,6 +110,14 @@ urlpatterns += (
 urlpatterns += (
     # other urls
     url(r"^notifications/", include("pinax.notifications.urls", namespace="pinax_notifications")),
+)
+
+urlpatterns += (
+    # urls for Publications
+    path('publications/', views.PublicationListView.as_view(), name='app_publication_list'),
+    path('publications/create/', views.PublicationCreateView.as_view(), name='app_publication_create'),
+    path('publications/detail/(<pk>/', views.PublicationDetailView.as_view(), name='app_publication_detail'),
+    path('publications/update/(<pk>/', views.PublicationUpdateView.as_view(), name='app_publication_update'),
 )
 
 
@@ -168,4 +177,6 @@ urlpatterns += (
 # REST API
 urlpatterns += [
     path('rest/activeproposals/', MyProposalList.as_view()),
+    path('rest/publications/', PublicationsList.as_view()),
+    path('rest/createlog/', LogCreate.as_view()),
 ]
