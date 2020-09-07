@@ -127,5 +127,5 @@ class LogSerializer(serializers.ModelSerializer):
 
 class LogCreate(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
-
     serializer_class = LogSerializer
+    queryset = Log.objects.all()
