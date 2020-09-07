@@ -240,7 +240,7 @@ class Proposals(models.Model):
                 pmembers.remove(self.reporter.uid)
                 notify_send(pmembers, 
                             'p_request_comments', extra_context = { 'proposal': self})
-            elif s == "RD" or s == "TD":
+            elif s[1] == "D":
                 notify_send(User.objects.filter(groups__name='director'), 
                             'D_accepted', extra_context = { 'proposal': self})
             elif s == "RX":
