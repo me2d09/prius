@@ -12,6 +12,7 @@ PyPDF2
 pip
 django-xhtml2pdf
 git+https://github.com/me2d09/pinax-notifications.git
+git+https://github.com/me2d09/django_quiz.git
 backports-datetime-fromisoformat
 django-oauth-toolkit
 requests

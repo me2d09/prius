@@ -40,6 +40,10 @@ INSTALLED_APPS = [
     'pinax.notifications',
     'oauth2_provider',
     'rest_framework',
+    'quiz',
+    'multichoice',
+    'true_false',
+    'essay',
 ]
 SITE_ID = 1
 

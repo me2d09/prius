@@ -11,3 +11,5 @@ db.sqlite3
 prius/settings.py
 /files/
 env1/
+priusenv/
+priusenv36/

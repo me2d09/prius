@@ -180,3 +180,8 @@ urlpatterns += [
     path('rest/publications/', PublicationsList.as_view()),
     path('rest/createlog/', LogCreate.as_view()),
 ]
+
+#quiz
+urlpatterns += (
+    url('q/', include('quiz.urls')),
+)
