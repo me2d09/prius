@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'multichoice',
     'true_false',
     'essay',
+    'data_browser',
 ]
 SITE_ID = 1
 

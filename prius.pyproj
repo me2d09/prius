@@ -138,6 +138,7 @@
     <Content Include="app\static\pdfstyle.css" />
     <Content Include="app\templates\404.html" />
     <Content Include="app\templates\500.html" />
+    <Content Include="app\templates\admin\change_list_object_tools.html" />
     <Content Include="app\templates\admin\publication_list.html" />
     <Content Include="app\templates\ajax\fulldays.html" />
     <Content Include="app\templates\ajax\events.html" />

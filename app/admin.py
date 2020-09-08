@@ -6,8 +6,22 @@ from django.utils.html import strip_tags
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 from .models import *
+from data_browser.helpers import AdminMixin as DataBrowserMixin
 import requests
 import datetime
+
+from django.contrib.auth.admin import UserAdmin
+
+custom_fieldsets = list(UserAdmin.fieldsets)
+#custom_fieldsets.append((None, {'fields': ('contact', )}))
+
+class CustomUserAdmin(DataBrowserMixin, UserAdmin):
+    fieldsets = custom_fieldsets
+    ddb_extra_fields = ['contact']
+
+admin.site.unregister(User)
+admin.site.register(User, CustomUserAdmin)
+
 
 class StatusAdminForm(forms.ModelForm):
     class Meta:
@@ -270,7 +284,7 @@ class ExperimentsAdminForm(forms.ModelForm):
         model = Experiments
         fields = '__all__'
 
-class ExperimentsAdmin(admin.ModelAdmin):
+class ExperimentsAdmin(DataBrowserMixin, admin.ModelAdmin):
     form = ExperimentsAdminForm
     list_display = ['instrument', 'proposal', 'created', 'start', 'end', 'duration', 'responsible', 'local_contact', 'all_options']
     readonly_fields = ['created', 'last_updated', 'duration']

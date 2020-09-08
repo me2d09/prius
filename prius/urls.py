@@ -183,5 +183,10 @@ urlpatterns += [
 
 #quiz
 urlpatterns += (
-    url('q/', include('quiz.urls')),
+    path('q/', include('quiz.urls')),
+)
+
+#data browser
+urlpatterns += (
+    path("data-browser/", include("data_browser.urls")),
 )

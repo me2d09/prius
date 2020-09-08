@@ -1,0 +1,7 @@
+﻿{% extends "admin/change_list_object_tools.html" %}
+{% block object-tools-items %}
+    {{ block.super }}
+    {% if ddb_url %}
+        <li><a href="{{ ddb_url }}" class="viewlink">Data Browser and Reports</a></li>
+    {% endif %}
+{% endblock %}
