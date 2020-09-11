@@ -36,6 +36,19 @@ class StatusAdmin(admin.ModelAdmin):
 admin.site.register(Status, StatusAdmin)
 
 
+class ProposalCategoryAdminForm(forms.ModelForm):
+    class Meta:
+        model = ProposalCategory
+        fields = '__all__'
+
+
+class ProposalCategoryAdmin(admin.ModelAdmin):
+    form = ProposalCategoryAdminForm
+    list_display = ['slug', 'name']
+    readonly_fields = ['slug']
+
+admin.site.register(ProposalCategory, ProposalCategoryAdmin)
+
 class ProposalsAdminForm(forms.ModelForm):
     class Meta:
         model = Proposals
@@ -44,7 +57,7 @@ class ProposalsAdminForm(forms.ModelForm):
 
 class ProposalsAdmin(admin.ModelAdmin):
     form = ProposalsAdminForm
-    list_display = ['pid', 'name', 'proposer', 'created', 'last_updated', 'grants', 'scientific_bg', 'supervisor', 'review_process']
+    list_display = ['pid', 'name', 'proposer', 'created', 'last_updated', 'grants', 'scientific_bg', 'supervisor', 'review_process', 'get_categories']
     readonly_fields = ['slug', 'created', 'last_updated']
 
 admin.site.register(Proposals, ProposalsAdmin)

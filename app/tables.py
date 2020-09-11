@@ -1,9 +1,9 @@
 # app/tables.py
 import django_tables2 as tables
 from .models import Proposals, Contacts, User, Status, Instruments, Experiments, Log, Resource
-from django_tables2.utils import A  # alias for Accessor
+from django_tables2.utils import A   # alias for Accessor
 import django_filters
-from django.db.models import Q
+from django.db.models import Q, Count, Max
 from django.utils.timezone import now
 from datetime import timedelta, date
 
@@ -18,6 +18,7 @@ class TruncatedTextColumn(tables.Column):
 
 class ProposalTable(tables.Table):
     local_contacts_short = TruncatedTextColumn(verbose_name= 'Local contact', orderable = False)
+    get_categories = tables.Column(verbose_name= 'Categories') #, order_by = A('categories__count')
     name = TruncatedTextColumn(linkify=True)
     proposaltype = tables.Column(verbose_name='Type')
     supervisor = tables.Column(empty_values=[])
@@ -29,6 +30,13 @@ class ProposalTable(tables.Table):
         #if self.request.user.has_perm('app.approve_panel'):
         #    self.Meta.exclude.pop("reporter")
         super().__init__(*args, **kwargs)
+
+    def order_get_categories(self, queryset, is_descending):
+        queryset = queryset.annotate(
+            countcat=Count('categories'),
+            firstcat=Max('categories'),
+        ).order_by(("-" if is_descending else "") + "countcat", ("-" if is_descending else "") + "firstcat")
+        return (queryset, True)
 
     def before_render(self, request):
         if request.user.has_perm('app.approve_panel') or request.user.has_perm('app.approve_board'):

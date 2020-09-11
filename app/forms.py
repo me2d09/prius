@@ -8,7 +8,7 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, Pass
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from .models import Proposals, Instruments, Contacts, Affiliations, Countries, Options, SharedOptions
-from .models import Samples, SamplePhotos, SampleRemarks, SharedOptionSlot
+from .models import Samples, SamplePhotos, SampleRemarks, SharedOptionSlot, ProposalCategory
 from .models import Publication, Experiments, Status, Report
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, HTML, Fieldset, Div, ButtonHolder, Field
@@ -229,6 +229,11 @@ The panel report has two parts - visible and hidden to the user."""
 
 
 class ProposalsForm(forms.ModelForm):
+    categories = forms.ModelMultipleChoiceField(
+            queryset=ProposalCategory.objects.all(),
+            widget=forms.CheckboxSelectMultiple,
+            label='Proposal category',
+            required=False)
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
@@ -252,7 +257,7 @@ class ProposalsForm(forms.ModelForm):
 
         self.helper.layout = Layout(
             Fieldset(
-                None, 'name', 'abstract', 'scientific_bg', 'proposaltype', 'student', 'thesis_topic', 'supervisor', 'grants', 'local_contacts', 'coproposers'
+                None, 'name', 'abstract', 'scientific_bg', 'proposaltype', 'student', 'thesis_topic', 'supervisor', 'grants', 'categories', 'local_contacts', 'coproposers'
             ),
             ButtonHolder(
                 Submit('submit', 'Save', css_class='button white'),
@@ -275,6 +280,7 @@ class ProposalsForm(forms.ModelForm):
             'data-theme': 'bootstrap4',
         }
         self.fields['grants'].help_text = "If the proposal is connected with any funding, add its abbreviation and/or number. In case of more fundings, separate by comma. Example: <i>'GAČR 19-000123S, ERC BoBEK 123456'</i>."
+        self.fields['categories'].help_text = "Optional proposal categories. Please tick all fields which fits for your proposal."
         self.fields['student'].help_text = "Student proposals needs to mention supervisor and thesis topic."
         self.fields['student'].widget.attrs['onclick'] = "javascript:toggleDivs();"
         if not self.user.groups.filter(name='localcontacts').exists():
@@ -306,7 +312,7 @@ class ProposalsForm(forms.ModelForm):
 
     class Meta:
         model = Proposals
-        fields = ['name', 'abstract', 'scientific_bg', 'proposaltype', 'student', 'supervisor', 'thesis_topic', 'local_contacts', 'grants', 'coproposers']
+        fields = ['name', 'abstract', 'scientific_bg', 'proposaltype', 'student', 'supervisor', 'thesis_topic', 'local_contacts', 'grants', 'categories', 'coproposers']
         labels = {
             "name": "Proposal name",
             "proposaltype": "Type of proposal",

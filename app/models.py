@@ -115,6 +115,19 @@ def validate_pdf_lenth(value):
     if pdf.getNumPages() > 5:
         raise ValidationError(u'Uploaded file has too many pages. Maximum allowed is 5.')
 
+
+class ProposalCategory(models.Model):
+    name = models.CharField(max_length=200)
+    slug = extension_fields.AutoSlugField(populate_from='name', blank=True, null=True)
+
+    class Meta:
+        ordering = ('name',)
+        verbose_name_plural = "categories" 
+
+    def __str__(self):
+        return f'{self.name}'
+
+
 class Proposals(models.Model):
 
     PROPOSAL_TYPE = (
@@ -146,6 +159,7 @@ class Proposals(models.Model):
     # Relationship Fields
     proposer =  models.ForeignKey(User, null=True, blank=True, on_delete=models.PROTECT)
     samples = models.ManyToManyField('app.Samples', blank=True)
+    categories = models.ManyToManyField('app.ProposalCategory', blank=True)
     local_contacts = models.ManyToManyField('app.Contacts',  related_name='proposal_local_contacts', blank=True)
     reporter = models.ForeignKey('app.Contacts', related_name='proposal_reporter', on_delete=models.PROTECT, blank=True, null = True)
     supervisor = models.ForeignKey('app.Contacts', related_name='proposal_supervisor', on_delete=models.PROTECT, blank=True, null = True)
@@ -285,6 +299,9 @@ class Proposals(models.Model):
 
     def __str__(self):
         return '%s %s' % (self.pid, self.name)
+
+    def get_categories(self):
+        return ", ".join([c.name for c in self.categories.all()])
 
 def default_report_time():
     return datetime.now() + timedelta(days=60)
