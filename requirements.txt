@@ -3,7 +3,7 @@ django-extensions
 django-crispy-forms
 django-bootstrap4
 djangorestframework
-django-autocomplete-light>=2.0.0pre
+django-autocomplete-light
 django-tables2
 django-filter
 Pillow
