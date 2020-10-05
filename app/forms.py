@@ -244,6 +244,7 @@ class ProposalsForm(forms.ModelForm):
 
         super(ProposalsForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
+        self.helper.include_media = False
         self.helper.form_class = 'form-horizontal'
         self.helper.form_method = 'post'
         self.helper.field_class = 'col-sm-10'
